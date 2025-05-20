@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room: Basic Pentesting - Web Enum Basics - TryHackMe Write-up</title>
+    <meta name="description" content="A comprehensive guide to basic web enumeration techniques from the TryHackMe Basic Pentesting room.">
+    <meta name="date" content="2025-05-20">
+    <meta name="author" content="UZIII">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="../../css/styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <!-- Navigation (same as other pages) -->
+    <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
+        <!-- ...existing navigation code... -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <article class="max-w-4xl mx-auto py-16 fade-in">
+            <header class="mb-12">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Room: Basic Pentesting - Web Enum Basics</h1>
+                <div class="flex items-center space-x-4 text-gray-400">
+                    <time datetime="2025-05-20">May 20, 2025</time>
+                    <span>•</span>
+                    <span>TryHackMe</span>
+                </div>
+            </header>
+
+            <div class="prose prose-lg prose-invert max-w-none">
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Room Overview</h2>
+                <p>The Basic Pentesting room on TryHackMe is designed to teach fundamental web enumeration techniques. This write-up covers the essential tools and methodologies used in the initial phases of a web application security assessment.</p>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial Enumeration</h2>
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>$ dirb http://TARGET_IP
+$ nikto -h http://TARGET_IP
+$ nmap -sC -sV -p- TARGET_IP</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Web Directory Discovery</h2>
+                <p>Using dirb, we discover several interesting directories:</p>
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>+ /admin (Status: 301)
++ /dev (Status: 301)
++ /backup (Status: 301)
++ /secret (Status: 301)</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Common Vulnerabilities</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Directory listing enabled</li>
+                    <li>Default credentials in admin panel</li>
+                    <li>Sensitive files in backup directory</li>
+                    <li>Misconfigured permissions</li>
+                </ul>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Exploitation Steps</h2>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>Enumerate web directories using dirb and gobuster</li>
+                    <li>Check for default credentials in admin panel</li>
+                    <li>Review source code for hidden information</li>
+                    <li>Download and analyze backup files</li>
+                </ol>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Tools Used</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>dirb - Web content scanner</li>
+                    <li>nikto - Web server scanner</li>
+                    <li>gobuster - Directory/file enumeration</li>
+                    <li>nmap - Network exploration tool</li>
+                </ul>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Best Practices</h2>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li>Always start with passive reconnaissance</li>
+                    <li>Document all findings systematically</li>
+                    <li>Verify findings manually to avoid false positives</li>
+                    <li>Follow proper authorization and scope guidelines</li>
+                </ol>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Additional Resources</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>OWASP Web Security Testing Guide</li>
+                    <li>Web Application Hacker's Handbook</li>
+                    <li>Burp Suite Documentation</li>
+                    <li>OWASP Top 10 Project</li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-base text-gray-400">&copy; 2025 Security Research Blog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

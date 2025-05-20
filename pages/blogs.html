@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Blog Posts - Security Engineer's Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-green-400 hover:text-green-500 font-bold text-xl">UZIII</a>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="nav-link px-3 py-2">Home</a>
+                        <a href="/pages/about.html" class="nav-link px-3 py-2">About</a>
+                        <a href="/pages/hackthebox.html" class="nav-link px-3 py-2">HackTheBox</a>
+                        <a href="/pages/tryhackme.html" class="nav-link px-3 py-2">TryHackMe</a>
+                        <a href="/pages/blogs.html" class="nav-link px-3 py-2 text-green-400">Blogs</a>
+                        <a href="/pages/contact.html" class="nav-link px-3 py-2">Contact</a>
+                        <a href="/pages/complaints.html" class="nav-link px-3 py-2">Complaints</a>
+                        <button onclick="toggleTheme()" class="theme-toggle ml-4">
+                            <span class="dark-mode-only">🌞</span>
+                            <span class="light-mode-only">🌙</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="/" class="nav-link block px-3 py-2">Home</a>
+                <a href="/pages/about.html" class="nav-link block px-3 py-2">About</a>
+                <a href="/pages/hackthebox.html" class="nav-link block px-3 py-2">HackTheBox</a>
+                <a href="/pages/tryhackme.html" class="nav-link block px-3 py-2">TryHackMe</a>
+                <a href="/pages/blogs.html" class="nav-link block px-3 py-2 text-green-400">Blogs</a>
+                <a href="/pages/contact.html" class="nav-link block px-3 py-2">Contact</a>
+                <a href="/pages/complaints.html" class="nav-link block px-3 py-2">Complaints</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <section class="max-w-6xl mx-auto py-16 fade-in">
+            <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-8">Security Blog Posts</h1>
+            <p class="text-xl mb-12">Articles, tutorials, and insights on various cybersecurity topics, from basic concepts to advanced techniques.</p>
+            
+            <!-- Post Grid -->
+            <div id="blogs-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Posts will be populated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-base text-gray-400">&copy; 2025 Security Research Blog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

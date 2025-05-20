@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box: Lame - Exploiting FTP Misconfiguration - HackTheBox Write-up</title>
+    <meta name="description" content="A detailed walkthrough of the Lame box on HackTheBox, focusing on FTP misconfiguration exploitation.">
+    <meta name="date" content="2025-05-20">
+    <meta name="author" content="UZIII">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="../../css/styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <!-- Navigation (same as other pages) -->
+    <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
+        <!-- ...existing navigation code... -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <article class="max-w-4xl mx-auto py-16 fade-in">
+            <header class="mb-12">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Box: Lame - Exploiting FTP Misconfiguration</h1>
+                <div class="flex items-center space-x-4 text-gray-400">
+                    <time datetime="2025-05-20">May 20, 2025</time>
+                    <span>•</span>
+                    <span>HackTheBox</span>
+                </div>
+            </header>
+
+            <div class="prose prose-lg prose-invert max-w-none">
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Box Overview</h2>
+                <p>Lame is a beginner-friendly box that demonstrates the importance of proper FTP server configuration. The box provides an excellent opportunity to learn about anonymous FTP access and its potential security implications.</p>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Enumeration</h2>
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>$ nmap -sC -sV -p- 10.10.10.3
+
+PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 2.3.4
+22/tcp   open  ssh         OpenSSH 4.7p1
+139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X
+445/tcp  open  netbios-ssn Samba smbd 3.X - 4.X</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Vulnerability Analysis</h2>
+                <p>The FTP server running vsftpd 2.3.4 is known to have a backdoor command execution vulnerability. Additionally, anonymous FTP access is enabled, allowing us to browse the server without authentication.</p>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Exploitation</h2>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>First, we attempt anonymous FTP access:
+                        <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto mt-2"><code>$ ftp 10.10.10.3
+Anonymous access allowed
+Password: anonymous</code></pre>
+                    </li>
+                    <li>Inside the FTP server, we discover several misconfigured directories with incorrect permissions.</li>
+                    <li>We can exploit these misconfigurations to gain initial access to the system.</li>
+                </ol>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Privilege Escalation</h2>
+                <p>After gaining initial access, we discover that the system is running an outdated kernel version vulnerable to a local privilege escalation exploit.</p>
+
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>$ uname -a
+Linux lame 2.6.24-16-server #1 SMP Thu Apr 10 13:58:00 UTC 2008 i686 GNU/Linux</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Lessons Learned</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Always disable anonymous FTP access unless explicitly required</li>
+                    <li>Keep FTP server software updated to prevent known vulnerabilities</li>
+                    <li>Regularly audit file permissions on FTP servers</li>
+                    <li>Maintain up-to-date system packages and kernel versions</li>
+                </ul>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Mitigation Steps</h2>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li>Update vsftpd to the latest version</li>
+                    <li>Disable anonymous FTP access</li>
+                    <li>Implement proper access controls and file permissions</li>
+                    <li>Update the system kernel to patch known vulnerabilities</li>
+                </ol>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-base text-gray-400">&copy; 2025 Security Research Blog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>
