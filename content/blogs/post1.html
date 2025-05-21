@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to CTF: Tips for Beginners - Security Blog</title>
+    <meta name="description" content="Essential tips and resources for those starting their journey in CTF competitions.">
+    <meta name="date" content="2025-05-20">
+    <meta name="author" content="UZIII2208">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="../../css/styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-green-400 hover:text-green-500 font-bold text-xl">UZIII2208</a>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="nav-link px-3 py-2">Home</a>
+                        <a href="/pages/about.html" class="nav-link px-3 py-2">About</a>
+                        <a href="/pages/hackthebox.html" class="nav-link px-3 py-2">HackTheBox</a>
+                        <a href="/pages/tryhackme.html" class="nav-link px-3 py-2">TryHackMe</a>
+                        <a href="/pages/blogs.html" class="nav-link px-3 py-2">Blogs</a>
+                        <a href="/pages/contact.html" class="nav-link px-3 py-2">Contact</a>
+                        <a href="/pages/complaints.html" class="nav-link px-3 py-2">Complaints</a>
+                        <button onclick="toggleSearch()" class="theme-toggle mr-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                        <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                        </button>
+                        <div id="search-container" class="search-container hidden ml-4">
+                            <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch()">
+                            <div id="search-results" class="search-results hidden"></div>
+                        </div>
+                        </button>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="/" class="nav-link block px-3 py-2">Home</a>
+                <a href="/pages/about.html" class="nav-link block px-3 py-2">About</a>
+                <a href="/pages/hackthebox.html" class="nav-link block px-3 py-2">HackTheBox</a>
+                <a href="/pages/tryhackme.html" class="nav-link block px-3 py-2">TryHackMe</a>
+                <a href="/pages/blogs.html" class="nav-link block px-3 py-2">Blogs</a>
+                <a href="/pages/contact.html" class="nav-link block px-3 py-2">Contact</a>
+                <a href="/pages/complaints.html" class="nav-link block px-3 py-2">Complaints</a>
+                <button onclick="toggleSearch()" class="theme-toggle mr-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <div id="search-container" class="search-container hidden ml-4">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch()">
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <article class="max-w-4xl mx-auto py-16 fade-in">
+            <header class="mb-12">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Introduction to CTF: Tips for Beginners</h1>
+                <div class="flex items-center space-x-4 text-gray-400">
+                    <time datetime="2025-05-20">May 20, 2025</time>
+                    <span>•</span>
+                    <span>Security Blog</span>
+                </div>
+            </header>
+
+            <div class="prose prose-lg prose-invert max-w-none">
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">What are CTFs?</h2>
+                <p>Capture The Flag (CTF) competitions are cybersecurity challenges where participants solve security puzzles and capture "flags" - usually strings of text that prove they've solved the challenge. CTFs are an excellent way to learn practical security skills in a controlled environment.</p>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Types of CTF Challenges</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Web Exploitation</li>
+                    <li>Binary Exploitation (Pwn)</li>
+                    <li>Reverse Engineering</li>
+                    <li>Cryptography</li>
+                    <li>Forensics</li>
+                    <li>OSINT (Open Source Intelligence)</li>
+                </ul>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Essential Tools</h2>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <h3 class="text-xl text-green-400 mb-4">Basic Toolkit</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Burp Suite - Web application testing</li>
+                        <li>Ghidra - Reverse engineering</li>
+                        <li>Wireshark - Network analysis</li>
+                        <li>John the Ripper - Password cracking</li>
+                        <li>Python - Scripting and automation</li>
+                    </ul>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Getting Started</h2>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>Start with beginner-friendly platforms:
+                        <ul class="list-disc list-inside ml-8 mt-2">
+                            <li>PicoCTF</li>
+                            <li>OverTheWire</li>
+                            <li>TryHackMe</li>
+                            <li>HackTheBox</li>
+                        </ul>
+                    </li>
+                    <li>Focus on one category initially</li>
+                    <li>Document your solutions and methodology</li>
+                    <li>Join CTF communities and Discord servers</li>
+                </ol>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Learning Resources</h2>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <h3 class="text-xl text-green-400 mb-4">Recommended Resources</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>CTFtime.org - CTF event calendar</li>
+                        <li>LiveOverflow YouTube channel</li>
+                        <li>IppSec YouTube channel</li>
+                        <li>CTF writeups on GitHub</li>
+                    </ul>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Best Practices</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Take detailed notes during challenges</li>
+                    <li>Create a personal toolkit of scripts and tools</li>
+                    <li>Review other players' write-ups after competitions</li>
+                    <li>Practice regularly with online platforms</li>
+                    <li>Share knowledge with the community</li>
+                </ul>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Common Pitfalls to Avoid</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Don't get stuck on one challenge too long</li>
+                    <li>Avoid relying solely on automated tools</li>
+                    <li>Don't neglect documentation and note-taking</li>
+                    <li>Remember to take breaks during long competitions</li>
+                </ul>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Conclusion</h2>
+                <p>CTFs are an excellent way to develop practical cybersecurity skills. Start with the basics, maintain consistency in practice, and gradually work your way up to more challenging competitions. Remember that the community is always willing to help, so don't hesitate to ask questions and share your experiences.</p>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">About</h3>
+                    <p class="text-gray-400">Security research blog focusing on CTF write-ups, penetration testing, and cybersecurity insights.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/pages/hackthebox.html" class="text-gray-400 hover:text-green-400">HackTheBox</a></li>
+                        <li><a href="/pages/tryhackme.html" class="text-gray-400 hover:text-green-400">TryHackMe</a></li>
+                        <li><a href="/pages/blogs.html" class="text-gray-400 hover:text-green-400">Blog Posts</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Connect</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/pages/contact.html" class="text-gray-400 hover:text-green-400">Contact</a></li>
+                        <li><a href="https://github.com/uziii2208" class="text-gray-400 hover:text-green-400" target="_blank">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 @UZIII2208. Some rights reserved.</p>
+                <p class="text-gray-500 text-sm mt-2">Built with Meow Meow :3</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

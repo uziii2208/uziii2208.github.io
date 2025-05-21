@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints - Security Engineer's Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-green-400 hover:text-green-500 font-bold text-xl">UZIII2208</a>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="nav-link px-3 py-2">Home</a>
+                        <a href="/pages/about.html" class="nav-link px-3 py-2">About</a>
+                        <a href="/pages/hackthebox.html" class="nav-link px-3 py-2">HackTheBox</a>
+                        <a href="/pages/tryhackme.html" class="nav-link px-3 py-2">TryHackMe</a>
+                        <a href="/pages/blogs.html" class="nav-link px-3 py-2">Blogs</a>
+                        <a href="/pages/contact.html" class="nav-link px-3 py-2">Contact</a>
+                        <a href="/pages/complaints.html" class="nav-link px-3 py-2 text-green-400">Complaints</a>
+                        <button onclick="toggleSearch()" class="theme-toggle mr-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                        <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                        </button>
+                        <div id="search-container" class="search-container hidden ml-4">
+                            <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch()">
+                            <div id="search-results" class="search-results hidden"></div>
+                        </div>
+                        </button>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="/" class="nav-link block px-3 py-2">Home</a>
+                <a href="/pages/about.html" class="nav-link block px-3 py-2">About</a>
+                <a href="/pages/hackthebox.html" class="nav-link block px-3 py-2">HackTheBox</a>
+                <a href="/pages/tryhackme.html" class="nav-link block px-3 py-2">TryHackMe</a>
+                <a href="/pages/blogs.html" class="nav-link block px-3 py-2">Blogs</a>
+                <a href="/pages/contact.html" class="nav-link block px-3 py-2">Contact</a>
+                <a href="/pages/complaints.html" class="nav-link block px-3 py-2 text-green-400">Complaints</a>
+                <button onclick="toggleSearch()" class="theme-toggle mr-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <div id="search-container" class="search-container hidden ml-4">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch()">
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <section class="max-w-2xl mx-auto py-16 fade-in">
+            <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-8">Submit a Complaint</h1>
+            <p class="text-xl mb-12">Found an issue with the content? Have a correction to suggest? Let me know!</p>
+            
+            <!-- Complaints Form -->
+            <form action="https://formspree.io/f/{FORM_ID}" method="POST" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-300">Name</label>
+                    <input type="text" name="name" id="name" required class="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+                    <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label for="page" class="block text-sm font-medium text-gray-300">Related Page/Post</label>
+                    <input type="text" name="page" id="page" required class="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50" placeholder="URL or title of the content">
+                </div>
+                <div>
+                    <label for="complaint" class="block text-sm font-medium text-gray-300">Complaint Details</label>
+                    <textarea name="complaint" id="complaint" rows="6" required class="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"></textarea>
+                </div>
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Submit Complaint
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">About</h3>
+                    <p class="text-gray-400">Security research blog focusing on CTF write-ups, penetration testing, and cybersecurity insights.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/pages/hackthebox.html" class="text-gray-400 hover:text-green-400">HackTheBox</a></li>
+                        <li><a href="/pages/tryhackme.html" class="text-gray-400 hover:text-green-400">TryHackMe</a></li>
+                        <li><a href="/pages/blogs.html" class="text-gray-400 hover:text-green-400">Blog Posts</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Connect</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/pages/contact.html" class="text-gray-400 hover:text-green-400">Contact</a></li>
+                        <li><a href="https://github.com/uziii2208" class="text-gray-400 hover:text-green-400" target="_blank">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 @UZIII2208. Some rights reserved.</p>
+                <p class="text-gray-500 text-sm mt-2">Built with Meow Meow :3</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>
