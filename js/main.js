@@ -19,7 +19,7 @@ const sections = {
         { 
             title: "Machine: Puppy - HackTheBox Season 8",
             excerpt: "Puppy, a medium-difficulty Windows machine, simulates a realistic Active Directory environment for testing web exploitation and privilege escalation skills.",
-            url: "/content/hackthebox/post1.html",
+            url: "/content/hackthebox/puppy_htb_ss8.html",
             date: "2025-05-18"
         },
         {
