@@ -3,7 +3,93 @@ function toggleTheme() {
     const body = document.body;
     const isDarkMode = body.classList.toggle('light-mode');
     localStorage.setItem('theme', isDarkMode ? 'light' : 'dark');
+    
+    // Update search button appearance
+    const searchButtons = document.querySelectorAll('.search-button');
+    searchButtons.forEach(button => {
+        button.classList.toggle('light-mode');
+    });
 }
+
+// Search functionality for desktop menu
+function toggleSearch() {
+    const searchContainer = document.getElementById('search-container');
+    const searchInput = document.getElementById('search-input');
+    searchContainer.classList.toggle('hidden');
+    if (!searchContainer.classList.contains('hidden')) {
+        searchInput.focus();
+    }
+}
+
+// Search functionality for mobile menu
+function toggleMobileSearch() {
+    const searchContainer = document.getElementById('mobile-search-container');
+    const searchInput = document.getElementById('mobile-search-input');
+    searchContainer.classList.toggle('hidden');
+    if (!searchContainer.classList.contains('hidden')) {
+        searchInput.focus();
+    }
+}
+
+function performSearch(event) {
+    const input = event.target;
+    const isMobile = input.id === 'mobile-search-input';
+    const searchResults = document.querySelector(isMobile ? '#mobile-search-results' : '#search-results');
+    const searchTerm = input.value.toLowerCase();
+    
+    if (searchTerm.length < 2) {
+        searchResults.classList.add('hidden');
+        return;
+    }
+
+    // Collect all content from all sections
+    let allContent = [];
+    for (const section in sections) {
+        allContent = allContent.concat(sections[section]);
+    }
+
+    // Filter and display results
+    const results = allContent.filter(item => 
+        item.title.toLowerCase().includes(searchTerm) || 
+        item.excerpt.toLowerCase().includes(searchTerm)
+    );
+
+    if (results.length > 0) {
+        searchResults.innerHTML = results.map(result => `
+            <a href="${result.url}" class="search-result-item">
+                <div class="p-4 hover:bg-gray-700 transition-colors duration-200">
+                    <h3 class="text-green-400 text-lg">${result.title}</h3>
+                    <p class="text-gray-400 text-sm">${result.excerpt}</p>
+                </div>
+            </a>
+        `).join('');
+        searchResults.classList.remove('hidden');
+    } else {
+        searchResults.innerHTML = '<div class="p-4 text-gray-400">No results found</div>';
+        searchResults.classList.remove('hidden');
+    }
+}
+
+// Close search results when clicking outside
+document.addEventListener('click', (e) => {
+    const desktopContainer = document.getElementById('search-container');
+    const mobileContainer = document.getElementById('mobile-search-container');
+    const desktopResults = document.getElementById('search-results');
+    const mobileResults = document.getElementById('mobile-search-results');
+    const searchButtons = document.querySelectorAll('.search-button');
+    
+    const isClickingSearchButton = Array.from(searchButtons).some(btn => btn.contains(e.target));
+    
+    if (!desktopContainer?.contains(e.target) && !isClickingSearchButton) {
+        desktopResults?.classList.add('hidden');
+        desktopContainer?.classList.add('hidden');
+    }
+    
+    if (!mobileContainer?.contains(e.target) && !isClickingSearchButton) {
+        mobileResults?.classList.add('hidden');
+        mobileContainer?.classList.add('hidden');
+    }
+});
 
 // Initialize theme from localStorage
 document.addEventListener('DOMContentLoaded', () => {
@@ -38,7 +124,7 @@ const sections = {
             title: "ArtifactUniversity: Insane - HackTheBox Challenge",
             excerpt: "ArtifactUniversity: Insane HackTheBox challenge, my beloved gem, demands mastering intricate AI/ML exploits, model poisoning, and cunning data manipulation.",
             url: "/content/hackthebox/artifactuniversity/artifactuniversity_htb_challenge.html",
-            date: "2025-10-22"
+            date: "2024-10-22"
         },
         {
             title: "Lockpick4.0: Insane - HackTheBox Sherlock",

@@ -26,21 +26,22 @@
                         <a href="/pages/blogs.html" class="nav-link px-3 py-2">Blogs</a>
                         <a href="/pages/contact.html" class="nav-link px-3 py-2">Contact</a>
                         <a href="/pages/complaints.html" class="nav-link px-3 py-2">Complaints</a>
-                        <button onclick="toggleSearch()" class="theme-toggle mr-4">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </button>
-                        <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                            </svg>
-                        </button>
-                        <div id="search-container" class="search-container hidden ml-4">
-                            <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch()">
-                            <div id="search-results" class="search-results hidden"></div>
+                        <div class="flex items-center space-x-4">
+                            <div id="search-container" class="search-container hidden">
+                                <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch(event)">
+                                <div id="search-results" class="search-results hidden"></div>
+                            </div>
+                            <button onclick="toggleSearch()" class="theme-toggle search-button">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </button>
+                            <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                                </svg>
+                            </button>
                         </div>
-                        </button>
                     </div>
                 </div>
                 <!-- Mobile menu button -->
@@ -63,21 +64,24 @@
                 <a href="/pages/blogs.html" class="nav-link block px-3 py-2">Blogs</a>
                 <a href="/pages/contact.html" class="nav-link block px-3 py-2">Contact</a>
                 <a href="/pages/complaints.html" class="nav-link block px-3 py-2">Complaints</a>
-                <button onclick="toggleSearch()" class="theme-toggle mr-4">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </button>
-                <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                </button>
-                <div id="search-container" class="search-container hidden ml-4">
-                    <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch()">
-                    <div id="search-results" class="search-results hidden"></div>
+                <div class="flex items-center flex-col space-y-4 mt-4">
+                    <div id="mobile-search-container" class="search-container hidden w-full">
+                        <input type="text" id="mobile-search-input" class="search-input w-full" placeholder="Search posts..." oninput="performSearch(event)">
+                        <div id="mobile-search-results" class="search-results hidden"></div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button onclick="toggleMobileSearch()" class="theme-toggle search-button">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                        <button onclick="toggleTheme()" class="theme-toggle">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                </button>
             </div>
         </div>
     </nav>
@@ -136,5 +140,6 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script type="module" src="js/background.js"></script>
 </body>
 </html>
