@@ -9,7 +9,7 @@
     <meta name="author" content="UZIII2208">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <link href="../../css/styles.css" rel="stylesheet">
+    <link href="../../../css/styles.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
     <!-- Navigation -->
@@ -22,7 +22,7 @@
                 <!-- Desktop Menu -->
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="/" class="nav-link px-3 py-2">Home</a>
+                        <a href="/" class="nav-link px-3 py-2">Home</a> 
                         <a href="/pages/about.html" class="nav-link px-3 py-2">About</a>
                         <a href="/pages/hackthebox.html" class="nav-link px-3 py-2">HackTheBox</a>
                         <a href="/pages/tryhackme.html" class="nav-link px-3 py-2">TryHackMe</a>
@@ -89,8 +89,8 @@
     <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
         <article class="max-w-4xl mx-auto py-16 fade-in">
             <header class="mb-12">
-                <img src="../hackthebox/puppy/puppy_htb.png" alt="Puppy Banner" class="rounded-lg shadow-lg mb-6">
-                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Machine: Puppy - HackTheBox Season 8</h1>
+                <img src="../puppy/puppy_htb.png" alt="Puppy Banner" class="rounded-lg shadow-lg mb-6">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Puppy: Medium - HackTheBox Season 8</h1>
                 <div class="flex items-center space-x-4 text-gray-400">
                     <time datetime="2025-05-18">May 18, 2025</time>
                     <span>•</span>
@@ -103,8 +103,8 @@
                 <table class="w-full border-collapse border border-gray-700 mb-6">
                   <thead>
                     <tr class="bg-gray-800">
-                      <th class="border border-gray-700 p-2 text-left">General Information</th>
-                      <th class="border border-gray-700 p-2 text-left">IP Address: 10.10.11.xx</th>
+                      <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">General Information</strong></th>
+                      <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">IP Address: 10.10.11.xx</strong></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -137,11 +137,11 @@ before commenting, I’m not responsible for any issues that arise. If you
 want to ask something, <strong class="text-green-400"><a href="/pages/contact.html">Contact Here</a></strong>!</li>
                 </blockquote>
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Enumeration</h2>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>As is common in real life pentests, you will start the Puppy box with credentials for the following account: levi.james / KingofAkron2025!</code></pre>
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">As is common in real life pentests, you will start the Puppy box with credentials for the following account: levi.james / KingofAkron2025!</code></pre>
                 <p>Here,<strong class="text-green-400"><a href="https://app.hackthebox.com/users/1600618">tr3nb0lone</a></strong> (the machine creator) has provided the following username and password:</p>
                 <li><strong>user:</strong> <strong class="text-green-400">levi.james</strong></li>
                 <li><strong>password:</strong> <strong class="text-green-400">KingofAkron2025!</strong></li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>┌──(meow㉿uziii2208)-[~]
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
 └─$ nmap -A 10.10.11.xx --min-rate 10000
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-05-17 15:00 EDT
 Nmap scan report for 10.10.11.xx
@@ -211,7 +211,7 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 176.71 seconds</code></pre>
 
                 <li>Use <strong class="text-green-400">CrackMapExec</strong> to scan users, taking advantage of existing account and password information.</li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>┌──(meow㉿uziii2208)-[~]
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
 └─$ sudo crackmapexec smb 10.10.11.xx -u levi.james -p 'KingofAkron2025!' --users
 SMB 10.10.11.xx 445 DC [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:PUPPY.H
 TB) (signing:True) (SMBv1:False)
@@ -228,12 +228,12 @@ SMB 10.10.11.xx 445 DC PUPPY.HTB\Guest badpwdcount: 0 desc: Built-in account for
 SMB 10.10.11.xx 445 DC PUPPY.HTB\Administrator badpwdcount: 0 desc: Built-in account for administering the computer/domain</code></pre>
 
                 <li>Add <strong class="text-green-400">DC.PUPPY.HTB</strong> and <strong class="text-green-400">PUPPY.HTB</strong> (domain name and domain controller) to the <strong class="text-green-400">/etc/hosts</strong> file.</li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>┌──(meow㉿uziii2208)-[~]
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
 └─$ echo "10.10.11.xx DC.PUPPY.HTB PUPPY.HTB" | sudo tee -a /etc/hosts
 10.10.11.xx DC.PUPPY.HTB PUPPY.HTB</code></pre>
 
                 <li>Split the list of users and write it to a file <strong class="text-green-400">users.txt</strong>.</li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
 └─$ nxc smb PUPPY.HTB -u 'levi.james' -p 'KingofAkron2025!' --rid-brute | grep "SidTypeUser" | awk -F '\\' '{print$2}' | awk '{print $1}' > users.txt
 ┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
 └─$ cat users.txt
@@ -249,7 +249,7 @@ Guest
 ************_adm</code></pre>
 
                 <li>Add the <strong class="text-green-400">domain controller's</strong> IP address to the <strong class="text-green-400">/etc/resolv.conf</strong> file and run a scan using <strong class="text-green-400">bloodhound-python</strong>.</li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
 └─$ sudo nano /etc/resolv.conf
 
 ┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
@@ -281,7 +281,7 @@ INFO: Starting computer enumeration with 10 workers
 INFO: Querying computer: DC.PUPPY.HTB
 INFO: Done in 00M 19S</code></pre>
 
-                <img src="../hackthebox/puppy/bloodhound1.png" alt="BloodHound Results" class="rounded-lg shadow-lg mb-6">
+                <img src="../puppy/bloodhound1.png" alt="BloodHound Results" class="rounded-lg shadow-lg mb-6">
                 <li>Our user has <strong class="text-green-400">GenericWrite</strong> permissions on the <strong class="text-green-400">Developers</strong> group, but we cannot proceed further with this privilege, so we need to dig deeper.</li>
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Exploitation (Advanced Hacking)</h2>
@@ -335,6 +335,6 @@ INFO: Done in 00M 19S</code></pre>
         </div>
     </footer>
 
-    <script src="../../js/main.js"></script>
+    <script src="../../../js/main.js"></script>
 </body>
 </html>

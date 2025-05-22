@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity A - Z với HackTheBox - Phần 1 - Security Blog</title>
+    <meta name="description" content="Lộ trình này giúp bạn học cybersecurity tập trung vào trên nền tảng HackTheBox.">
+    <meta name="date" content="2024-12-10">
+    <meta name="author" content="UZIII2208">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="../../../css/styles.css" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-green-400 hover:text-green-500 font-bold text-xl">UZIII2208</a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="nav-link px-3 py-2">Home</a>
+                        <a href="/pages/about.html" class="nav-link px-3 py-2">About</a>
+                        <a href="/pages/hackthebox.html" class="nav-link px-3 py-2">HackTheBox</a>
+                        <a href="/pages/tryhackme.html" class="nav-link px-3 py-2">TryHackMe</a>
+                        <a href="/pages/blogs.html" class="nav-link px-3 py-2">Blogs</a>
+                        <a href="/pages/contact.html" class="nav-link px-3 py-2">Contact</a>
+                        <a href="/pages/complaints.html" class="nav-link px-3 py-2">Complaints</a>
+                        <button onclick="toggleSearch()" class="theme-toggle mr-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                        <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                        </button>
+                        <div id="search-container" class="search-container hidden ml-4">
+                            <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch()">
+                            <div id="search-results" class="search-results hidden"></div>
+                        </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="/" class="nav-link block px-3 py-2">Home</a>
+                <a href="/pages/about.html" class="nav-link block px-3 py-2">About</a>
+                <a href="/pages/hackthebox.html" class="nav-link block px-3 py-2">HackTheBox</a>
+                <a href="/pages/tryhackme.html" class="nav-link block px-3 py-2">TryHackMe</a>
+                <a href="/pages/blogs.html" class="nav-link block px-3 py-2">Blogs</a>
+                <a href="/pages/contact.html" class="nav-link block px-3 py-2">Contact</a>
+                <a href="/pages/complaints.html" class="nav-link block px-3 py-2">Complaints</a>
+                <button onclick="toggleSearch()" class="theme-toggle mr-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <div id="search-container" class="search-container hidden ml-4">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch()">
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <article class="max-w-4xl mx-auto py-16 fade-in">
+            <header class="mb-12">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Cybersecurity A - Z với HackTheBox - Phần 1</h1>
+                <div class="flex items-center space-x-4 text-gray-400">
+                    <time datetime="2024-12-10">Dec 12, 2024</time>
+                    <span>•</span>
+                    <span>Security Blog</span>
+                </div>
+            </header>
+
+
+            <div class="prose prose-lg prose-invert max-w-none">
+                <h2 class="text-2xl text-green-400 mt-8 mb-4"><strong>HackTheBox là gì?</strong></h2>
+                <img src="image.png" alt="image.png" />
+                <p>HackTheBox (HTB) là một nền tảng hàng đầu để học và thực hành
+                cybersecurity, cung cấp các bài tập thực tế thông qua máy ảo (machines),
+                thử thách (challenges), và các khóa học có hướng dẫn trên HTB Academy.
+                Lộ trình này được thiết kế để giúp bạn học cybersecurity từ cơ bản đến
+                nâng cao, với sự tập trung vào các module path và thực hành trên
+                HackTheBox, sử dụng đúng tên module bằng tiếng Anh để dễ dàng tìm kiếm,
+                kèm theo liên kết trực tiếp đến các module.</p>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <li class="text-gray-400"><strong class = "text-green-400">Starting Point Machines</strong>: Chuỗi máy dành cho người
+                    mới bắt đầu, đi kèm hướng dẫn chi tiết.</li>
+                    <li class="text-gray-400"><strong class = "text-green-400">HTB Academy</strong>: Các khóa học và lộ trình học có cấu
+                    trúc, từ cơ bản đến chuyên sâu.</li>
+                    <li class="text-gray-400"><strong class = "text-green-400">Tracks</strong>: Bộ sưu tập máy và thử thách được nhóm theo
+                    chủ đề, như Beginner Track.</li>
+                    <li class="text-gray-400"><strong class = "text-green-400">Retired Machines</strong>: Các máy đã ngừng hoạt động, lý
+                    tưởng để thực hành với hướng dẫn từ cộng đồng.</li> 
+                </div>
+                <p>Lộ trình này sẽ hướng dẫn bạn từng bước, từ việc làm quen với nền
+                tảng đến việc thành thạo các kỹ năng kiểm thử xâm nhập.</p>
+
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4"><strong>Bước 1: Bắt
+                đầu với Starting Point Machines</strong></h2>
+                <img src="image%201.png" alt="image.png" />
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mô tả:</strong></h3>
+                <p>Starting Point là một chuỗi máy ảo được thiết kế dành riêng cho người
+                mới bắt đầu, với các đường khai thác đơn giản để giới thiệu bạn với nền
+                tảng HackTheBox và các khái niệm kiểm thử xâm nhập cơ bản. Mỗi máy đi
+                kèm với một hướng dẫn chi tiết (writeup) giải thích từng bước và các
+                khái niệm liên quan.</p>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Hành động:</strong></h3>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <ol class="list-decimal list-inside space-y-4">
+                    <li class="text-gray-400"><strong class = "text-green-400">Kết nối với VPN:</strong> Tải tệp VPN từ trang <a
+                    href="https://app.hackthebox.com/starting-point">Starting Point</a> trên
+                    HackTheBox và sử dụng
+                    lệnh <strong class = "text-green-400">sudo openvpn /path/to/vpn/file.ovpn</strong> trên hệ điều hành
+                    <strong class = "text-green-400">Linux</strong> như <strong class = "text-green-400">Parrot Security</strong> để kết nối.</li>
+                    <li class="text-gray-400"><strong class = "text-green-400">Hoàn thành các máy Starting Point:</strong> Bắt đầu với máy
+                    đầu tiên và làm theo hướng dẫn để hiểu cách hoạt động của nền tảng. Ví
+                    dụ, máy “<strong class = "text-green-400">Lame</strong>” thường được đề xuất cho người mới.</li>
+                    <li class="text-gray-400"><strong class = "text-green-400">Học các công cụ cơ bản:</strong> Làm quen với các công cụ
+                    như <strong class = "text-green-400">nmap </strong>, <strong class = "text-green-400">wireshark</strong>(network scanning), <strong class = "text-green-400">dirb</strong> hoặc <strong class = "text-green-400">gobuster</strong> (directory
+                    enumeration), và <strong class = "text-green-400">Burp Suite</strong> (web traffic
+                    interception).</li>
+                    </ol>
+                </div>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mục tiêu:</strong></h3>
+                <li>Hiểu cách sử dụng HackTheBox và kết nối với các máy.</li>
+                <li>Nắm bắt các khái niệm cơ bản như quét cổng, liệt kê dịch vụ, và khai
+                thác lỗ hổng đơn giản.</li>
+
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4"><strong>Bước
+                2: Tham gia lộ trình “Cracking into Hack the Box” trên HTB
+                Academy</strong></h2>
+                <img src="image%202.png" alt="image.png" />   
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mô tả</strong></h3>
+                <p>Lộ trình <a
+                href="https://academy.hackthebox.com/path/preview/cracking-into-hack-the-box">Cracking
+                into Hack the Box</a> là một khóa học dễ trên HTB Academy, bao gồm 42
+                phần, yêu cầu 30 điểm để hoàn thành, và mang lại phần thưởng +30 điểm.
+                Lộ trình này giới thiệu các khái niệm cốt lõi cần thiết cho bất kỳ vai
+                trò kỹ thuật nào trong lĩnh vực an ninh thông tin và chuẩn bị cho bạn
+                tham gia nền tảng chính của HackTheBox.</p>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Nội dung chính</strong></h3>                
+                <ul>
+                <li>
+                <ul>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                <ol class="list-decimal list-inside space-y-4">
+                <strong class="text-gray-400">Các mô-đun bao gồm:</strong>
+                <li class="text-gray-400"><a
+                href="https://academy.hackthebox.com/module/details/112"><strong class = "text-green-400">Introduction to
+                HTTP web requests and web applications</strong></a>.</li>
+                <li class="text-gray-400"><a
+                href="https://academy.hackthebox.com/module/details/70"><strong class = "text-green-400">JavaScript
+                Deobfuscation basics</strong></a>.</li>
+                <li class="text-gray-400"><a
+                href="https://academy.hackthebox.com/module/details/1"><strong class = "text-green-400">Penetration
+                testing process and HackTheBox platform introduction</strong></a>.</li>
+                <p class="text-gray-400"><strong>Hoạt động thực hành</strong>: <strong class = "text-green-400">Hướng dẫn hoàn thành máy đầu
+                tiên trên HackTheBox (có thể là một máy Starting Point) và thử thách
+                hoàn thành một máy độc lập bằng cách áp dụng kiến thức đã học</strong>.</p>
+                </ol>
+            </div>
+        </ul>
+    </li>
+</ul>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Hành động</strong></h3>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <ol class="list-decimal list-inside space-y-4">
+                    <li class="text-gray-400"><strong class = "text-green-400">Đăng ký HTB Academy</strong>: Truy cập <a
+                    href="https://academy.hackthebox.com/">HTB Academy</a> và bắt đầu với lộ
+                    trình “Cracking into Hack the Box”.</li>
+                    <li class="text-gray-400"><strong class = "text-green-400">Hoàn thành các mô-đun</strong>: Làm theo từng mô-đun, thực
+                    hiện các bài tập thực hành, và hoàn thành bài kiểm tra kỹ năng.</li>
+                    <li class="text-gray-400"><strong class = "text-green-400">Tìm hiểu thêm</strong>: Nếu gặp khó khăn, nghiên cứu thêm từ
+                    các nguồn bên ngoài hoặc tham gia <a
+                    href="https://forum.hackthebox.com/">HackTheBox Forums</a> để được hỗ
+                    trợ.</li>
+                    </ol>
+                </div>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mục tiêu</strong></h3>
+                <ol class="list-decimal list-inside space-y-4">
+                <li>Làm quen với các khái niệm cơ bản về an ninh mạng và kiểm thử xâm
+                nhập.</li>
+                <li>Hoàn thành máy đầu tiên trên HackTheBox với sự hướng dẫn.</li>
+                </ol>     
+                
+                
+                <h2 class="text-2xl text-green-400 mt-8 mb-4"><strong>Bước 3: Xây dựng nền tảng với “Information Security
+Foundations”</strong></h2>
+                <img src="image%203.png" alt="image.png" />   
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mô tả</strong></h3>
+                <p>Lộ trình <a
+                href="https://academy.hackthebox.com/path/preview/information-security-foundations"><strong class = "text-green-400">Information
+                Security Foundations</strong></a> là một khóa học cấp độ dễ trên HTB Academy, bao
+                gồm 191 phần, yêu cầu 200 điểm để hoàn thành, và mang lại phần thưởng
+                +120 điểm. Lộ trình này phát triển sự hiểu biết cơ bản về các chủ đề cốt
+                lõi của CNTT và an ninh thông tin, là điều kiện tiên quyết cho lộ trình
+                “Penetration Tester”.</p>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Nội dung chính</strong></h3>                
+                <table class="w-full border-collapse border border-gray-700 mb-6">
+                  <thead>
+                    <tr class="bg-gray-800">
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Module Name</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Difficulty</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Sections</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Reward</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Description</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Link</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Introduction to Academy</td>
+                      <td class="border border-gray-700 p-2">Beginner</td>
+                      <td class="border border-gray-700 p-2">8</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Get familiar with the platform and learning process.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/1"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Learning Process</td>
+                      <td class="border border-gray-700 p-2">Beginner</td>
+                      <td class="border border-gray-700 p-2">20</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Describes the learning process suitable for information
+security.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/5"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Linux Fundamentals</td>
+                      <td class="border border-gray-700 p-2">Beginner</td>
+                      <td class="border border-gray-700 p-2">30</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Work comfortably with the Linux operating system and shell.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/18"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Windows Fundamentals</td>
+                      <td class="border border-gray-700 p-2">Beginner</td>
+                      <td class="border border-gray-700 p-2">14</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Work comfortably with the Windows operating system.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/37"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Networking Fundamentals</td>
+                      <td class="border border-gray-700 p-2">Beginner</td>
+                      <td class="border border-gray-700 p-2">21</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Essential network protocols and structures for information
+security.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/17"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Web Application Fundamentals</td>
+                      <td class="border border-gray-700 p-2">Beginner</td>
+                      <td class="border border-gray-700 p-2">17</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">How web applications work from an information security
+perspective.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/112"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+</ul>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Hành động</strong></h3>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <ol class="list-decimal list-inside space-y-4">
+                        <li class="text-gray-400"><strong class="text-green-400">Bắt đầu lộ trình</strong>: Sau khi hoàn thành “Information
+                        Security Foundations”, chuyển sang lộ trình “Penetration Tester”.</li>
+                        <li class="text-gray-400"><strong class="text-green-400">Thực hành song song</strong>: Áp dụng kiến thức từ các
+                        mô-đun vào các máy trên HackTheBox, đặc biệt là các máy dễ trong phần
+                        Starting Point hoặc máy đã nghỉ hưu.</li>
+                        <li class="text-gray-400"><strong class="text-green-400">Hoàn thành bài kiểm tra</strong>: Đảm bảo hoàn thành tất cả
+                        các bài tập và bài kiểm tra kỹ năng.</li>
+                    </ol>
+                </div>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mục tiêu</strong></h3>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>Xây dựng nền tảng vững chắc về hệ điều hành, mạng, và an ninh thông
+                    tin.</li>
+                    <li>Chuẩn bị cho các lộ trình chuyên sâu hơn như “Penetration
+                    Tester”.</li>
+                </ol>
+
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4"><strong>Bước 4: Chuyên sâu với lộ trình “Penetration Tester” trên HTB
+Academy</strong></h2>
+                <img src="image%204.png" alt="image.png" />   
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mô tả</strong></h3>
+                <p>Lộ trình <a
+                href="https://academy.hackthebox.com/path/preview/penetration-tester"><strong class = "text-green-400">Penetration
+Tester</strong></a> là một khóa học toàn diện, cấp độ trung bình trên HTB
+Academy, bao gồm 491 phần, yêu cầu 1970 điểm để hoàn thành, và mang lại
+phần thưởng +450 điểm. Lộ trình này được thiết kế cho những người mới
+muốn trở thành chuyên gia kiểm thử xâm nhập, bao gồm tất cả các giai
+đoạn của quá trình kiểm thử.</p>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Nội dung chính</strong></h3>                
+                <table class="w-full border-collapse border border-gray-700 mb-6">
+                  <thead>
+                    <tr class="bg-gray-800">
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Module Name</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Difficulty</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Sections</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Reward</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Description</th>
+                      <th class="border border-gray-700 p-2 text-left text-gray-400">Link</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Penetration Testing Process</td>
+                      <td class="border border-gray-700 p-2">Beginner</td>
+                      <td class="border border-gray-700 p-2">15</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Introduces the stages of penetration testing.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/2"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Nmap</td>
+                      <td class="border border-gray-700 p-2">Easy</td>
+                      <td class="border border-gray-700 p-2">12</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Network scanning techniques with Nmap.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/28"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Common Service Enumeration</td>
+                      <td class="border border-gray-700 p-2">Medium</td>
+                      <td class="border border-gray-700 p-2">21</td>
+                      <td class="border border-gray-700 p-2">+20</td>
+                      <td class="border border-gray-700 p-2">Enumerating and analyzing network services.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/29"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Password Attacks</td>
+                      <td class="border border-gray-700 p-2">Medium</td>
+                      <td class="border border-gray-700 p-2">22</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Password attack techniques.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/43"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">SQL Injection</td>
+                      <td class="border border-gray-700 p-2">Medium</td>
+                      <td class="border border-gray-700 p-2">17</td>
+                      <td class="border border-gray-700 p-2">+10</td>
+                      <td class="border border-gray-700 p-2">Exploiting SQL Injection vulnerabilities.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/33"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Cross-Site Scripting (XSS)</td>
+                      <td class="border border-gray-700 p-2">Easy</td>
+                      <td class="border border-gray-700 p-2">10</td>
+                      <td class="border border-gray-700 p-2">+20</td>
+                      <td class="border border-gray-700 p-2">XSS attacks on web applications.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/34"><strong class = "text-green-400">Click
+here</strong></a></td>
+<tr>
+                      <td class="border border-gray-700 p-2">Windows Privilege Escalation</td>
+                      <td class="border border-gray-700 p-2">Medium</td>
+                      <td class="border border-gray-700 p-2">33</td>
+                      <td class="border border-gray-700 p-2">+20</td>
+                      <td class="border border-gray-700 p-2">Privilege escalation techniques on Windows.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/77"><strong class = "text-green-400">Click
+here</strong></a></td>
+<tr>
+                      <td class="border border-gray-700 p-2">Documentation &amp; Reporting</td>
+                      <td class="border border-gray-700 p-2">Easy</td>
+                      <td class="border border-gray-700 p-2">8</td>
+                      <td class="border border-gray-700 p-2">+20</td>
+                      <td class="border border-gray-700 p-2">How to write penetration testing reports.</td>
+                      <td class="border border-gray-700 p-2"><a href="https://academy.hackthebox.com/module/details/3"><strong class = "text-green-400">Click
+here</strong></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+</ul>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mục tiêu</strong></h3>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>Thành thạo các kỹ thuật kiểm thử xâm nhập, từ thu thập thông tin đến
+                    khai thác và báo cáo.</li>
+                    <li>Xây dựng nền tảng vững chắc để giải quyết các máy khó hơn trên
+                    HackTheBox.</li>
+                </ol>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4"><strong>Bước
+5: Thực hành trên Tracks và Retired Machines</strong></h2>
+                <img src="image%205.png" alt="image.png" />  
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mô tả</strong></h3>
+                <p>HackTheBox cung cấp các tracks, là bộ sưu tập máy và
+                thử thách được nhóm theo chủ đề, như <strong class="text-green-400">Beginner Track</strong>, giúp bạn tập trung
+                vào các kỹ năng cụ thể. Ngoài ra, các máy đã nghỉ hưu (retired machines)
+                là nguồn tài nguyên tuyệt vời để thực hành, với các hướng dẫn từ cộng
+                đồng.</p>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Hành động</strong></h3>                
+                <ul>
+                <li>
+                <ul>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                <ol class="list-decimal list-inside space-y-4">
+                <li class="text-gray-400"><strong class="text-green-400">Khám phá tracks</strong>: Truy cập <a
+                href="https://app.hackthebox.com/tracks">Tracks</a> trên nền tảng chính
+                và bắt đầu với <a
+                href="https://app.hackthebox.com/tracks/Beginner-Track">Beginner
+                Track</a>, bao gồm 4 máy và 7 thử thách dễ.</li>
+                <li class="text-gray-400"><strong class="text-green-400">Thực hành trên máy đã nghỉ hưu</strong>: Tìm các máy được
+                xếp hạng dễ trong danh sách máy đã nghỉ hưu. Sử dụng các hướng dẫn từ
+                cộng đồng hoặc video từ IppSec trên YouTube để học kỹ thuật mới.</li>
+                <li class="text-gray-400"><strong class="text-green-400">Tiến bộ dần</strong>: Sau khi thành thạo các máy dễ, thử
+                thách bản thân với các máy trung bình và khó.</li>
+                </ol>
+            </div>
+        </ul>
+    </li>
+</ul>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mục tiêu</strong></h3>
+                <ol class="list-decimal list-inside space-y-4">
+                <li>Củng cố kiến thức từ HTB Academy bằng cách áp dụng vào các tình
+                huống thực tế.</li>
+                <li>Phát triển kỹ năng giải quyết vấn đề và tư duy sáng tạo trong kiểm
+                thử xâm nhập.</li>
+                </ol>
+
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4"><strong>Bước
+6: Sử dụng tài nguyên bổ sung và tham gia cộng đồng</strong></h2>
+                <img src="image%206.png" alt="image.png" />  
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mô tả</strong></h3>
+                <p>Để nâng cao kỹ năng và giải quyết các thách thức, bạn nên tận dụng
+                các tài nguyên bên ngoài và cộng đồng HackTheBox.</p>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Tài nguyên đề xuất</strong></h3>                
+                <ul>
+                    <li>
+                        <ul>
+                            <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                                <ol class="list-decimal list-inside space-y-4">
+                                    <li class='text-gray-400'><strong class='text-green-400'>YouTube</strong>: Xem các video hướng dẫn từ <strong class='text-green-400'>IppSec</strong>, cung
+                                    cấp các hướng dẫn chi tiết về cách giải các máy đã nghỉ hưu.</li>
+                                    <li class='text-gray-400'><strong class='text-green-400'>Diễn đàn HackTheBox</strong>: Tham gia <a
+                                    href="https://forum.hackthebox.com/"><strong class='text-green-400'>HackTheBox Forums</strong></a> để thảo luận,
+                                    tìm gợi ý, và học hỏi từ cộng đồng.</li>
+                                    <li class='text-gray-400'><strong class='text-green-400'>Cộng đồng Reddit</strong>: Tham gia subreddit <a
+                                    href="https://www.reddit.com/r/hackthebox/"><strong class='text-green-400'>/r/hackthebox</strong></a> để nhận lời
+                                    khuyên và chia sẻ kinh nghiệm.</li>
+                                    <li class='text-gray-400'><strong class='text-green-400'>Bài viết hướng dẫn</strong>: Đọc bài viết như <a
+                                    href="https://medium.com/%40pedro.correia_8569/unleash-your-inner-hacker-where-to-start-in-hack-the-box-pt-1-994033ac3a6f"><strong class='text-green-400'>Unleash
+                                    Your Inner Hacker</strong></a> để có góc nhìn cá nhân về cách tiếp cận
+                                    HackTheBox.</li>
+                                </ol>
+                            </div>
+                        </ul>
+                    </li>
+                </ul>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Hành động</strong></h3>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <ol class="list-decimal list-inside space-y-4">
+                        <li class='text-gray-400'><strong class='text-green-400'>Tham gia cộng đồng</strong>: Đặt câu hỏi trên diễn đàn hoặc
+                        <strong class='text-green-400'>Discord</strong> của HackTheBox khi cần hỗ trợ.</li>
+                        <li class='text-gray-400'><strong class='text-green-400'>Học thêm công cụ</strong>: Làm quen với các công cụ
+                        như <strong class='text-green-400'>Metasploit</strong>, <strong class='text-green-400'>dirsearch</strong>,
+                        và <strong class='text-green-400'>wfuzz</strong> thông qua các hướng dẫn trên HTB Academy hoặc tài
+                        liệu trực tuyến.</li>
+                    </ol>
+                </div>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Mục tiêu</strong></h3>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>Mở rộng kiến thức và kỹ năng thông qua học hỏi từ cộng đồng và các
+                    chuyên gia.</li>
+                    <li>Xây dựng sự tự tin trong việc giải quyết các thách thức phức
+                    tạp.</li>
+                </ol>
+                <h3 class="text-xl text-green-400 mb-4"><strong>Lời khuyên bổ sung</strong></h3>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <ol class="list-decimal list-inside space-y-4">
+                        <li class="text-gray-400"><strong class="text-green-400">Kiên nhẫn và kiên trì</strong>: Học cybersecurity đòi hỏi
+                        thời gian và thực hành. Đừng nản lòng nếu gặp khó khăn.</li>
+                        <li class="text-gray-400"><strong class="text-green-400">Tổ chức học tập</strong>: Lập kế hoạch học tập, ví dụ, dành
+                        1-2 giờ mỗi ngày để học lý thuyết và thực hành.</li>
+                        <li class="text-gray-400"><strong class="text-green-400">Ghi chú</strong>: Ghi lại các kỹ thuật, công cụ, và bài học
+                        từ mỗi máy bạn giải để tham khảo sau này.</li>
+                        <li class="text-gray-400"><strong class="text-green-400">Cập nhật kiến thức</strong>: Theo dõi các bài viết và cập
+                        nhật từ <a href="https://www.hackthebox.com/blog"><strong class="text-green-400">HackTheBox Blog</strong></a> để
+                        nắm bắt các xu hướng và kỹ thuật mới.</li>
+                        <li class="text-gray-400"><strong class="text-green-400">Xem xét VIP</strong>: Một số nội dung, như máy đã nghỉ hưu
+                        và tracks, có thể yêu cầu đăng ký <strong class="text-green-400">VIP</strong>. Kiểm tra chi tiết trên <a
+                        href="https://www.hackthebox.com/"><strong class="text-green-400">HackTheBox</strong></a>.</li>
+                    </ol>
+                </div>
+
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4"><strong>Kết luận</strong></h2>
+                <p>Lộ trình học cybersecurity với HackTheBox cung cấp một cách tiếp cận
+thực tế và có cấu trúc để phát triển kỹ năng từ cơ bản đến nâng cao.
+Bằng cách bắt đầu với Starting Point, tiếp tục với các lộ trình trên HTB
+Academy, thực hành trên tracks và máy đã nghỉ hưu, và tận dụng tài
+nguyên cộng đồng, bạn sẽ xây dựng được nền tảng vững chắc và tiến tới
+trở thành một chuyên gia kiểm thử xâm nhập. Hãy bắt đầu ngay hôm nay và
+tận hưởng hành trình học tập!</p>
+
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">About</h3>
+                    <p class="text-gray-400">Security research blog focusing on CTF write-ups, penetration testing, and cybersecurity insights.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/pages/hackthebox.html" class="text-gray-400 hover:text-green-400">HackTheBox</a></li>
+                        <li><a href="/pages/tryhackme.html" class="text-gray-400 hover:text-green-400">TryHackMe</a></li>
+                        <li><a href="/pages/blogs.html" class="text-gray-400 hover:text-green-400">Blog Posts</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Connect</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/pages/contact.html" class="text-gray-400 hover:text-green-400">Contact</a></li>
+                        <li><a href="https://github.com/uziii2208" class="text-gray-400 hover:text-green-400" target="_blank">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 @UZIII2208. Some rights reserved.</p>
+                <p class="text-gray-500 text-sm mt-2">Built with Meow Meow :3</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../js/main.js"></script>
+</body>
+</html>
