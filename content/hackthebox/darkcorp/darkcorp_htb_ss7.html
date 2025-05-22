@@ -20,9 +20,9 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="../../../favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <title>Machine: WhiteRabbit - HackTheBox Season 7 Write-up</title>
-    <meta name="description" content="WhiteRabbit: Insane HackTheBox Season 7 challenge tests advanced penetration skills with complex enumeration, exploitation, and privilege escalation techniques.">
-    <meta name="date" content="2025-04-09">
+    <title>Machine: DarkCorp - HackTheBox Season 7 Write-up</title>
+    <meta name="description" content="DarkCorp: Insane HackTheBox Season 7, my absolute favorite, demands elite Active Directory exploits, buffer overflows, and thrilling privilege escalation mastery.">
+    <meta name="date" content="2025-02-16">
     <meta name="author" content="UZIII2208">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -110,10 +110,10 @@
     <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
         <article class="max-w-4xl mx-auto py-16 fade-in">
             <header class="mb-12">
-                <img src="../whiterabbit/whiterabbit_banner.png" alt="WhiteRabbit Banner" class="rounded-lg shadow-lg mb-6">
-                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">WhiteRabbit: Insane - HackTheBox Season 7</h1>
+                <img src="../darkcorp/darkcorp_banner.png" alt="DarkCorp Banner" class="rounded-lg shadow-lg mb-6">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">DarkCorp: Insane - HackTheBox Season 7</h1>
                 <div class="flex items-center space-x-4 text-gray-400">
-                    <time datetime="2025-04-09">Apr 09, 2025</time>
+                    <time datetime="2025-02-16">Feb 16, 2025</time>
                     <span>•</span>
                     <span>HackTheBox</span>
                 </div>
@@ -121,6 +121,9 @@
 
             <div class="prose prose-lg prose-invert max-w-none">
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Information</h2>
+                <li>Although it is supposed to be a <strong class="text-yellow-400">Windows machine</strong> , the scan looks very much like <strong class="text-red-400">Linux</strong>. This is because a <strong class="text-green-400">type of container is
+running on the IP xx.xx.xx.xx</strong>.</li>
+                <li>This's a <strong class="text-red-400">freakin machine is both insanely tough and hands down my favorite of Season 7! Don't make me dissappoint, i don't want you do some scripts kiddie with this writeup, pls!!!</strong></li>
                 <table class="w-full border-collapse border border-gray-700 mb-6">
                   <thead>
                     <tr class="bg-gray-800">
@@ -139,11 +142,11 @@
                     </tr>
                     <tr>
                       <td class="border border-gray-700 p-2">Web Server Software and Version</td>
-                      <td class="border border-gray-700 p-2">Caddy httpd (version not specified in the scan)</td>
+                      <td class="border border-gray-700 p-2">nginx 1.22.1</td>
                     </tr>
                     <tr>
                       <td class="border border-gray-700 p-2">Available Ports</td>
-                      <td class="border border-gray-700 p-2">22, 80, 2222</td>
+                      <td class="border border-gray-700 p-2">22, 80</td>
                     </tr>
                   </tbody>
                 </table>
@@ -152,87 +155,98 @@
                 <blockquote>
                 <li>I have explained in detail every task I performed in each
                 step, accompanied by screenshots and the exploits used.</li>
-                <li>The full write-up <strong class="text-yellow-400">will be made public after machine retired</strong> to
+                <li>The full write-up <strong class="text-yellow-400">will be made public after Season 8 ends</strong> to
 ensure transparency with <strong class="text-green-400">HackTheBox policies</strong>. <strong class="text-red-400">Please read carefully
 before commenting, I’m not responsible for any issues that arise</strong>. If you
 want to ask something, <strong class="text-green-400"><a href="/pages/contact.html">Contact Here</a></strong>!</li>
                 </blockquote>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial Reconnaissance</h2>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Enumeration</h2>
                 <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
-└─$ nmap -p- -T4 -oN initial_scan.txt xx.xx.xx.xx
-Starting Nmap 7.94 ( https://nmap.org ) at 2025-04-05 09:15 EST
-Nmap scan report for xx.xx.xx.xx
-Host is up (0.043s latency).
+└─$ nmap -p 1-65535 -T4 -A -v xx.xx.xx.xx
+Starting Nmap (version unknown) at an unspecified date and time
+Command: nmap -p 1-65535 -T4 -A -v xx.xx.xx.xx
 
-Not shown: 65532 closed ports
+Nmap scan report for drip.htb (xx.xx.xx.xx)
+Host is up (0.063s latency).
 
-PORT    STATE SERVICE VERSION
-22/tcp  open  ssh    OpenSSH 9.6p1 Ubuntu 3ubuntu13.9 (Ubuntu Linux; protocol 2.0)
-80/tcp  open  http    Caddy httpd
-2222/tcp open  ssh    OpenSSH 9.6p1 Ubuntu 3ubuntu13.5 (Ubuntu Linux; protocol 2.0)
+Not shown: 65533 filtered tcp ports (no-response)
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 9.2p1 Debian 2+deb12u3 (protocol 2.0)
+| ssh-hostkey: 
+|   256 33:41:ed:0a:a5:1a:86:d0:cc:2a:a6:2b:8d:8d:b2:ad (ECDSA)
+|   256 04:ad:7e:ba:11:0e:62:0f:b0:80:d3:24:c2:3e:2c:c5 (ED25519)
+80/tcp   open  http    nginx 1.22.1
+|_http-server-header: nginx/1.22.1
+|_http-favicon: Unknown favicon MD5: B0F964065616CFF6D415ASEDCF430B97
+|_http-methods: GET OPTIONS HEAD
+|_http-title: DripyMail
+| Requested resource was INDEX
+
+WARNING: OSSCAN results may be unreliable because we could not find at least 1 open and 1 closed port
+No OS matches for host
+Uptime guess: 0.003 days (since Tue Apr 1 13:16:18 2025)
+
+Network Distance: 2 hops
+TCP Sequence Prediction: Difficulty=254 (Good luck!)
+IP ID Sequence Generation: Incremental
+
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
-Nmap done: 1 IP address (1 host up) scanned in 18.23 seconds</code></pre>
+TRACEROUTE (using port 80/tcp)
+HOP RTT       ADDRESS
+1   101.84 ms xx.xx.xx.xx
+2   101.89 ms drip.htb (xx.xx.xx.xx)
+
+Nmap done: 1 IP address (1 host up) scanned in an unspecified duration</code></pre>
+
+                <li>Add <strong class="text-green-400">xx.xx.xx.xx</strong> and <strong class="text-green-400">drip.htb</strong> (domain name and domain controller) to the <strong class="text-green-400">/etc/hosts</strong> file.</li>
                 <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
-└─$ nmap -p 22,80,2222 -sC -sV -oN detailed_scan.txt xx.xx.xx.xx
-Starting Nmap 7.94 ( https://nmap.org ) at 2025-04-05 09:18 EST
-Nmap scan report for xx.xx.xx.xx
-Host is up (0.041s latency).
+└─$ echo "xx.xx.xx.xx drip.htb" | sudo tee -a /etc/hosts > /dev/null
+xx.xx.xx.xx drip.htb</code></pre>
 
-PORT    STATE SERVICE VERSION
-22/tcp  open  ssh    OpenSSH 9.6p1 Ubuntu 3ubuntu13.9 (Ubuntu Linux; protocol 2.0)
-80/tcp  open  http    Caddy httpd
-2222/tcp open  ssh    OpenSSH 9.6p1 Ubuntu 3ubuntu13.5 (Ubuntu Linux; protocol 2.0)
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 12.67 seconds</code></pre>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Injection</h2>
-                <p>-New subdomain, <strong class="text-green-400">status.whiterabbit.htb</strong> that has Uptime Kuma</p>
-                <li>However we couldn't find anything (lot of directory bruteforcing for both subdomains), so after a
-little bit of research: <a href="https://github.com/louislam/uptime-kuma/issues/2917"><strong class="text-green-400">https://github.com/louislam/uptime-kuma/issues/2917</strong></a>.</li>
-                <li>This says that under <strong class="text-green-400">/status/</strong> endpoint, there might be some pages accessible for non
-authenticated users.</li>
-                <li>So we bruteforced this endpoint and found <strong class="text-green-400">/status/temp/</strong> that lists some new subdomains:</li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">GoPhish -> ddb*********.whiterabbit.htb
-Wikijs -> a66**********.whiterabbit.htb
-</code></pre>
-                <p>-If we read this post on <a href="https://js.wiki/"><strong class="text-green-400">Wikijs</strong></a> endpoint <strong class="text-green-400">http://a66**********.whiterabbit.htb/en/gophish_webhooks</strong> we can see that there is a
-webhook endpoint that talks to <a href="https://n8n.io/"><strong class="text-green-400">n8n</strong></a> subdomain <strong class="text-green-400">28e*******.whiterabbit.htb</strong>.</p>
-                <p>Interestingly:</p>
-                <li><strong class="text-green-400">User Validation</strong>: Checks if the user’s email from the event is present in the database.</li>
-                <p>-So this could be vulnerable to SQLI, however this endpoint requires <strong class="text-green-400">x-gophish-signature</strong>
-header containing a HMAC Signature of the POST Request Body.</p>
-                <p>-However we don't have the key for HMAC Signature, but if we continue reading:</p>
-                <li>We have attached a json file of a completed workflow where an invalid signature is provided
-<strong class="text-green-400">gophish_to_phishing_score_database.json</strong>.</li>
-                <p>-If we read <strong class="text-green-400">http://a66**********.whiterabbit.htb/gophish/gophish_to_phishing_score_database.js</strong>
-on we can find the secret key use for HMAC Signature:</p>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">3CW*****************************</code></pre>                
-                <li>Now we can test for SQLI either manually or using sqlmap. To generate a HMAC Signature we can use CyberChef</li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">https://gchq.github.io/CyberChef/#recipe=HMAC(%7B'option':'UTF8','string':'3CWVGMndgMvdVAzOjqBiTicmv7gxc6IS'%7D,'SHA256')&input=eyJjYW1wYWlnbl9pZCI6MiwiZW1haWwiOiJ0ZXN0XCIiLCJtZXNzYWdlIjoiQ2xpY2tlZCBMaW5rIn0&ieol=CRLF</code></pre>
+                <li>We go to <a href="http://drip.htb"><strong class="text-green-400">http://drip.htb</strong></a> (as seen in the <strong class="text-green-400">nmap</strong> scan) and see a mail application.</li>
+                <li>We <strong class="text-green-400">register</strong> a new <strong class="text-green-400">user</strong>.</li>
+                <img src="image_1.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6">
+                <li>We <strong class="text-green-400">register</strong> user <strong class="text-green-400">test</strong> with password=<strong class="text-green-400">1234</strong>.</li>
+                <li>We check our <strong class="text-green-400">mails</strong> and examine the <strong class="text-green-400">header</strong>. There, the domain <strong class="text-green-400">drip.darkcorp.htb</strong> is visible</li>
+                <li>We add <strong class="text-green-400">xx.xx.xx.xx drip.darkcorp.htb</strong> to the hostfile.</li>
+                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
+└─$ echo "xx.xx.xx.xx drip.darkcorp.htb" | sudo tee -a /etc/hosts > /dev/null
+xx.xx.xx.xx drip.htb drip.darkcorp.htb</code></pre>
+                <li>Back to <strong class="text-green-400">DripMail</strong>: </li>
+                <img src="image_2.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6">
+                <img src="image_3.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6">
+                <li>When we click on the <strong class="text-green-400">Help button</strong> , we see that <strong class="text-green-400">Roundcube Webmail 1.6.7</strong> is running.</li>
+                <div class="flex justify-center">
+                  <img src="image_4.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6 mx-auto">
+                </div>
+                <img src="image_5.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6">
+                <li>Now we go to <strong class="text-green-400">http://drip.htb/index#contact</strong> and fill out the <strong class="text-green-400">Contact Us</strong> form with the details of our <strong class="text-green-400">created</strong> user <strong class="text-green-400">test
+email=test@drip.htb</strong>.</li>
                 <p><strong class="text-yellow-400">Coming soon...</strong></p>
 
-                
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Exploiting the File Upload</h2>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Web Application Exploitation</h2>
                 <p><strong class="text-yellow-400">Coming soon...</strong></p>
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial Foothold</h2>
                 <p><strong class="text-yellow-400">Coming soon...</strong></p>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">User Access</h2>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Privilege Escalation via Vulnerable Driver</h2>
                 <p><strong class="text-yellow-400">Coming soon...</strong></p>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Privilege Escalation</h2>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Active Directory Compromise</h2>
+                <p><strong class="text-yellow-400">Coming soon...</strong></p>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Kernel Exploitation & Mitigation Bypass</h2>
                 <p><strong class="text-yellow-400">Coming soon...</strong></p>
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Flags Found</h2>
                 <ol class="list-decimal list-inside space-y-4">
                     
-                    <li><strong>User flag :</strong> <strong class="text-red-400">n49******************************</strong></li>
-                    <li><strong>Root flag :</strong> <strong class="text-red-400">ap1******************************</strong></li>
+                    <li><strong>User flag :</strong> <strong class="text-red-400">na4******************************</strong></li>
+                    <li><strong>Root flag :</strong> <strong class="text-red-400">4p7******************************</strong></li>
                     <p>Note: <strong class="text-red-400">Flags in all HTB machines are dynamic flags. It is strictly prohibited to dump flags or copy and paste flags blindly. If you try this, you are genuinely foolish!!!</strong></p>
                 </ol>
             </div>
