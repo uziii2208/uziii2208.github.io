@@ -111,7 +111,7 @@ const sections = {
         {
             title: "WhiteRabbit: Insane - HackTheBox Season 7",
             excerpt: "WhiteRabbit: Insane HackTheBox Season 7 challenge tests advanced penetration skills with complex enumeration, exploitation, and privilege escalation techniques.",
-            url: "/content/hackthebox/white/whiterabbit_htb_ss7.html",
+            url: "/content/hackthebox/whiterabbit/whiterabbit_htb_ss7.html",
             date: "2025-04-09"
         },
         {
