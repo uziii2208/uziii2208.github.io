@@ -72,7 +72,8 @@ body.light-mode .nav-link.text-green-400 {
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  animation: subtleScale 4s infinite ease-in-out;
 }
 
 .card::before {
@@ -142,10 +143,12 @@ body.light-mode .nav-link.text-green-400 {
   from { 
     opacity: 0;
     transform: translateY(-10px);
+    filter: blur(5px);
   }
   to { 
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -153,22 +156,24 @@ body.light-mode .nav-link.text-green-400 {
   from {
     transform: translateX(-50px);
     opacity: 0;
+    filter: blur(3px);
   }
   to {
     transform: translateX(0);
     opacity: 1;
+    filter: blur(0);
   }
 }
 
 @keyframes floatAnimation {
   0% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-15px);
+    transform: translateY(-15px) rotate(1deg);
   }
   100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
 }
 
@@ -177,28 +182,53 @@ body.light-mode .nav-link.text-green-400 {
     box-shadow: 0 0 5px var(--primary-color);
   }
   50% {
-    box-shadow: 0 0 20px var(--primary-color);
+    box-shadow: 0 0 25px var(--primary-color);
   }
   100% {
     box-shadow: 0 0 5px var(--primary-color);
   }
 }
 
+@keyframes fadeInBackground {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+
+@keyframes subtleScale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Apply animations */
 .fade-in {
-  animation: fadeIn 0.5s ease-in;
+  animation: fadeIn 0.7s ease-in-out;
 }
 
 .slide-in {
-  animation: slideInFromLeft 0.7s ease-out;
+  animation: slideInFromLeft 0.8s ease-out;
 }
 
 .float {
-  animation: floatAnimation 3s infinite ease-in-out;
+  animation: floatAnimation 4s infinite ease-in-out;
 }
 
 .glow {
-  animation: glowPulse 2s infinite;
+  animation: glowPulse 3s infinite;
+}
+
+.scale {
+  animation: subtleScale 4s infinite ease-in-out;
 }
 
 /* Theme toggle button */
@@ -243,7 +273,8 @@ body.light-mode .nav-link.text-green-400 {
   width: 100%;
   height: 100%;
   z-index: -1;
-  opacity: 0.15;
+  opacity: 0.2;
   pointer-events: none;
   mix-blend-mode: screen;
+  animation: fadeInBackground 2s ease-in;
 }

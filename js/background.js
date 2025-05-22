@@ -26,12 +26,11 @@ function init() {
     }
     
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-    
-    const material = new THREE.PointsMaterial({
+      const material = new THREE.PointsMaterial({
         color: 0x10B981,
-        size: 3,
+        size: 3.5,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.95,
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true
     });
