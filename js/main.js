@@ -124,13 +124,19 @@ const sections = {
             title: "ArtifactUniversity: Insane - HackTheBox Challenge",
             excerpt: "ArtifactUniversity: Insane HackTheBox challenge, my beloved gem, demands mastering intricate AI/ML exploits, model poisoning, and cunning data manipulation.",
             url: "/content/hackthebox/artifactuniversity/artifactuniversity_htb_challenge.html",
-            date: "2024-10-22"
+            date: "2024-10-29"
         },
         {
             title: "Lockpick4.0: Insane - HackTheBox Sherlock",
             excerpt: "Lockpick4.0: Insane HackTheBox Sherlock, my ultimate favorite, challenges with ruthless ransomware reverse-engineering, uncovering IOCs, and thwarting Forela’s attackers.",
             url: "/content/hackthebox/lockpick40/lockpick40_htb_sherlock.html",
             date: "2024-10-21"
+        },
+        {
+            title: "Developer: Hard - HackTheBox Machine",
+            excerpt: "Developer: Hard-difficulty HackTheBox Linux machine, featuring complex vulnerabilities, web exploitation, privilege escalation, and advanced penetration testing techniques.",
+            url: "/content/hackthebox/developer_htb/developer_htb_sherlock.html",
+            date: "2024-08-05"
         }
     ],
     tryhackme: [
@@ -211,12 +217,12 @@ function populateSection(sectionId, sectionData) {
     if (sectionList) {
         sectionData.forEach(post => {
             const card = document.createElement('div');
-            card.className = 'bg-gray-800 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 fade-in';
+            card.className = 'card bg-gray-800 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 fade-in';
             card.innerHTML = `
                 <h2 class="text-xl text-green-400 hover:text-green-500 transition-colors duration-300 mb-2">
                     <a href="${post.url}" class="hover:underline">${post.title}</a>
                 </h2>
-                <p class="text-gray-300 dark:text-gray-400 mb-4">${post.excerpt}</p>
+                <p class="text-gray-500 dark:text-gray-500 mb-4">${post.excerpt}</p>
                 <p class="text-sm text-gray-500">${post.date}</p>
             `;
             sectionList.appendChild(card);
