@@ -15,9 +15,25 @@ function toggleTheme() {
 function toggleSearch() {
     const searchContainer = document.getElementById('search-container');
     const searchInput = document.getElementById('search-input');
-    searchContainer.classList.toggle('hidden');
-    if (!searchContainer.classList.contains('hidden')) {
+    
+    if (searchContainer.classList.contains('hidden')) {
+        searchContainer.classList.remove('hidden');
+        searchContainer.style.opacity = '0';
+        searchContainer.style.transform = 'translateY(-10px)';
+        
+        // Trigger reflow
+        searchContainer.offsetHeight;
+        
+        searchContainer.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        searchContainer.style.opacity = '1';
+        searchContainer.style.transform = 'translateY(0)';
         searchInput.focus();
+    } else {
+        searchContainer.style.opacity = '0';
+        searchContainer.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+            searchContainer.classList.add('hidden');
+        }, 300);
     }
 }
 
@@ -38,7 +54,11 @@ function performSearch(event) {
     const searchTerm = input.value.toLowerCase();
     
     if (searchTerm.length < 2) {
-        searchResults.classList.add('hidden');
+        searchResults.style.opacity = '0';
+        searchResults.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+            searchResults.classList.add('hidden');
+        }, 300);
         return;
     }
 
@@ -48,24 +68,43 @@ function performSearch(event) {
         allContent = allContent.concat(sections[section]);
     }
 
-    // Filter and display results
+    // Filter and display results with animation
     const results = allContent.filter(item => 
         item.title.toLowerCase().includes(searchTerm) || 
         item.excerpt.toLowerCase().includes(searchTerm)
     );
 
     if (results.length > 0) {
-        searchResults.innerHTML = results.map(result => `
-            <a href="${result.url}" class="search-result-item">
-                <div class="p-4 hover:bg-gray-700 transition-colors duration-200">
-                    <h3 class="text-green-400 text-lg">${result.title}</h3>
-                    <p class="text-gray-400 text-sm">${result.excerpt}</p>
-                </div>
-            </a>
-        `).join('');
+        let html = '';
+        results.forEach((result, index) => {
+            html += `
+                <a href="${result.url}" 
+                   class="block p-4 hover:bg-gray-700 transition-all duration-300"
+                   style="animation: fadeIn ${0.2 + index * 0.1}s ease-out forwards">
+                    <h3 class="text-lg font-semibold text-green-400">${result.title}</h3>
+                    <p class="text-gray-300 mt-1">${result.excerpt}</p>
+                </a>
+            `;
+        });
+        
+        searchResults.innerHTML = html;
         searchResults.classList.remove('hidden');
+        searchResults.style.opacity = '0';
+        searchResults.style.transform = 'translateY(-10px)';
+        
+        // Trigger reflow
+        searchResults.offsetHeight;
+        
+        searchResults.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        searchResults.style.opacity = '1';
+        searchResults.style.transform = 'translateY(0)';
     } else {
-        searchResults.innerHTML = '<div class="p-4 text-gray-400">No results found</div>';
+        searchResults.innerHTML = `
+            <div class="p-4 text-gray-400"
+                 style="animation: fadeIn 0.2s ease-out forwards">
+                No results found for "${searchTerm}"
+            </div>
+        `;
         searchResults.classList.remove('hidden');
     }
 }

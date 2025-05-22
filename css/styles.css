@@ -47,6 +47,8 @@ body.light-mode {
 
 .nav-link:hover::after {
   width: 100%;
+  box-shadow: 0 0 10px var(--primary-color);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Make sure header links are visible in light mode */
@@ -66,16 +68,16 @@ body.light-mode .nav-link.text-green-400 {
 /* Cards */
 .card {
   background-color: var(--card-bg);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-  animation: subtleScale 4s infinite ease-in-out;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  animation: cardPulse 2s infinite ease-in-out;
 }
 
 .card::before {
@@ -107,17 +109,21 @@ body.light-mode .nav-link.text-green-400 {
 }
 
 .search-input {
-  width: 200px;
-  background-color: transparent;
-  border: 1px solid var(--primary-color);
+  width: 220px;
+  background-color: rgba(31, 41, 55, 0.7);
+  border: 2px solid var(--primary-color);
   color: var(--text-color);
-  padding: 0.5rem;
-  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
   outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
 }
 
 .search-input:focus {
-  box-shadow: 0 0 0 2px var(--primary-color);
+  width: 280px;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+  background-color: rgba(31, 41, 55, 0.9);
 }
 
 .search-results {
@@ -226,6 +232,18 @@ body.light-mode .nav-link.text-green-400 {
   }
 }
 
+@keyframes cardPulse {
+  0% {
+    box-shadow: 0 15px 30px rgba(16, 185, 129, 0);
+  }
+  50% {
+    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.2);
+  }
+  100% {
+    box-shadow: 0 15px 30px rgba(16, 185, 129, 0);
+  }
+}
+
 /* Apply animations */
 .fade-in {
   animation: fadeIn 0.7s ease-in-out;
@@ -249,18 +267,21 @@ body.light-mode .nav-link.text-green-400 {
 
 /* Theme toggle button */
 .theme-toggle {
-  background: none;
+  background: rgba(16, 185, 129, 0.1);
   border: 2px solid var(--primary-color);
   color: var(--primary-color);
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(5px);
 }
 
 .theme-toggle:hover {
   background-color: var(--primary-color);
   color: var(--bg-color);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
 }
 
 /* Custom scrollbar */
