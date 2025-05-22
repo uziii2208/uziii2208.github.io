@@ -11,6 +11,19 @@ function toggleTheme() {
     });
 }
 
+// Custom cursor preload
+document.addEventListener('DOMContentLoaded', function() {
+    // Preload SVG cursors
+    const cursors = [
+        '/img/cursor-default.svg',
+        '/img/cursor-pointer.svg'
+    ];
+    
+    cursors.forEach(cursorUrl => {
+        fetch(cursorUrl).catch(err => console.log(`Failed to preload cursor: ${cursorUrl}`));
+    });
+});
+
 // Search functionality for desktop menu
 function toggleSearch() {
     const searchContainer = document.getElementById('search-container');

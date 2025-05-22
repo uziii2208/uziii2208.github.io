@@ -11,6 +11,12 @@ body {
   font-family: 'JetBrains Mono', monospace;
   background-color: var(--bg-color);
   color: var(--text-color);
+  cursor: url('/img/cursor-default.svg') 0 0, auto !important;
+}
+
+/* Custom cursor for clickable elements */
+a, button, .theme-toggle, .nav-link, .card {
+  cursor: url('/img/cursor-pointer.svg') 0 0, pointer !important;
 }
 
 /* Light mode styles */
