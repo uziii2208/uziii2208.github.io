@@ -47,10 +47,6 @@
                         <a href="/pages/contact.html" class="nav-link px-3 py-2">Contact</a>
                         <a href="/pages/complaints.html" class="nav-link px-3 py-2">Complaints</a>
                         <div class="flex items-center space-x-4">
-                            <div id="search-container" class="search-container hidden">
-                                <input type="text" id="search-input" class="search-input" placeholder="Search posts..." oninput="performSearch(event)">
-                                <div id="search-results" class="search-results hidden"></div>
-                            </div>
                             <button onclick="toggleSearch()" class="theme-toggle search-button">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -101,9 +97,24 @@
                         <a href="/pages/contact.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Contact</a>
                         <a href="/pages/complaints.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Complaints</a>
                         <div class="flex items-center flex-col space-y-4 mt-6">
-                            <div id="mobile-search-container" class="search-container hidden w-full">
-                                <input type="text" id="mobile-search-input" class="search-input w-full rounded-lg" placeholder="Search posts..." oninput="performSearch(event)">
-                                <div id="mobile-search-results" class="search-results hidden"></div>
+                            <!-- Mobile Search Container -->
+                            <div id="mobile-search-container" class="search-container hidden fixed inset-0 z-50">
+                                <!-- Backdrop with blur effect -->
+                                <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="toggleMobileSearch()"></div>
+                                <!-- Search Content -->
+                                <div class="relative h-full flex items-center justify-center" onclick="event.stopPropagation()">
+                                    <div class="bg-gray-900 rounded-lg shadow-xl p-6 m-4 max-w-2xl w-full transform transition-all">
+                                        <div class="relative">
+                                            <input type="text" id="mobile-search-input" class="search-input w-full rounded-lg bg-gray-800 border-2 border-green-400 text-gray-100 pr-10" placeholder="Search posts..." oninput="performSearch(event)" autofocus>
+                                            <button onclick="toggleMobileSearch()" class="absolute right-2 top-2 text-gray-400 hover:text-white">
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div id="mobile-search-results" class="search-results hidden mt-4 max-h-96 overflow-y-auto"></div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="flex space-x-4">
                                 <button onclick="toggleMobileSearch()" class="theme-toggle search-button p-2 hover:bg-gray-800 rounded-lg">
@@ -128,6 +139,27 @@
             </div>
         </div>
     </nav>
+
+    <!-- Search Overlay -->
+    <div id="search-overlay" class="search-overlay fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-50">
+        <div class="absolute inset-0" onclick="closeSearch()"></div>
+        <div class="relative min-h-screen flex items-center justify-center">
+            <div class="bg-gray-900 rounded-lg shadow-xl p-6 m-4 max-w-2xl w-full transform transition-all">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-green-400">Search Posts</h3>
+                    <button onclick="closeSearch()" class="text-gray-400 hover:text-white p-2 hover:bg-gray-800 rounded-lg transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="search-container w-full">
+                    <input type="text" id="search-input" class="search-input w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Search posts..." oninput="performSearch(event)">
+                    <div id="search-results" class="search-results mt-4 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Main Content -->

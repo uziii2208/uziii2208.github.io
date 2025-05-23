@@ -24,30 +24,52 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Search functionality for desktop menu
+// Search functionality
 function toggleSearch() {
-    const searchContainer = document.getElementById('search-container');
-    const searchInput = document.getElementById('search-input');
-    
-    if (searchContainer.classList.contains('hidden')) {
-        searchContainer.classList.remove('hidden');
-        searchContainer.style.opacity = '0';
-        searchContainer.style.transform = 'translateY(-10px)';
-        
-        // Trigger reflow
-        searchContainer.offsetHeight;
-        
-        searchContainer.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        searchContainer.style.opacity = '1';
-        searchContainer.style.transform = 'translateY(0)';
-        searchInput.focus();
+    const searchOverlay = document.getElementById('search-overlay');
+    searchOverlay.classList.toggle('active');
+    if (searchOverlay.classList.contains('active')) {
+        document.getElementById('search-input').focus();
+        document.body.style.overflow = 'hidden';
     } else {
-        searchContainer.style.opacity = '0';
-        searchContainer.style.transform = 'translateY(-10px)';
-        setTimeout(() => {
-            searchContainer.classList.add('hidden');
-        }, 300);
+        document.body.style.overflow = '';
     }
+}
+
+function closeSearch() {
+    const searchOverlay = document.getElementById('search-overlay');
+    searchOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Close search when pressing Escape
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeSearch();
+    }
+});
+
+function performSearch(event) {
+    const searchInput = event.target;
+    const searchResults = document.getElementById('search-results');
+    const query = searchInput.value.toLowerCase();
+
+    if (query.length < 2) {
+        searchResults.innerHTML = '';
+        return;
+    }
+
+    // Example search results - Replace with your actual search logic
+    const results = [
+        { title: 'Sample Post 1', url: '/posts/sample-1' },
+        { title: 'Sample Post 2', url: '/posts/sample-2' }
+    ].filter(post => post.title.toLowerCase().includes(query));
+
+    searchResults.innerHTML = results.map(result => `
+        <a href="${result.url}" class="search-result-item block text-white hover:text-green-400">
+            <h4 class="font-medium">${result.title}</h4>
+        </a>
+    `).join('');
 }
 
 // Search functionality for mobile menu
