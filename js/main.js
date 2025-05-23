@@ -285,8 +285,87 @@ function populateSection(sectionId, sectionData) {
 // Mobile menu toggle
 function toggleMobileMenu() {
     const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenu.classList.toggle('hidden');
+    const body = document.body;
+    
+    if (mobileMenu.classList.contains('hidden')) {
+        // Show menu
+        mobileMenu.classList.remove('hidden');
+        // Trigger reflow
+        mobileMenu.offsetHeight;
+        // Add active class for animations
+        mobileMenu.classList.add('active');
+        // Prevent body scroll
+        body.style.overflow = 'hidden';
+    } else {
+        // Hide menu
+        mobileMenu.classList.remove('active');
+        // Wait for animations to finish
+        setTimeout(() => {
+            mobileMenu.classList.add('hidden');
+            // Restore body scroll
+            body.style.overflow = '';
+        }, 300);
+    }
 }
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuContent = mobileMenu.querySelector('.relative');
+    const menuButton = document.querySelector('.md\\:hidden button');
+    
+    if (!mobileMenu.classList.contains('hidden') && 
+        !menuContent.contains(event.target) && 
+        !menuButton.contains(event.target)) {
+        toggleMobileMenu();
+    }
+});
+
+// Visit counter management
+function showVisitCount() {
+    // Get current visit count from localStorage
+    let visitCount = parseInt(localStorage.getItem('visitCount')) || 0;
+    
+    // Create or update the notification element
+    let notification = document.getElementById('visit-notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'visit-notification';
+        notification.className = 'fixed bottom-4 right-4 bg-gray-900 text-green-400 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 z-50 border border-green-400';
+        document.body.appendChild(notification);
+    }
+    
+    // Update notification content with animation
+    notification.style.transform = 'translateY(100px)';
+    notification.style.opacity = '0';
+    
+    setTimeout(() => {
+        notification.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                <span class="font-semibold">Total Visits: ${visitCount}</span>
+            </div>
+        `;
+        notification.style.transform = 'translateY(0)';
+        notification.style.opacity = '1';
+    }, 100);
+    
+    // Auto hide notification after 3 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateY(100px)';
+        notification.style.opacity = '0';
+    }, 3000);
+}
+
+// Initialize visit counter
+document.addEventListener('DOMContentLoaded', () => {
+    let visitCount = parseInt(localStorage.getItem('visitCount')) || 0;
+    visitCount++;
+    localStorage.setItem('visitCount', visitCount);
+});
 
 // Initialize content when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -296,4 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
             populateSection(section, sections[section]);
         }
     });
+    
+    updatePageLanguage();
 });
