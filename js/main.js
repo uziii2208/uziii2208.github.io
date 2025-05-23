@@ -321,11 +321,41 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Visit counter management
-function showVisitCount() {
-    // Get current visit count from localStorage
-    let visitCount = parseInt(localStorage.getItem('visitCount')) || 0;
-    
+// Global visit counter management using JSONBin.io
+const JSONBIN_BIN_ID = '6830526a8561e97a501a794f'; // You'll need to create this
+const JSONBIN_API_KEY = '$2a$10$yqYY4dhZEFi5ieXrPmHYG.s91r.LgXC8qsGFRua9hQWzNQIjoGWkS'; // You'll need to create this
+
+async function incrementVisitCount() {
+    try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+            headers: {
+                'X-Master-Key': JSONBIN_API_KEY
+            }
+        });
+        const data = await response.json();
+        let count = data.record.count || 1631; // Start with 1631 if no count exists
+        
+        // Increment the count
+        count++;
+        
+        // Update the count in JSONBin
+        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_API_KEY
+            },
+            body: JSON.stringify({ count })
+        });
+        
+        return count;
+    } catch (error) {
+        console.error('Error updating visit count:', error);
+        return 1631; // Return default count if error occurs
+    }
+}
+
+async function showVisitCount() {
     // Create or update the notification element
     let notification = document.getElementById('visit-notification');
     if (!notification) {
@@ -335,23 +365,50 @@ function showVisitCount() {
         document.body.appendChild(notification);
     }
     
-    // Update notification content with animation
-    notification.style.transform = 'translateY(100px)';
-    notification.style.opacity = '0';
+    // Show loading state
+    notification.style.transform = 'translateY(0)';
+    notification.style.opacity = '1';
+    notification.innerHTML = `
+        <div class="flex items-center space-x-2">
+            <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Loading visit count...</span>
+        </div>
+    `;
     
-    setTimeout(() => {
+    try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+            headers: {
+                'X-Master-Key': JSONBIN_API_KEY
+            }
+        });
+        const data = await response.json();
+        const count = data.record.count || 1631;
+        
+        // Update notification content with animation
+        setTimeout(() => {
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    <span class="font-semibold">Total Global Visits: ${count.toLocaleString()}</span>
+                </div>
+            `;
+        }, 100);
+    } catch (error) {
         notification.innerHTML = `
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-2 text-red-400">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span class="font-semibold">Total Visits: ${visitCount}</span>
+                <span>Error loading visit count</span>
             </div>
         `;
-        notification.style.transform = 'translateY(0)';
-        notification.style.opacity = '1';
-    }, 100);
+    }
     
     // Auto hide notification after 3 seconds
     setTimeout(() => {
@@ -361,10 +418,8 @@ function showVisitCount() {
 }
 
 // Initialize visit counter
-document.addEventListener('DOMContentLoaded', () => {
-    let visitCount = parseInt(localStorage.getItem('visitCount')) || 0;
-    visitCount++;
-    localStorage.setItem('visitCount', visitCount);
+document.addEventListener('DOMContentLoaded', async () => {
+    await incrementVisitCount();
 });
 
 // Initialize content when DOM is loaded
