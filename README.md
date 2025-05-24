@@ -1,145 +1,65 @@
-# uziii2208.github.io
+# UZIII2208's Security Research Blog
 
-A serverless blog for a security engineer to share CTF write-ups and cybersecurity knowledge. Features a dark theme with green accents, inspired by https://benheater.com/ and https://4xura.com/.
+Personal cybersecurity blog focused on sharing CTF write-ups, penetration testing guides, and security insights. Features a sleek dark theme with neon green accents, optimized for readability and code presentation.
 
-## Features
+## What's Inside
 
-- Responsive design with dark/light theme toggle
-- Six main sections: About Me, HackTheBox, TryHackMe, Blogs, Contact, and Complaints
-- Integration with Notion for content management
-- Serverless contact forms using Formspree
-- Modern UI with TailwindCSS and JetBrains Mono font
+🎯 **Content Focus**
+- HackTheBox machine write-ups and walkthroughs
+- TryHackMe room solutions with detailed explanations
+- In-depth security blog posts on:
+  - Web vulnerabilities
+  - Privilege escalation techniques
+  - CTF tips and guides
+  - Penetration testing lab setup
 
-## Setup Instructions
+🎨 **Key Features**
+- Dark/Light theme toggle for comfortable reading
+- Global visit counter
+- Integrated search functionality
+- Mobile-friendly responsive design
+- Code syntax highlighting with JetBrains Mono font
+- Real-time contact forms
 
-1. Create a GitHub repository:
-   ```bash
-   git clone https://github.com/uziii2208/uziii2208.github.io.git
-   cd uziii2208.github.io
-   ```
+## Blog Structure
 
-2. Set up Formspree integration:
-   - Sign up at https://formspree.io/
-   - Create two new forms (one for Contact, one for Complaints)
-   - Replace `{FORM_ID}` in `pages/contact.html` and `pages/complaints.html` with your form IDs
-
-3. Export content from Notion:
-   - In Notion, navigate to the page you want to export
-   - Click "..." > Export > HTML
-   - Convert the exported HTML to match the site's styling:
-     - Add the standard navigation bar from other pages
-     - Add TailwindCSS and custom styles
-     - Include metadata in `<meta>` tags
-   - Place the converted files in the appropriate folders:
-     - HackTheBox write-ups: `content/hackthebox/`
-     - TryHackMe write-ups: `content/tryhackme/`
-     - Blog posts: `content/blogs/`
-
-4. Update post metadata:
-   - Open `js/main.js`
-   - Add new posts to the appropriate section in the `sections` object
-   - Include title, excerpt, URL, and date for each post
-
-5. Deploy to GitHub Pages:
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   ```
-
-6. Enable GitHub Pages:
-   - Go to repository Settings > Pages
-   - Set source branch to `main`
-   - Save changes
-   - Your site will be available at `https://uziii2208.github.io`
-
-## Development
-
-### Local Development
-1. Install a local web server (e.g., Live Server VS Code extension)
-2. Preview changes locally before pushing to GitHub
-
-### File Structure
 ```
-uziii2208.github.io/
-├── index.html
-├── css/
-│   └── styles.css
-├── js/
-│   └── main.js
-├── pages/
-│   ├── about.html
-│   ├── hackthebox.html
-│   ├── tryhackme.html
-│   ├── blogs.html
-│   ├── contact.html
-│   └── complaints.html
-├── content/
-│   ├── hackthebox/
-│   ├── tryhackme/
-│   └── blogs/
-└── assets/
+📦 Content Categories
+├── 🎯 HackTheBox Write-ups
+│   ├── Puppy (Season 8)
+│   ├── WhiteRabbit (Season 7)
+│   ├── DarkCorp (Season 7)
+│   └── More machines...
+├── 🎮 TryHackMe Guides
+│   └── Various room solutions
+└── 📚 Security Blog Posts
+    ├── Introduction to CTF
+    ├── Web Vulnerabilities Guide
+    ├── Pentesting Lab Setup
+    └── More security topics...
 ```
 
-### Adding New Content
-1. Export content from Notion as HTML
-2. Convert to match site styling:
-   ```html
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>Post Title - Section</title>
-       <meta name="description" content="Post description">
-       <meta name="date" content="YYYY-MM-DD">
-       <meta name="author" content="UZIII">
-       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-       <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-       <link href="../../css/styles.css" rel="stylesheet">
-   </head>
-   <body>
-       <!-- Copy navigation from another post -->
-       <!-- Add your content here -->
-       <!-- Copy footer from another post -->
-   </body>
-   </html>
-   ```
-3. Update metadata in `js/main.js`
-4. Commit and push changes
+## Tech Stack
 
-## Customization
+- **Frontend**: HTML5, TailwindCSS, JavaScript
+- **Styling**: Custom CSS with dark/light themes
+- **Typography**: JetBrains Mono for code blocks
+- **Forms**: Formspree for serverless form handling
+- **Hosting**: GitHub Pages
 
-### Theme Colors
-- Edit colors in `css/styles.css`
-- Default theme uses:
-  - Background: `bg-gray-900`
-  - Text: `text-gray-100`
-  - Accents: `text-green-400`
+## Quick Start
 
-### Typography
-- Site uses JetBrains Mono font
-- To change, update font in `css/styles.css` and font import in HTML files
-
-### Layout
-- Built with TailwindCSS utility classes
-- Responsive design with mobile-first approach
-- Edit classes in HTML files to modify layout
-
-## Contributing
-
-1. Fork the repository
-2. Create a new branch: `git checkout -b feature-name`
-3. Make changes and commit: `git commit -m "Add feature"`
-4. Push to the branch: `git push origin feature-name`
-5. Submit a pull request
-
-## License
-
-This project is open source and available under the MIT License.
+1. Visit the blog: [https://uziii2208.github.io](https://uziii2208.github.io)
+2. Navigate through sections using the top navigation
+3. Use the search feature to find specific content
+4. Toggle dark/light theme as needed
+5. Check the visit counter for site statistics
 
 ## Contact
 
-For questions or issues:
 - Use the Contact form on the website
-- Submit an issue on GitHub
+- Visit my GitHub: [github.com/uziii2208](https://github.com/uziii2208)
+
+## License
+
+Copyright © 2025 UZIII2208. All rights reserved.
