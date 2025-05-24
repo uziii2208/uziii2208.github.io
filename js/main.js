@@ -261,25 +261,25 @@ const sections = {
         {
             title: "Why I Love HackTheBox and TryHackMe",
             excerpt: "Personal journey and experiences with popular cybersecurity learning platforms.",
-            url: "/content/blogs/post2.html",
+            url: "/content/blogs/why-i-love-htb-and-tryhackme/why-i-love-htb-and-tryhackme.html",
             date: "2023-05-20"
         },
         {
             title: "Setting Up Your Pentesting Lab",
             excerpt: "Step-by-step guide to creating a secure and effective penetration testing environment.",
-            url: "/content/blogs/post3.html",
+            url: "/content/blogs/setting-up-your-pentesting-lab/setting-up-your-pentesting-lab.html",
             date: "2023-07-11"
         },
         {
             title: "Common Web Vulnerabilities Explained",
             excerpt: "Deep dive into OWASP Top 10 and other critical web security vulnerabilities.",
-            url: "/content/blogs/post4.html",
+            url: "/content/blogs/common-web-vulnerabilities/common-web-vulnerabilities.html",
             date: "2023-05-20"
         },
         {
             title: "Privilege Escalation Techniques",
             excerpt: "Comprehensive guide to Linux and Windows privilege escalation methods.",
-            url: "/content/blogs/post5.html",
+            url: "/content/blogs/privilege-escalation-techniques/privilege-escalation-techniques.html",
             date: "2023-05-01"
         }
     ]
