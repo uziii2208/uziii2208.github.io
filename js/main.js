@@ -177,6 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
 const sections = {
     hackthebox: [
         { 
+            title: "Fluffy: Easy - HackTheBox Season 8",
+            excerpt: "Fluffy, an easy-difficulty Windows machine, simulates an Active Directory Certificate Services (ADCS) environment, ideal for practicing enumeration, certificate-based exploitation, and privilege escalation skills.",
+            url: "/content/hackthebox/fluffy/fluffy_htb_ss8.html",
+            date: "2025-05-25"
+        },
+        { 
             title: "Puppy: Medium - HackTheBox Season 8",
             excerpt: "Puppy, a medium-difficulty Windows machine, simulates a realistic Active Directory environment for testing web exploitation and privilege escalation skills.",
             url: "/content/hackthebox/puppy/puppy_htb_ss8.html",
@@ -246,6 +252,12 @@ const sections = {
         }
     ],
     blogs: [
+        {
+            title: "Venice.ai: The Unshackled Muse of Code and Chaos",
+            excerpt: "Venice.ai’s promise of uncensored AI and privacy-first design is turning heads, allowing users to generate content and code without typical ethical filters.",
+            url: "/content/blogs/venice-ai-the-unshackled-muse-of-code-and-chaos/venice-ai-the-unshackled-muse-of-code-and-chaos.html",
+            date: "2025-05-24"
+        },
         {
             title: "Introduction to CTF: Tips for Beginners",
             excerpt: "Essential tips and resources for those starting their journey in CTF competitions.",

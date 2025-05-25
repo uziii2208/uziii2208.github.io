@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" sizes="144x144" href="../../../favicon/apple-icon-144x144.png">
     <link rel="apple-touch-icon" sizes="152x152" href="../../../favicon/apple-icon-152x152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../../../favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="../../../favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="../../../favicon/android-icon-192x192.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../../../favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="../../../favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../../../favicon/favicon-16x16.png">
@@ -20,9 +20,9 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="../../../favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <title>Privilege Escalation Techniques - Security Blog</title>
-    <meta name="description" content="Comprehensive guide to Linux and Windows privilege escalation methods.">
-    <meta name="date" content="2023-05-01">
+    <title>Machine: Fluffy - HackTheBox Season 8 Write-up</title>
+    <meta name="description" content="Fluffy, an easy-difficulty Windows machine, simulates an Active Directory Certificate Services (ADCS) environment, ideal for practicing enumeration, certificate-based exploitation, and privilege escalation skills.">
+    <meta name="date" content="2025-05-25">
     <meta name="author" content="UZIII2208">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -165,139 +165,60 @@
     <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
         <article class="max-w-4xl mx-auto py-16 fade-in">
             <header class="mb-12">
-                <img src="https://www.adminbyrequest.com/wp-content/uploads/elementor/thumbs/fortify-your-qzg1r17a2gjr4c14r8krmrxsmfom4yn31ju84bwj9a.png" alt="PrivEsc Banner" class="rounded-lg shadow-lg mb-6">
-                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Privilege Escalation Techniques</h1>
+                <img src="../fluffy/fluffy_htb.png" alt="Fluffy Banner" class="rounded-lg shadow-lg mb-6">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Fluffy: Easy - HackTheBox Season 8</h1>
                 <div class="flex items-center space-x-4 text-gray-400">
-                    <time datetime="2023-05-01">May 1, 2023</time>
+                    <time datetime="2025-05-25">May 25, 2025</time>
                     <span>•</span>
-                    <span>Security Blog</span>
+                    <span>HackTheBox</span>
                 </div>
             </header>
 
             <div class="prose prose-lg prose-invert max-w-none">
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Introduction</h2>
-                <p>Privilege escalation is a critical phase in penetration testing and security assessments. This comprehensive guide covers various techniques for both Linux and Windows systems, helping security professionals identify and exploit privilege escalation vectors.</p>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Information</h2>
+                <table class="w-full border-collapse border border-gray-700 mb-6">
+                  <thead>
+                    <tr class="bg-gray-800">
+                      <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">General Information</strong></th>
+                      <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">IP Address: xx.xx.xx.xx</strong></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Operating System (Distribution)</td>
+                      <td class="border border-gray-700 p-2">Microsoft Windows Server 2022 Standard</td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Kernel OS Version</td>
+                      <td class="border border-gray-700 p-2">10.0.20348 N/A Build 20348</td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Web Server Software and Version</td>
+                      <td class="border border-gray-700 p-2">Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Available Ports</td>
+                      <td class="border border-gray-700 p-2">53, 88, 111, 135, 139, 389, 445, 464, 593, 636, 2049, 3260, 3268, 3269, 5985, 9389, 49667, 49677, 49678</td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-700 p-2">Known Exploited Vulnerabilities</td>
+                      <td class="border border-gray-700 p-2">CVE-2025-2****</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Linux Privilege Escalation</h2>
-                
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Report Content Characteristics</h2>
                 <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                    <h3 class="text-xl text-green-400 mb-4">1. SUID/SGID Binaries</h3>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code># Find SUID binaries
-find / -perm -u=s -type f 2>/dev/null
-
-# Find SGID binaries
-find / -perm -g=s -type f 2>/dev/null</code></pre>
-                    <p class="text-gray-400 mt-4">Common SUID binaries to check:</p>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li class="text-gray-400">nmap (older versions)</li>
-                        <li class="text-gray-400">vim/vi</li>
-                        <li class="text-gray-400">find</li>
-                        <li class="text-gray-400">bash</li>
-                    </ul>
+                <blockquote>
+                <li class="text-gray-400">I have explained in detail every task I performed in each
+                step, accompanied by screenshots and the exploits used.</li>
+                <li class="text-gray-400">The full write-up <strong class="text-yellow-400">will be made public after machine retire</strong> to
+ensure transparency with <strong class="text-green-400">HackTheBox policies</strong>. <strong class="text-red-400">Please read carefully
+before commenting, I’m not responsible for any issues that arise</strong>. If you
+want to ask something, <strong class="text-green-400"><a href="/pages/contact.html">Contact Here</a></strong>!</li>
+                </blockquote> 
                 </div>
 
-                <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                    <h3 class="text-xl text-green-400 mb-4">2. Sudo Misconfigurations</h3>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code># List sudo privileges
-sudo -l
-
-# Check for sudo version
-sudo -V</code></pre>
-                    <p class="text-gray-400 mt-4">Common sudo exploitation scenarios:</p>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li class="text-gray-400">LD_PRELOAD exploitation</li>
-                        <li class="text-gray-400">Shell escaping</li>
-                        <li class="text-gray-400">Environment variable manipulation</li>
-                    </ul>
-                </div>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Windows Privilege Escalation</h2>
-
-                <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                    <h3 class="text-xl text-green-400 mb-4">1. Service Misconfigurations</h3>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code># Check service permissions
-accesschk.exe -uwcqv "Authenticated Users" *
-
-# Query service configuration
-sc qc [ServiceName]</code></pre>
-                    <p class="text-gray-400 mt-4">Key areas to check:</p>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li class="text-gray-400">Unquoted service paths</li>
-                        <li class="text-gray-400">Weak service permissions</li>
-                        <li class="text-gray-400">Registry permissions</li>
-                    </ul>
-                </div>
-
-                <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                    <h3 class="text-xl text-green-400 mb-4">2. Automated Enumeration Tools</h3>
-                    <p class="text-gray-400">Essential tools for privilege escalation:</p>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li class="text-gray-400">LinPEAS/WinPEAS</li>
-                        <li class="text-gray-400">Linux Smart Enumeration (LSE)</li>
-                        <li class="text-gray-400">PowerUp.ps1</li>
-                        <li class="text-gray-400">Windows-Exploit-Suggester</li>
-                    </ul>
-                </div>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Kernel Exploits</h2>
-                <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                    <h3 class="text-xl text-green-400 mb-4">Identifying Kernel Vulnerabilities</h3>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code># Linux kernel version
-uname -a
-
-# Windows system info
-systeminfo</code></pre>
-                    <p class="text-gray-400 mt-4">Key considerations:</p>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li class="text-gray-400">Check for known exploits</li>
-                        <li class="text-gray-400">Verify patch levels</li>
-                        <li class="text-gray-400">Test in similar environment first</li>
-                    </ul>
-                </div>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Password Hunting</h2>
-                <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                    <h3 class="text-xl text-green-400 mb-4">Common Password Locations</h3>
-                    <h4 class="text-lg text-green-400 mb-2">Linux:</h4>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li class="text-gray-400">/etc/shadow</li>
-                        <li class="text-gray-400">Configuration files</li>
-                        <li class="text-gray-400">History files</li>
-                        <li class="text-gray-400">Database configuration files</li>
-                    </ul>
-                    <h4 class="text-lg text-green-400 mt-4 mb-2">Windows:</h4>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li class="text-gray-400">Registry</li>
-                        <li class="text-gray-400">Unattend.xml files</li>
-                        <li class="text-gray-400">Group Policy Preferences</li>
-                        <li class="text-gray-400">Application config files</li>
-                    </ul>
-                </div>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Network Service Exploitation</h2>
-                <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                    <h3 class="text-xl text-green-400 mb-4">Common Vectors</h3>
-                    <ol class="list-decimal list-inside space-y-4">
-                        <li class="text-gray-400">Internal service vulnerabilities</li>
-                        <li class="text-gray-400">Weak service credentials</li>
-                        <li class="text-gray-400">Port forwarding opportunities</li>
-                        <li class="text-gray-400">Network shares misconfiguration</li>
-                    </ol>
-                </div>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Best Practices and Methodology</h2>
-                <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                    <h3 class="text-xl text-green-400 mb-4">Systematic Approach</h3>
-                    <ol class="list-decimal list-inside space-y-4">
-                        <li class="text-gray-400"><strong class="text-green-400">Enumeration</strong>: Thorough system information gathering</li>
-                        <li class="text-gray-400"><strong class="text-green-400">Research</strong>: Identifying potential vulnerabilities</li>
-                        <li class="text-gray-400"><strong class="text-green-400">Exploitation</strong>: Careful testing of privilege escalation vectors</li>
-                        <li class="text-gray-400"><strong class="text-green-400">Documentation</strong>: Detailed recording of findings and methods</li>
-                    </ol>
-                </div>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Conclusion</h2>
-                <p>Privilege escalation is a complex but crucial aspect of security testing. Success requires a methodical approach, thorough enumeration, and careful exploitation of identified vulnerabilities. Always ensure you have proper authorization before attempting any privilege escalation techniques.</p>
             </div>
         </article>
     </main>

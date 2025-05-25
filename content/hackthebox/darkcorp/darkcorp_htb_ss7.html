@@ -178,7 +178,9 @@
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Information</h2>
                 <li>Although it is supposed to be a <strong class="text-yellow-400">Windows machine</strong> , the scan looks very much like <strong class="text-red-400">Linux</strong>. This is because a <strong class="text-green-400">type of container is
 running on the IP xx.xx.xx.xx</strong>.</li>
-                <li>This's a <strong class="text-red-400">freakin machine is both insanely tough and hands down my favorite of Season 7! Don't make me dissappoint, i don't want you do some scripts kiddie with this writeup, pls!!!</strong></li>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                <p><strong class="text-red-400">This's a freakin machine is both insanely tough and hands down my favorite of Season 7! Don't make me dissappoint, i don't want you do some scripts kiddie with this writeup, pls!!!</strong></p>
+                </div>
                 <table class="w-full border-collapse border border-gray-700 mb-6">
                   <thead>
                     <tr class="bg-gray-800">
@@ -207,103 +209,16 @@ running on the IP xx.xx.xx.xx</strong>.</li>
                 </table>
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Report Content Characteristics</h2>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
                 <blockquote>
-                <li>I have explained in detail every task I performed in each
+                <li class="text-gray-400">I have explained in detail every task I performed in each
                 step, accompanied by screenshots and the exploits used.</li>
-                <li>The full write-up <strong class="text-yellow-400">will be made public after Season 8 ends</strong> to
+                <li class="text-gray-400">The full write-up <strong class="text-yellow-400">will be made public after machine retire</strong> to
 ensure transparency with <strong class="text-green-400">HackTheBox policies</strong>. <strong class="text-red-400">Please read carefully
 before commenting, I’m not responsible for any issues that arise</strong>. If you
 want to ask something, <strong class="text-green-400"><a href="/pages/contact.html">Contact Here</a></strong>!</li>
-                </blockquote>
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Enumeration</h2>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
-└─$ nmap -p 1-65535 -T4 -A -v xx.xx.xx.xx
-Starting Nmap (version unknown) at an unspecified date and time
-Command: nmap -p 1-65535 -T4 -A -v xx.xx.xx.xx
-
-Nmap scan report for drip.htb (xx.xx.xx.xx)
-Host is up (0.063s latency).
-
-Not shown: 65533 filtered tcp ports (no-response)
-
-PORT     STATE SERVICE VERSION
-22/tcp   open  ssh     OpenSSH 9.2p1 Debian 2+deb12u3 (protocol 2.0)
-| ssh-hostkey: 
-|   256 33:41:ed:0a:a5:1a:86:d0:cc:2a:a6:2b:8d:8d:b2:ad (ECDSA)
-|   256 04:ad:7e:ba:11:0e:62:0f:b0:80:d3:24:c2:3e:2c:c5 (ED25519)
-80/tcp   open  http    nginx 1.22.1
-|_http-server-header: nginx/1.22.1
-|_http-favicon: Unknown favicon MD5: B0F964065616CFF6D415ASEDCF430B97
-|_http-methods: GET OPTIONS HEAD
-|_http-title: DripyMail
-| Requested resource was INDEX
-
-WARNING: OSSCAN results may be unreliable because we could not find at least 1 open and 1 closed port
-No OS matches for host
-Uptime guess: 0.003 days (since Tue Apr 1 13:16:18 2025)
-
-Network Distance: 2 hops
-TCP Sequence Prediction: Difficulty=254 (Good luck!)
-IP ID Sequence Generation: Incremental
-
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-TRACEROUTE (using port 80/tcp)
-HOP RTT       ADDRESS
-1   101.84 ms xx.xx.xx.xx
-2   101.89 ms drip.htb (xx.xx.xx.xx)
-
-Nmap done: 1 IP address (1 host up) scanned in an unspecified duration</code></pre>
-
-                <li>Add <strong class="text-green-400">xx.xx.xx.xx</strong> and <strong class="text-green-400">drip.htb</strong> (domain name and domain controller) to the <strong class="text-green-400">/etc/hosts</strong> file.</li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
-└─$ echo "xx.xx.xx.xx drip.htb" | sudo tee -a /etc/hosts > /dev/null
-xx.xx.xx.xx drip.htb</code></pre>
-
-                <li>We go to <a href="http://drip.htb"><strong class="text-green-400">http://drip.htb</strong></a> (as seen in the <strong class="text-green-400">nmap</strong> scan) and see a mail application.</li>
-                <li>We <strong class="text-green-400">register</strong> a new <strong class="text-green-400">user</strong>.</li>
-                <img src="image_1.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6">
-                <li>We <strong class="text-green-400">register</strong> user <strong class="text-green-400">test</strong> with password=<strong class="text-green-400">1234</strong>.</li>
-                <li>We check our <strong class="text-green-400">mails</strong> and examine the <strong class="text-green-400">header</strong>. There, the domain <strong class="text-green-400">drip.darkcorp.htb</strong> is visible</li>
-                <li>We add <strong class="text-green-400">xx.xx.xx.xx drip.darkcorp.htb</strong> to the hostfile.</li>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-gray-400">┌──(meow㉿uziii2208)-[~]
-└─$ echo "xx.xx.xx.xx drip.darkcorp.htb" | sudo tee -a /etc/hosts > /dev/null
-xx.xx.xx.xx drip.htb drip.darkcorp.htb</code></pre>
-                <li>Back to <strong class="text-green-400">DripMail</strong>: </li>
-                <img src="image_2.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6">
-                <img src="image_3.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6">
-                <li>When we click on the <strong class="text-green-400">Help button</strong> , we see that <strong class="text-green-400">Roundcube Webmail 1.6.7</strong> is running.</li>
-                <div class="flex justify-center">
-                  <img src="image_4.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6 mx-auto">
-                </div>
-                <img src="image_5.png" alt="DarkCorp Guide" class="rounded-lg shadow-lg mb-6">
-                <li>Now we go to <strong class="text-green-400">http://drip.htb/index#contact</strong> and fill out the <strong class="text-green-400">Contact Us</strong> form with the details of our <strong class="text-green-400">created</strong> user <strong class="text-green-400">test
-email=test@drip.htb</strong>.</li>
-                <p><strong class="text-yellow-400">Coming soon...</strong></p>
-
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Web Application Exploitation</h2>
-                <p><strong class="text-yellow-400">Coming soon...</strong></p>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial Foothold</h2>
-                <p><strong class="text-yellow-400">Coming soon...</strong></p>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Privilege Escalation via Vulnerable Driver</h2>
-                <p><strong class="text-yellow-400">Coming soon...</strong></p>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Active Directory Compromise</h2>
-                <p><strong class="text-yellow-400">Coming soon...</strong></p>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Kernel Exploitation & Mitigation Bypass</h2>
-                <p><strong class="text-yellow-400">Coming soon...</strong></p>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Flags Found</h2>
-                <ol class="list-decimal list-inside space-y-4">
-                    
-                    <li><strong>User flag :</strong> <strong class="text-red-400">na4******************************</strong></li>
-                    <li><strong>Root flag :</strong> <strong class="text-red-400">4p7******************************</strong></li>
-                    <p>Note: <strong class="text-red-400">Flags in all HTB machines are dynamic flags. It is strictly prohibited to dump flags or copy and paste flags blindly. If you try this, you are genuinely foolish!!!</strong></p>
-                </ol>
+                </blockquote> 
+                </div>             
             </div>
         </article>
     </main>
