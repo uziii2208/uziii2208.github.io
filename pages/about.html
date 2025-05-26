@@ -24,6 +24,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link href="../css/styles.css" rel="stylesheet">
+    <link href="../css/about.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
     <!-- Navigation -->
@@ -169,8 +170,8 @@
                             <div class="w-32 h-32 mx-auto rounded-full bg-green-400 flex items-center justify-center text-4xl font-bold text-gray-900 mb-4">
                                 <img src="../img/i_think_u_know_exactly_whut_im_doin_now.gif" alt="Profile Picture" class="rounded-full w-full h-full object-cover">
                             </div>
-                            <h2 class="text-2xl font-bold text-green-400 mb-2">Tong Hoang %@#</h2>
-                            <p class="text-gray-400 mb-4">Offensive Security</p>
+                            <h2 class="text-2xl font-bold text-green-400 mb-2">Hoang ###</h2>
+                            <p class="text-gray-400 mb-4">Security Engineer</p>
                             <div class="flex justify-center space-x-6">
                                 <a href="https://app.hackthebox.com/profile/2125051" class="text-gray-400 hover:text-green-400 flex items-center space-x-2 group transition-all duration-300">
                                     <span class="sr-only">HackTheBox</span>
@@ -208,61 +209,430 @@
 
                 <!-- Content Section -->
                 <div class="md:col-span-2">
-                    <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-8">About Me</h1>
+                    <h1 class="text-4xl md:text-6xl gradient-text font-bold mb-8 floating-element">About Me</h1>
                     
-                    <div class="space-y-8 text-lg">
-                        <p class="text-gray-300">I specialize in emulating real-world adversaries to help organizations strengthen their security posture. With over 4 years of hands-on experience in cybersecurity field, I've developed expertise in <span class="text-green-400">evading EDR solutions</span>, <span class="text-green-400">crafting custom C2 frameworks</span>, and <span class="text-green-400">designing sophisticated attack chains</span>.</p>
+                    <div class="space-y-12 text-lg">
+                        <!-- Introduction -->
+                        <div class="section-fade">
+                            <div class="modern-card rounded-xl p-8">
+                                <p class="text-gray-300 leading-relaxed">I specialize in emulating real-world adversaries to help organizations strengthen their security posture. With over 3 years of hands-on experience in cybersecurity field, I've developed expertise in 
+                                    <span class="skill-tag inline-block mr-2 mb-2">EDR evasion</span>
+                                    <span class="skill-tag inline-block mr-2 mb-2">C2 frameworks</span>
+                                    <span class="skill-tag inline-block mr-2 mb-2">attack chains</span>
+                                </p>
+                            </div>
+                        </div>
                         
-                        <div class="bg-gray-800 p-6 rounded-lg mt-6">
-                            <h2 class="text-2xl text-green-400 mb-4">Offensive Capabilities</h2>
-                            <ul class="list-disc list-inside space-y-3">
-                                <li class="text-gray-300">
-                                    <span class="text-green-400 font-semibold">Active Directory Exploitation:</span> Deep expertise in NTLM relay attacks, Kerberos exploitation (Golden/Silver tickets), and domain persistence techniques
-                                </li>
-                                <li class="text-gray-300">
-                                    <span class="text-green-400 font-semibold">Custom Malware Development:</span> Proficient in developing evasive payloads using Rust and C++, focusing on shellcode injection and EDR bypass techniques
-                                </li>
-                                <li class="text-gray-300">
-                                    <span class="text-green-400 font-semibold">Infrastructure Development:</span> Experience in building resilient C2 infrastructures using redirectors, domain fronting, and malleable C2 profiles
-                                </li>
-                                <li class="text-gray-300">
-                                    <span class="text-green-400 font-semibold">Post-Exploitation:</span> Advanced Windows/Linux privilege escalation, credential harvesting, and lateral movement techniques
-                                </li>
-                            </ul>
+                        <!-- A Little Experience Section -->
+                        <div class="section-fade">
+                            <h2 class="text-3xl gradient-text font-bold mb-8 flex items-center">
+                                <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" class="text-green-400"/>
+                                </svg>
+                                A little Experience
+                            </h2>
+                            
+                            <!-- Timeline Container -->
+                            <div class="timeline-container space-y-8">
+                                <!-- CTF Participant Role -->
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="modern-card rounded-xl p-6">
+                                        <div class="flex flex-col md:flex-row md:items-start gap-6">
+                                            <div class="md:w-1/3">
+                                                <h3 class="text-xl gradient-text font-bold">CTF Participant</h3>
+                                                <p class="text-gray-400 mt-2">Freelance</p>
+                                                <p class="text-gray-400">Jun 2023 - Now</p>
+                                            </div>
+                                            <div class="md:w-2/3">
+                                                <ul class="space-y-3 text-gray-300">
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Competed in top-tier CTF events like HackTheBox, NahamCon, and PicoCTF</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Mastered challenges in access control and authentication vulnerabilities</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Achieved breakthrough results in 2025, capturing multiple high-value flags</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Passionately stayed ahead of cybersecurity trends, fueling consistent growth</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                
+
+                                 <!-- Security Researcher Role -->
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="modern-card rounded-xl p-6">
+                                        <div class="flex flex-col md:flex-row md:items-start gap-6">
+                                            <div class="md:w-1/3">
+                                                <h3 class="text-xl gradient-text font-bold">Security Researcher</h3>
+                                                <p class="text-gray-400 mt-2">Freelance</p>
+                                                <p class="text-gray-400">Jun 2023 - Now</p>
+                                            </div>
+                                            <div class="md:w-2/3">
+                                                <ul class="space-y-3 text-gray-300">
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Active participation in bug bounty programs</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Specialized in access control and authentication vulnerabilities</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Successfully reported multiple security issues</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Maintained updated knowledge of security trends</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Security Engineer Role -->
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="modern-card rounded-xl p-6">
+                                        <div class="flex flex-col md:flex-row md:items-start gap-6">
+                                            <div class="md:w-1/3">
+                                                <h3 class="text-xl gradient-text font-bold">Security Engineer</h3>
+                                                <p class="text-gray-400 mt-2">Contract</p>
+                                                <p class="text-gray-400">Oct 2023 - Now</p>
+                                            </div>
+                                            <div class="md:w-2/3">
+                                                <ul class="space-y-3 text-gray-300">
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Designed APT simulation campaigns following MITRE ATT&CK framework</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Developed proprietary attack tools to circumvent AV/EDR detection</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Created advanced crypter/loaders for memory-only execution</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Led "assumed breach" campaigns for Blue Team evaluation</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Implemented custom payloads with anti-forensics capabilities</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Adversary Simulation Role -->
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="modern-card rounded-xl p-6">
+                                        <div class="flex flex-col md:flex-row md:items-start gap-6">
+                                            <div class="md:w-1/3">
+                                                <h3 class="text-xl gradient-text font-bold">Adversary Simulation</h3>
+                                                <p class="text-gray-400 mt-2">Contract</p>
+                                                <p class="text-gray-400">Oct 2024 - Now</p>
+                                            </div>
+                                            <div class="md:w-2/3">
+                                                <ul class="space-y-3 text-gray-300">
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Developed custom malware with stealth remote capabilities</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Designed dedicated loaders utilizing deep obfuscation techniques</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Integrated stealth GUI access modules similar to HVNC</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Conducted extensive anti-sandbox and anti-analysis research</span>
+                                                    </li>
+                                                    <li class="flex items-start">
+                                                        <svg class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span>Led research in offensive evasion tactics</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="bg-gray-800 p-6 rounded-lg mt-6">
-                            <h2 class="text-2xl text-green-400 mb-4">Advanced Training & Certifications</h2>
-                            <ul class="list-disc list-inside space-y-3">
-                                <li class="text-gray-300">
-                                    <span class="text-green-400"><a href="https://eu.badgr.com/public/assertions/B15X3Nb5TgaphN0epdKnbg"><strong>Zero-Point Security - Red Team Operator (CRTO)</strong></a></span><br>
-                                    <span class="text-sm text-gray-400">Specialized in advanced adversary simulation and evasion techniques</span>
-                                </li>
-                                <li class="text-gray-300">
-                                    <span class="text-green-400"><a href="https://assets.tryhackme.com/certification-certificate/67decfb34c9e7365c8575fe0.pdf"><strong>TryHackMe - Security Analyst (SAL1) Certificate</strong></a></span><br>
-                                    <span class="text-sm text-gray-400">Foundational Cybersecurity Analysis and Threat Response</span>
-                                </li>
-                                <li class="text-gray-300">
-                                    <span class="text-green-400"><a href="https://www.credential.net/733af39c-99c4-4722-aec7-d116bcbdaeb5"><strong>Cyberwarfare Labs - Certified Red Team Analyst [CRTA]</strong></a></span><br>
-                                    <span class="text-sm text-gray-400">Focused on real-world TTPs and adversary emulation</span>
-                                </li>
-                                <li class="text-gray-300">
-                                    <span class="text-green-400"><a href="https://www.hackthebox.com/certificates"><strong>HackTheBox - Certified Penetration Testing Specialist (HTB CPTS)</strong></a></span><br>
-                                    <span class="text-sm text-gray-400">Mastery in advanced penetration testing methodologies</span>
-                                </li>
-                            </ul>
+                        <!-- Education Section -->
+                        <div class="section-fade mt-16">
+                            <h2 class="text-3xl gradient-text font-bold mb-8 flex items-center">
+                                <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" class="text-green-400"/>
+                                </svg>
+                                Education
+                            </h2>
+                            <div class="modern-card rounded-xl p-6">
+                                <div class="flex flex-col md:flex-row md:items-start gap-6">
+                                    <div class="md:w-1/3">
+                                        <h3 class="text-xl text-green-400 font-bold">Ho Chi Minh City University of Industry and Trade (HUIT)</h3>
+                                        <p class="text-gray-400">2021 - 2026</p>
+                                    </div>
+                                    <div class="md:w-2/3">
+                                        <p class="text-gray-300 font-semibold mb-3">Security of Network System - Engineer of Information Security</p>
+                                        <ul class="list-disc list-inside space-y-2 text-gray-300">
+                                            <li>Specialized in network security and information system protection</li>
+                                            <li>Focus on practical application of security principles</li>
+                                            <li>Advanced coursework in system administration and security architecture</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="bg-gray-800 p-6 rounded-lg">
-                            <h2 class="text-2xl text-green-400 mb-4">Achievements</h2>
-                            <ul class="list-disc list-inside space-y-2">
-                                <li class="text-gray-400">Top #54 - Cyber Apocalypse CTF 2025 | HackTheBox</li>
-                                <li class="text-gray-400">Top #82 - Hackfinity Battle CTF 2025 | TryHackMe</li>
-                            </ul>
+                        <!-- Offensive Capabilities Section -->
+                        <div class="section-fade">
+                            <h2 class="text-3xl gradient-text font-bold mb-8 flex items-center">
+                                <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" class="text-green-400"/>
+                                </svg>
+                                Offensive Capabilities
+                            </h2>
+                            <div class="modern-card rounded-xl p-6">
+                                <ul class="list-disc list-inside space-y-3 text-gray-300">
+                                    <li class="text-gray-300">
+                                        <span class="text-green-400 font-semibold">Active Directory Exploitation:</span> Deep expertise in NTLM relay attacks, Kerberos exploitation (Golden/Silver tickets), and domain persistence techniques
+                                    </li>
+                                    <li class="text-gray-300">
+                                        <span class="text-green-400 font-semibold">Custom Malware Development:</span> Proficient in developing evasive payloads using C# and C++, focusing on shellcode injection and EDR bypass techniques
+                                    </li>
+                                    <li class="text-gray-300">
+                                        <span class="text-green-400 font-semibold">Infrastructure Development:</span> Experience in building resilient C2 infrastructures using redirectors, domain fronting, and malleable C2 profiles
+                                    </li>
+                                    <li class="text-gray-300">
+                                        <span class="text-green-400 font-semibold">Post-Exploitation:</span> Advanced Windows/Linux privilege escalation, credential harvesting, and lateral movement techniques
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <p>Through this blog, I aim to share my knowledge and experiences in cybersecurity, particularly focusing on CTF challenges and practical security techniques. I believe in the power of community learning and hope my write-ups help others in their security journey.</p>
+                        <!-- Advanced Training & Certifications Section -->
+                        <div class="section-fade">
+                            <h2 class="text-3xl gradient-text font-bold mb-8 flex items-center">
+                                <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" class="text-green-400"/>
+                                </svg>
+                                Advanced Training & Certifications
+                            </h2>
+                            <div class="certs-container">
+                                <!-- OSED Certificate -->
+                                <div class="cert-card" data-index="0">
+                                    <div class="cert-title">OffSec Exploit Developer (OSED)</div>
+                                    <div class="cert-info">
+                                        <div>
+                                            <div class="cert-issuer">Offensive Security</div>
+                                            <div class="cert-date">Expected: **/**/****</div>
+                                        </div>
+                                        <div class="cert-rating">
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="cert-status in-progress">In Progress</div>
+                                </div>
 
+                                <!-- HTB CPTS Certificate -->
+                                <div class="cert-card" data-index="1">
+                                    <div class="cert-title">Penetration Testing Specialist (CPTS)</div>
+                                    <div class="cert-info">
+                                        <div>
+                                            <div class="cert-issuer">HackTheBox</div>
+                                            <div class="cert-date">Completed: 16/05/2025</div>
+                                        </div>
+                                        <div class="cert-rating">
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="cert-status completed">Completed</div>
+                                </div>
+
+                                <!-- CRTA Certificate -->
+                                <div class="cert-card" data-index="2">
+                                    <div class="cert-title">Certified Red Team Analyst (CRTA)</div>
+                                    <div class="cert-info">
+                                        <div>
+                                            <div class="cert-issuer">Cyberwarfare Labs</div>
+                                            <div class="cert-date">Completed: 24/03/2025</div>
+                                        </div>
+                                        <div class="cert-rating">
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="cert-status completed">Completed</div>
+                                </div>
+
+                                <!-- SAL1 Certificate -->
+                                <div class="cert-card" data-index="3">
+                                    <div class="cert-title">Security Analyst (SAL1) Certificate</div>
+                                    <div class="cert-info">
+                                        <div>
+                                            <div class="cert-issuer">TryHackMe</div>
+                                            <div class="cert-date">Completed: 22/03/2025</div>
+                                        </div>
+                                        <div class="cert-rating">
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star-empty">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="cert-status completed">Completed</div>
+                                </div>
+
+                                <!-- CRTO Certificate -->
+                                <div class="cert-card" data-index="4">
+                                    <div class="cert-title">Red Team Operator (CRTO)</div>
+                                    <div class="cert-info">
+                                        <div>
+                                            <div class="cert-issuer">Zero-Point Security</div>
+                                            <div class="cert-date">Completed: 09/10/2023</div>
+                                        </div>
+                                        <div class="cert-rating">
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="cert-status completed">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Achievements Section -->
+                        <div class="section-fade">
+                            <h2 class="text-3xl gradient-text font-bold mb-8 flex items-center">
+                                <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" class="text-green-400"/>
+                                </svg>
+                                Achievements
+                            </h2>
+                            <div class="ctfs-container">
+                                <!-- HTB Cyber Apocalypse CTF -->
+                                <div class="ctf-card" data-index="0">
+                                    <div class="ctf-title">Rank #54 - HTB Cyber Apocalypse CTF 2025</div>
+                                    <div class="ctf-info">
+                                        <div>
+                                            <div class="cert-issuer">HackTheBox</div>
+                                            <div class="cert-date">Expected: 26/03/2025</div>
+                                            <div class="cert-date">Participants: 18369</div>
+                                            <div class="cert-date">Style : Jeopardy</div>
+                                        </div>
+                                        <div class="ctf-rating">
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="ctf-status completed">Completed</div>
+                                </div>
+
+                                <!-- Hackfinity Battle CTF -->
+                                <div class="ctf-card" data-index="1">
+                                    <div class="ctf-title">Rank #80 - Hackfinity Battle CTF 2025</div>
+                                    <div class="ctf-info">
+                                        <div>
+                                            <div class="ctf-issuer">TryHackMe</div>
+                                            <div class="ctf-date">Completed: 20/03/2025</div>
+                                            <div class="cert-date">Teams: 4353</div>
+                                            <div class="cert-date">Style : Jeopardy</div>
+                                        </div>
+                                        <div class="ctf-rating">
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                            <span class="star">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="ctf-status completed">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Closing Statement -->
+                        <div class="section-fade">
+                            <div class="modern-card rounded-xl p-6">
+                                <p class="text-gray-300 leading-relaxed">Through this blog, I aim to share my knowledge and experiences in cybersecurity, particularly focusing on CTF challenges and practical security techniques. I believe in the power of community learning and hope my write-ups help others in their security journey.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -302,5 +672,71 @@
 
     <script src="../js/main.js"></script>
     <script type="module" src="../js/background.js"></script>
+    <script>
+        // Initialize Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        // Observe all timeline items and section fades
+        document.querySelectorAll('.timeline-item, .section-fade').forEach((item) => {
+            observer.observe(item);
+        });
+
+        // Certificate rotation logic
+        function initCertRotation() {
+            const cards = Array.from(document.querySelectorAll('.cert-card'));
+            let currentIndex = 0;
+            const totalCards = cards.length;
+
+            function updateCardClasses(index) {
+                cards.forEach((card, i) => {
+                    card.classList.remove('active', 'prev', 'next');
+                    if (i === index) {
+                        card.classList.add('active');
+                    } else if (i === (index - 1 + totalCards) % totalCards) {
+                        card.classList.add('prev');
+                    } else if (i === (index + 1) % totalCards) {
+                        card.classList.add('next');
+                    }
+                });
+            }
+
+            function rotateCards() {
+                currentIndex = (currentIndex + 1) % totalCards;
+                updateCardClasses(currentIndex);
+            }
+
+            // Initial setup
+            updateCardClasses(0);
+
+            // Start rotation
+            setInterval(rotateCards, 3000);
+
+            // Optional: Pause on hover
+            const container = document.querySelector('.certs-container');
+            let intervalId;
+
+            container.addEventListener('mouseenter', () => {
+                clearInterval(intervalId);
+            });
+
+            container.addEventListener('mouseleave', () => {
+                intervalId = setInterval(rotateCards, 3000);
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initCertRotation();
+        });
+    </script>
 </body>
 </html>
