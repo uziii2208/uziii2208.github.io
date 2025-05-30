@@ -221,34 +221,34 @@ const sections = {
     ],
     tryhackme: [
         {
-            title: "Room: Basic Pentesting - Web Enum Basics",
-            excerpt: "Essential web enumeration techniques for beginners in penetration testing.",
-            url: "/content/tryhackme/post1.html",
-            date: "2024-05-20"
+            title: "Takedown: Insane - TryHackMe Challenge Room",
+            excerpt: "We have reason to believe a corporate webserver has been compromised by RISOTTO GROUP. Cyber interdiction is authorized for this operation. Find their teamserver and take it down.",
+            url: "/content/tryhackme/thm_takedown/takedown.html",
+            date: "2025-05-31"
         },
         {
-            title: "Room: VulnNet - Active Directory Attacks",
-            excerpt: "Comprehensive guide to attacking and exploiting Active Directory environments.",
-            url: "/content/tryhackme/post2.html",
-            date: "2024-05-20"
+            title: "Crocc Crew: Insane - TryHackMe Challenge Room",
+            excerpt: "Crocc Crew has created a backdoor on a Cooctus Corp Domain Controller. We're calling in the experts to find the real back door!",
+            url: "/content/tryhackme/thm_crocc_crew/crocc_crew.html",
+            date: "2025-05-31"
         },
         {
-            title: "Room: Pickle Rick - Rickrolling Exploits",
-            excerpt: "Fun walkthrough of the Rick and Morty themed room with Linux privilege escalation.",
-            url: "/content/tryhackme/post3.html",
-            date: "2024-05-20"
+            title: "Theseus: Insane - TryHackMe Challenge Room",
+            excerpt: "The first installment of the SuitGuy series of very hard challenges.",
+            url: "/content/tryhackme/thm_theseus/theseus.html",
+            date: "2025-05-31"
         },
         {
-            title: "Room: Overpass - Password Cracking 101",
-            excerpt: "Introduction to password cracking techniques and tools.",
-            url: "/content/tryhackme/post4.html",
-            date: "2024-05-20"
+            title: "Osiris: Insane - TryHackMe Challenge Room",
+            excerpt: "Can you Quack it?",
+            url: "/content/tryhackme/thm_osiris/osiris.html",
+            date: "2025-05-31"
         },
         {
-            title: "Room: Blue - MS17-010 Walkthrough",
-            excerpt: "Detailed analysis of the EternalBlue exploit in a controlled environment.",
-            url: "/content/tryhackme/post5.html",
-            date: "2024-05-20"
+            title: "CCT2019: Insane - TryHackMe Challenge Room",
+            excerpt: "Legacy challenges from the US Navy Cyber Competition Team 2019 Assessment sponsored by US TENTH Fleet.",
+            url: "/content/tryhackme/thm_cct2019/cct2019.html",
+            date: "2025-05-31"
         }
     ],
     blogs: [

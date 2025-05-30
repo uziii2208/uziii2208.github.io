@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../../favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../../favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../../favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../../favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../../favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../../favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../../favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../../favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../../favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../../favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../favicon/favicon-16x16.png">
+    <link rel="manifest" href="../../../favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../../favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>Room: CCT2019 - TryHackMe Write-up</title>
+    <meta name="description"
+        content="A detailed walkthrough of the U.S. Navy Cyber Competition Team 2019 Assessment PCAP challenge">
+    <meta name="date" content="2025-05-31">
+    <meta name="author" content="UZIII2208">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="../../../css/styles.css" rel="stylesheet">
+</head>
+
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-green-400 hover:text-green-500 font-bold text-xl">UZIII2208</a>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="nav-link px-3 py-2">Home</a>
+                        <a href="/pages/about.html" class="nav-link px-3 py-2">About</a>
+                        <a href="/pages/blogs.html" class="nav-link px-3 py-2">Blogs</a>
+                        <a href="/pages/hackthebox.html" class="nav-link px-3 py-2">HackTheBox</a>
+                        <a href="/pages/tryhackme.html" class="nav-link px-3 py-2">TryHackMe</a>
+                        <a href="/pages/contact.html" class="nav-link px-3 py-2">Contact</a>
+                        <a href="/pages/complaints.html" class="nav-link px-3 py-2">Complaints</a>
+                        <div class="flex items-center space-x-4">
+                            <button onclick="toggleSearch()" class="theme-toggle search-button">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </button>
+                            <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                                </svg>
+                            </button>
+                            <button onclick="showVisitCount()" class="theme-toggle" id="visit-counter" title="Show Visit Count">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-50">
+            <!-- Backdrop with blur effect -->
+            <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="toggleMobileMenu()"></div>
+            <!-- Menu Content -->
+            <div class="relative h-full flex items-center justify-center" onclick="event.stopPropagation()">
+                <div class="bg-gray-900 rounded-lg shadow-xl p-6 m-4 max-w-sm w-full transform transition-all relative">
+                    <!-- Exit button -->
+                    <button onclick="toggleMobileMenu()" class="absolute top-2 right-2 text-gray-400 hover:text-white p-2 hover:bg-gray-800 rounded-lg transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    <div class="space-y-4 mt-6">
+                        <a href="/" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Home</a>
+                        <a href="/pages/about.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">About</a>
+                        <a href="/pages/blogs.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Blogs</a>
+                        <a href="/pages/hackthebox.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">HackTheBox</a>
+                        <a href="/pages/tryhackme.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">TryHackMe</a>
+                        <a href="/pages/contact.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Contact</a>
+                        <a href="/pages/complaints.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Complaints</a>
+                        <div class="flex items-center flex-col space-y-4 mt-6">
+                            <!-- Mobile Search Container -->
+                            <div id="mobile-search-container" class="search-container hidden fixed inset-0 z-50">
+                                <!-- Backdrop with blur effect -->
+                                <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="toggleMobileSearch()"></div>
+                                <!-- Search Content -->
+                                <div class="relative h-full flex items-center justify-center" onclick="event.stopPropagation()">
+                                    <div class="bg-gray-900 rounded-lg shadow-xl p-6 m-4 max-w-2xl w-full transform transition-all">
+                                        <div class="relative">
+                                            <input type="text" id="mobile-search-input" class="search-input w-full rounded-lg bg-gray-800 border-2 border-green-400 text-gray-100 pr-10" placeholder="Search posts..." oninput="performSearch(event)" autofocus>
+                                            <button onclick="toggleMobileSearch()" class="absolute right-2 top-2 text-gray-400 hover:text-white">
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div id="mobile-search-results" class="search-results hidden mt-4 max-h-96 overflow-y-auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-4">
+                                <button onclick="toggleMobileSearch()" class="theme-toggle search-button p-2 hover:bg-gray-800 rounded-lg">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="toggleTheme()" class="theme-toggle p-2 hover:bg-gray-800 rounded-lg">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="showVisitCount()" class="theme-toggle p-2 hover:bg-gray-800 rounded-lg" title="Show Visit Count">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Overlay -->
+    <div id="search-overlay" class="search-overlay fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-50">
+        <div class="absolute inset-0" onclick="closeSearch()"></div>
+        <div class="relative min-h-screen flex items-center justify-center">
+            <div class="bg-gray-900 rounded-lg shadow-xl p-6 m-4 max-w-2xl w-full transform transition-all">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-green-400">Search Posts</h3>
+                    <button onclick="closeSearch()" class="text-gray-400 hover:text-white p-2 hover:bg-gray-800 rounded-lg transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="search-container w-full">
+                    <input type="text" id="search-input" class="search-input w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Search posts..." oninput="performSearch(event)">
+                    <div id="search-results" class="search-results mt-4 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <article class="max-w-4xl mx-auto py-16 fade-in">
+            <header class="mb-12">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">CCT2019: Insane - TryHackMe Challenge Room</h1>
+                <div class="flex items-center space-x-4 text-gray-400">
+                    <time datetime="2025-05-31">May 31, 2025</time>
+                    <span>•</span>
+                    <span>TryHackMe</span>
+                    <span>•</span>
+                    <span class="text-red-400">Insane</span>
+                </div>
+            </header>
+
+            <div class="prose prose-lg prose-invert max-w-none">
+                <div class="mb-8">
+                    <img src="https://tryhackme-images.s3.amazonaws.com/room-icons/becbbab3e7f5a68d5e3af45c16ad133d.jpeg" alt="CCT2019 Challenge Banner" class="rounded-lg shadow-lg w-full">
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <h2 class="text-2xl text-green-400 mb-4">Challenge Overview</h2>
+                    <p class="mb-4">This challenge is part of the U.S. Navy Cyber Competition Team 2019 Assessment, sponsored by US TENTH Fleet. It focuses heavily on PCAP analysis and requires careful attention to detail to follow the breadcrumbs through multiple stages.</p>
+                    <div class="flex flex-wrap gap-4 mt-4">
+                        <span class="bg-gray-700 px-3 py-1 rounded">PCAP Analysis</span>
+                        <span class="bg-gray-700 px-3 py-1 rounded">USB Traffic</span>
+                        <span class="bg-gray-700 px-3 py-1 rounded">Network Forensics</span>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial PCAP Analysis</h2>
+                <p>The first step involved analyzing the USB traffic captured in the PCAP file:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~/Downloads/CCT2019]
+└─$ file pcap2.pcapng                          
+pcap2.pcapng: pcapng capture file - version 1.0
+
+File encapsulation USB packets with USBPcap header
+Number of packets 20
+Data size 2308 kB
+Start time 2019-07-21 02:39:27
+End time 2019-07-21 02:39:27
+Capture duration 0.114676 seconds</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">USB Data Extraction</h2>
+                <p>To extract the USB data, we used tshark with specific filters:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~/Downloads/CCT2019]
+└─$ tshark -r pcap2.pcapng -Y 'usb.capdata and usb.device_address==7' -T fields -e usb.capdata > raw</code></pre>
+
+                <div class="bg-yellow-900 bg-opacity-20 border-l-4 border-yellow-400 p-4 mb-8">
+                    <p class="text-yellow-200">When filtering USB data, focus on the 'Leftover Capture Data' field as it contains the crucial information we need.</p>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Data Transformation</h2>
+                <p>Converting the extracted hex data to binary:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~/Downloads/CCT2019/results/keepers]
+└─$ xxd -r -p raw output2.bin</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">ICMP Message Analysis</h2>
+                <p>Found hidden messages in ICMP packets using Wireshark filter:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>frame.len < 98 && icmp</code></pre>
+
+                <div class="bg-blue-900 bg-opacity-20 border-l-4 border-blue-400 p-4 mb-8">
+                    <h4 class="text-blue-400 mb-2">Key Messages Found:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>References to cryptcat and encryption</li>
+                        <li>Discussion about using metasploit port</li>
+                        <li>Mention of hash verification</li>
+                        <li>Reference to Angela Bennett (movie reference)</li>
+                    </ul>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Movie Reference Analysis</h2>
+                <p>A key piece of information referenced "The Net" movie:</p>
+                <div class="bg-gray-800 p-6 rounded-lg my-4">
+                    <p class="text-gray-300">Angela Bennett uses it to log into the Bethesda Naval Hospital</p>
+                    <p class="text-sm text-gray-500 mt-2">Reference: The Net (1995) - Plot Detail</p>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Image Analysis</h2>
+                <p>Found an interesting HTTP request:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>GET /analysis.php?id=e7e47ecfd72c324519c9a72239cd2b399aaafc4b.9686&fmt=card HTTP/1.1
+Host: fotoforensics.com</code></pre>
+
+                <div class="bg-green-900 bg-opacity-20 border-l-4 border-green-400 p-4 mb-8">
+                    <h4 class="text-green-400 mb-2">Key Findings:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>USB traffic analysis revealed hidden files</li>
+                        <li>ICMP packets contained conversation fragments</li>
+                        <li>Movie reference provided context for password/access</li>
+                        <li>Image metadata contained crucial RAR file data</li>
+                    </ul>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Step by Step Pwn This Challenge</h2>
+                <iframe src="tryhackme" class="w-full h-64 bg-gray-800 p-2 rounded-lg overflow-x-auto"></iframe>
+
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">About</h3>
+                    <p class="text-gray-400">Dedicated to sharing CTF solutions and cybersecurity insights.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/pages/blogs.html" class="text-gray-400 hover:text-green-400">Blog Posts</a></li>
+                        <li><a href="/pages/hackthebox.html" class="text-gray-400 hover:text-green-400">HackTheBox</a></li>
+                        <li><a href="/pages/tryhackme.html" class="text-gray-400 hover:text-green-400">TryHackMe</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Connect</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://github.com/UZIII2208" class="text-gray-400 hover:text-green-400">GitHub</a></li>
+                        <li><a href="/pages/contact.html" class="text-gray-400 hover:text-green-400">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 UZIII2208. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../js/main.js"></script>
+    <script type="module" src="../../../js/background.js"></script>
+</body>
+</html>

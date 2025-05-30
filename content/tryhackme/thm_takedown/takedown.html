@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" sizes="57x57" href="../../favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="../../favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="../../favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="../../favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="../../favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="../../favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="../../favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="../../favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="../../favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon/favicon-16x16.png">
-    <link rel="manifest" href="../../favicon/manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../../favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../../favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../../favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../../favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../../favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../../favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../../favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../../favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../../favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../../favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../favicon/favicon-16x16.png">
+    <link rel="manifest" href="../../../favicon/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="../../favicon/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="../../../favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <title>Room: Basic Pentesting - Web Enum Basics - TryHackMe Write-up</title>
-    <meta name="description" content="A comprehensive guide to basic web enumeration techniques from the TryHackMe Basic Pentesting room.">
-    <meta name="date" content="2025-05-20">
+    <title>Room: Takedown - TryHackMe Write-up</title>
+    <meta name="description"
+        content="An exciting cyber interdiction operation against the RISOTTO GROUP's compromised corporate webserver.">
+    <meta name="date" content="2025-05-31">
     <meta name="author" content="UZIII2208">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <link href="../../css/styles.css" rel="stylesheet">
+    <link href="../../../css/styles.css" rel="stylesheet">
 </head>
+
 <body class="min-h-screen">
     <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-gray-900 shadow-lg z-50">
@@ -165,69 +168,134 @@
     <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
         <article class="max-w-4xl mx-auto py-16 fade-in">
             <header class="mb-12">
-                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Room: Basic Pentesting - Web Enum Basics</h1>
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Takedown: Insane - TryHackMe Challenge Room</h1>
                 <div class="flex items-center space-x-4 text-gray-400">
-                    <time datetime="2025-05-20">May 20, 2025</time>
+                    <time datetime="2025-05-31">May 31, 2025</time>
                     <span>•</span>
                     <span>TryHackMe</span>
+                    <span>•</span>
+                    <span class="text-purple-400">Insane</span>
                 </div>
             </header>
 
             <div class="prose prose-lg prose-invert max-w-none">
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Room Overview</h2>
-                <p>The Basic Pentesting room on TryHackMe is designed to teach fundamental web enumeration techniques. This write-up covers the essential tools and methodologies used in the initial phases of a web application security assessment.</p>
+                <div class="mb-8">
+                    <img src="https://tryhackme-images.s3.amazonaws.com/room-icons/b6cc9563554d62c4c3e5fb1eaa1be238.png" alt="Operation Overcooked Risotto Banner" class="rounded-lg shadow-lg w-full">
+                </div>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial Enumeration</h2>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>$ dirb http://TARGET_IP
-$ nikto -h http://TARGET_IP
-$ nmap -sC -sV -p- TARGET_IP</code></pre>
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <h2 class="text-2xl text-green-400 mb-4">Mission Overview</h2>
+                    <p class="mb-4">A corporate webserver has been compromised by the RISOTTO GROUP. We've been authorized for cyber interdiction operations to locate their teamserver and take it down.</p>
+                    <div class="flex flex-wrap gap-4 mt-4">
+                        <span class="bg-gray-700 px-3 py-1 rounded">Cyber Interdiction</span>
+                        <span class="bg-gray-700 px-3 py-1 rounded">Malware Analysis</span>
+                        <span class="bg-gray-700 px-3 py-1 rounded">Reverse Engineering</span>
+                    </div>
+                </div>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Web Directory Discovery</h2>
-                <p>Using dirb, we discover several interesting directories:</p>
-                <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code>+ /admin (Status: 301)
-+ /dev (Status: 301)
-+ /backup (Status: 301)
-+ /secret (Status: 301)</code></pre>
+                <div class="bg-yellow-900 bg-opacity-20 border-l-4 border-yellow-400 p-4 mb-8">
+                    <h3 class="text-xl text-yellow-400 mb-4">⚠️ Author's Note</h3>
+                    <p>This THM room should be treated as a work of fiction. The author does not condone unauthorized hacking of anything for any reason. Hacking back is a crime.</p>
+                </div>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Common Vulnerabilities</h2>
-                <ul class="list-disc list-inside space-y-2">
-                    <li>Directory listing enabled</li>
-                    <li>Default credentials in admin panel</li>
-                    <li>Sensitive files in backup directory</li>
-                    <li>Misconfigured permissions</li>
-                </ul>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial Reconnaissance</h2>
+                <p class="mb-4">After configuring our hosts file with <code>takedown.thm.local</code>, we began with basic enumeration using nmap:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~]
+└─$ nmap -sC -sV takedown.thm.local
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-06-30 15:49 EDT
+Nmap scan report for takedown.thm.local (10.10.191.181)
+Host is up (0.20s latency).
+Not shown: 998 closed tcp ports (conn-refused)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    nginx 1.23.1</code></pre>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Exploitation Steps</h2>
-                <ol class="list-decimal list-inside space-y-4">
-                    <li>Enumerate web directories using dirb and gobuster</li>
-                    <li>Check for default credentials in admin panel</li>
-                    <li>Review source code for hidden information</li>
-                    <li>Download and analyze backup files</li>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Web Application Analysis</h2>
+                <p>Using gobuster, we discovered several interesting directories and files:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~]
+└─$ gobuster -t 64 dir -e -k -u http://takedown.thm.local/ -w /usr/share/wordlists/dirb/common.txt -x txt
+[...]
+/css                  (Status: 301)
+/fonts                (Status: 301)
+/favicon.ico          (Status: 200)
+/images               (Status: 301)
+/inc                  (Status: 301)
+/index.html           (Status: 200)
+/js                   (Status: 301)
+/readme.txt           (Status: 200)
+/robots.txt           (Status: 200)</code></pre>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Malware Analysis</h2>
+                <p>Two suspicious files were discovered during enumeration:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h4 class="text-green-400 mb-2">favicon.ico</h4>
+                        <p class="text-sm text-gray-400">PE32+ executable (GUI) x86-64, for MS Windows</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h4 class="text-green-400 mb-2">shutterbug.jpg</h4>
+                        <p class="text-sm text-gray-400">ELF 64-bit LSB pie executable</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Static Analysis</h2>
+                <p>Initial analysis of favicon.ico revealed interesting strings:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>strings -n 6 favicon.ico | grep nim
+fatal.nim
+io.nim
+parseutils.nim
+strutils.nim
+oserr.nim
+os.nim</code></pre>
+
+                <div class="bg-blue-900 bg-opacity-20 border-l-4 border-blue-400 p-4 mb-8">
+                    <h4 class="text-blue-400 mb-2">Key Finding:</h4>
+                    <p>The malware appears to be written in Nim, a relatively uncommon choice that might help evade detection.</p>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Deep Dive Analysis</h2>
+                <p>Further string analysis revealed C2 infrastructure details:</p>
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>@[*] Sleeping: 10000
+@results
+@[*] Result: 
+@http://takedown.thm.local/
+@http://takedown.thm.local/api/agents/
+@[*] Command to run: 
+@[*] Hostname: 
+@[*] My UID is: 
+@[*] Key matches!</code></pre>
+
+                <div class="bg-gray-800 p-6 rounded-lg mb-8">
+                    <h2 class="text-2xl text-green-400 mb-4">Environmental Analysis</h2>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Potential username discovered: <code>c.oberst</code></li>
+                        <li>API endpoints identified in C2 infrastructure</li>
+                        <li>Evidence of environmental keying mechanisms</li>
+                        <li>Automated command execution capabilities</li>
+                    </ul>
+                </div>
+
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Nim Code Analysis</h2>
+                <p>The malware's structure follows typical Nim patterns:</p>
+                <ol class="list-decimal list-inside space-y-2 mb-4">
+                    <li>Entrypoint → main()</li>
+                    <li>main() → NimMain()</li>
+                    <li>NimMain() → NimMainModule()</li>
+                    <li>Additional WinMain() for Windows execution</li>
                 </ol>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Tools Used</h2>
-                <ul class="list-disc list-inside space-y-2">
-                    <li>dirb - Web content scanner</li>
-                    <li>nikto - Web server scanner</li>
-                    <li>gobuster - Directory/file enumeration</li>
-                    <li>nmap - Network exploration tool</li>
-                </ul>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">Step by Step Pwn This Challenge</h2>
+                <iframe src="tryhackme" class="w-full h-64 bg-gray-800 p-2 rounded-lg overflow-x-auto"></iframe>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Best Practices</h2>
-                <ol class="list-decimal list-inside space-y-2">
-                    <li>Always start with passive reconnaissance</li>
-                    <li>Document all findings systematically</li>
-                    <li>Verify findings manually to avoid false positives</li>
-                    <li>Follow proper authorization and scope guidelines</li>
-                </ol>
-
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Additional Resources</h2>
-                <ul class="list-disc list-inside space-y-2">
-                    <li>OWASP Web Security Testing Guide</li>
-                    <li>Web Application Hacker's Handbook</li>
-                    <li>Burp Suite Documentation</li>
-                    <li>OWASP Top 10 Project</li>
-                </ul>
+                <div class="bg-green-900 bg-opacity-20 border-l-4 border-green-400 p-4">
+                    <h4 class="text-green-400 mb-2">Key Takeaways:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Advanced malware using Nim for evasion</li>
+                        <li>Sophisticated C2 infrastructure</li>
+                        <li>Environmental keying for targeted execution</li>
+                        <li>Extensive command and control capabilities</li>
+                    </ul>
+                </div>
             </div>
         </article>
     </main>
@@ -238,21 +306,17 @@ $ nmap -sC -sV -p- TARGET_IP</code></pre>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <h3 class="text-green-400 font-semibold mb-4">About</h3>
-                    <p class="text-gray-400">Security research blog focusing on CTF write-ups, penetration testing, and cybersecurity insights.</p>
+                    <p class="text-gray-400">Security research blog focusing on CTF write-ups, penetration testing, and
+                        cybersecurity insights.</p>
                 </div>
                 <div>
                     <h3 class="text-green-400 font-semibold mb-4">Quick Links</h3>
                     <ul class="space-y-2">
-                        <li><a href="/pages/hackthebox.html" class="text-gray-400 hover:text-green-400">HackTheBox</a></li>
-                        <li><a href="/pages/tryhackme.html" class="text-gray-400 hover:text-green-400">TryHackMe</a></li>
-                        <li><a href="/pages/blogs.html" class="text-gray-400 hover:text-green-400">Blog Posts</a></li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-green-400 font-semibold mb-4">Connect</h3>
                     <ul class="space-y-2">
-                        <li><a href="/pages/contact.html" class="text-gray-400 hover:text-green-400">Contact</a></li>
-                        <li><a href="https://github.com/uziii2208" class="text-gray-400 hover:text-green-400" target="_blank">GitHub</a></li>
                     </ul>
                 </div>
             </div>
@@ -263,7 +327,7 @@ $ nmap -sC -sV -p- TARGET_IP</code></pre>
         </div>
     </footer>
 
-    <script src="../../js/main.js"></script>
-    <script type="module" src="../../js/background.js"></script>
+    <script src="../../../js/main.js"></script>
+    <script type="module" src="../../../js/background.js"></script>
 </body>
 </html>
