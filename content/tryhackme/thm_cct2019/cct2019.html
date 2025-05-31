@@ -174,7 +174,7 @@
                     <span>•</span>
                     <span>TryHackMe</span>
                     <span>•</span>
-                    <span class="text-red-400">Insane</span>
+                    <span class="text-purple-400">Insane</span>
                 </div>
             </header>
 
@@ -195,7 +195,7 @@
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial PCAP Analysis</h2>
                 <p>The first step involved analyzing the USB traffic captured in the PCAP file:</p>
-                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~/Downloads/CCT2019]
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~/Downloads/CCT2019]
 └─$ file pcap2.pcapng                          
 pcap2.pcapng: pcapng capture file - version 1.0
 
@@ -208,7 +208,7 @@ Capture duration 0.114676 seconds</code></pre>
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">USB Data Extraction</h2>
                 <p>To extract the USB data, we used tshark with specific filters:</p>
-                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~/Downloads/CCT2019]
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~/Downloads/CCT2019]
 └─$ tshark -r pcap2.pcapng -Y 'usb.capdata and usb.device_address==7' -T fields -e usb.capdata > raw</code></pre>
 
                 <div class="bg-yellow-900 bg-opacity-20 border-l-4 border-yellow-400 p-4 mb-8">
@@ -217,7 +217,7 @@ Capture duration 0.114676 seconds</code></pre>
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Data Transformation</h2>
                 <p>Converting the extracted hex data to binary:</p>
-                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~/Downloads/CCT2019/results/keepers]
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~/Downloads/CCT2019/results/keepers]
 └─$ xxd -r -p raw output2.bin</code></pre>
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">ICMP Message Analysis</h2>
@@ -256,8 +256,12 @@ Host: fotoforensics.com</code></pre>
                     </ul>
                 </div>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Step by Step Pwn This Challenge</h2>
-                <iframe src="tryhackme" class="w-full h-64 bg-gray-800 p-2 rounded-lg overflow-x-auto"></iframe>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">That's How I Can Solve This Challenge - Write Up</h2>
+                <iframe 
+                    src="fd91f33b0a9c6eaa5f3567b2c1ee40fb.html" 
+                    class="w-full h-screen bg-gray-800 p-4 rounded-2xl overflow-x-auto"
+                    style="border: none;">
+                </iframe>
 
             </div>
         </article>
@@ -269,26 +273,28 @@ Host: fotoforensics.com</code></pre>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <h3 class="text-green-400 font-semibold mb-4">About</h3>
-                    <p class="text-gray-400">Dedicated to sharing CTF solutions and cybersecurity insights.</p>
+                    <p class="text-gray-400">Security research blog focusing on CTF write-ups, penetration testing, and
+                        cybersecurity insights.</p>
                 </div>
                 <div>
                     <h3 class="text-green-400 font-semibold mb-4">Quick Links</h3>
                     <ul class="space-y-2">
-                        <li><a href="/pages/blogs.html" class="text-gray-400 hover:text-green-400">Blog Posts</a></li>
                         <li><a href="/pages/hackthebox.html" class="text-gray-400 hover:text-green-400">HackTheBox</a></li>
                         <li><a href="/pages/tryhackme.html" class="text-gray-400 hover:text-green-400">TryHackMe</a></li>
+                        <li><a href="/pages/blogs.html" class="text-gray-400 hover:text-green-400">Blog Posts</a></li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-green-400 font-semibold mb-4">Connect</h3>
                     <ul class="space-y-2">
-                        <li><a href="https://github.com/UZIII2208" class="text-gray-400 hover:text-green-400">GitHub</a></li>
                         <li><a href="/pages/contact.html" class="text-gray-400 hover:text-green-400">Contact</a></li>
+                        <li><a href="https://github.com/uziii2208" class="text-gray-400 hover:text-green-400" target="_blank">GitHub</a></li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2025 UZIII2208. All rights reserved.</p>
+                <p class="text-gray-400">&copy; 2025 UZIII2208. Some rights reserved.</p>
+                <p class="text-gray-500 text-sm mt-2">Built with Meow Meow :3</p>
             </div>
         </div>
     </footer>

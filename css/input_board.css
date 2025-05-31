@@ -1,0 +1,159 @@
+.password-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 2rem;
+    background: rgba(31, 41, 55, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.password-form {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid rgba(74, 222, 128, 0.1);
+}
+
+.password-form h2 {
+    color: #10B981;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.password-form .hint {
+    color: #94A3B8;
+    margin: 0.75rem 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.password-input {
+    width: 100%;
+    max-width: 400px;
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    background: rgba(17, 24, 39, 0.7);
+    border: 2px solid rgba(74, 222, 128, 0.2);
+    border-radius: 8px;
+    color: #F3F4F6;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.password-input:focus {
+    border-color: #10B981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    outline: none;
+    background: rgba(17, 24, 39, 0.9);
+}
+
+.unlock-button {
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: #F3F4F6;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.unlock-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+.unlock-button:active {
+    transform: translateY(0);
+}
+
+.error-message {
+    color: #EF4444;
+    margin: 1rem 0;
+    display: none;
+    font-size: 0.9rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.protected-content {
+    background: rgba(17, 24, 39, 0.7);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+    border: 1px solid rgba(74, 222, 128, 0.1);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #F3F4F6;
+    max-height: 800px;
+    overflow-y: auto;
+}
+
+.protected-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.protected-content::-webkit-scrollbar-track {
+    background: rgba(17, 24, 39, 0.3);
+    border-radius: 4px;
+}
+
+.protected-content::-webkit-scrollbar-thumb {
+    background: #10B981;
+    border-radius: 4px;
+    border: 2px solid rgba(17, 24, 39, 0.3);
+}
+
+.protected-content::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .password-container {
+        margin: 20px;
+        padding: 1rem;
+    }
+
+    .password-form {
+        padding: 1rem;
+    }
+
+    .password-form h2 {
+        font-size: 1.5rem;
+    }
+
+    .password-input {
+        font-size: 0.9rem;
+        padding: 0.8rem 1.2rem;
+    }
+
+    .unlock-button {
+        padding: 0.8rem 2rem;
+        font-size: 0.9rem;
+    }
+}

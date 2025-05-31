@@ -200,7 +200,7 @@
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Initial Reconnaissance</h2>
                 <p class="mb-4">After configuring our hosts file with <code>takedown.thm.local</code>, we began with basic enumeration using nmap:</p>
-                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~]
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~]
 └─$ nmap -sC -sV takedown.thm.local
 Starting Nmap 7.93 ( https://nmap.org ) at 2023-06-30 15:49 EDT
 Nmap scan report for takedown.thm.local (10.10.191.181)
@@ -212,7 +212,7 @@ PORT   STATE SERVICE VERSION
 
                 <h2 class="text-2xl text-green-400 mt-8 mb-4">Web Application Analysis</h2>
                 <p>Using gobuster, we discovered several interesting directories and files:</p>
-                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(witty㉿kali)-[~]
+                <pre class="text-gray-400 bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4"><code>┌──(kali㉿kali)-[~]
 └─$ gobuster -t 64 dir -e -k -u http://takedown.thm.local/ -w /usr/share/wordlists/dirb/common.txt -x txt
 [...]
 /css                  (Status: 301)
@@ -284,8 +284,12 @@ os.nim</code></pre>
                     <li>Additional WinMain() for Windows execution</li>
                 </ol>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Step by Step Pwn This Challenge</h2>
-                <iframe src="tryhackme" class="w-full h-64 bg-gray-800 p-2 rounded-lg overflow-x-auto"></iframe>
+                <h2 class="text-2xl text-green-400 mt-8 mb-4">That's How I Can Solve This Challenge - Write Up</h2>
+                <iframe 
+                    src="36378bfee5a30e2b407e39ba8317a35b.html" 
+                    class="w-full h-screen bg-gray-800 p-4 rounded-2xl overflow-x-auto"
+                    style="border: none;">
+                </iframe>
 
                 <div class="bg-green-900 bg-opacity-20 border-l-4 border-green-400 p-4">
                     <h4 class="text-green-400 mb-2">Key Takeaways:</h4>
@@ -312,11 +316,16 @@ os.nim</code></pre>
                 <div>
                     <h3 class="text-green-400 font-semibold mb-4">Quick Links</h3>
                     <ul class="space-y-2">
+                        <li><a href="/pages/hackthebox.html" class="text-gray-400 hover:text-green-400">HackTheBox</a></li>
+                        <li><a href="/pages/tryhackme.html" class="text-gray-400 hover:text-green-400">TryHackMe</a></li>
+                        <li><a href="/pages/blogs.html" class="text-gray-400 hover:text-green-400">Blog Posts</a></li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-green-400 font-semibold mb-4">Connect</h3>
                     <ul class="space-y-2">
+                        <li><a href="/pages/contact.html" class="text-gray-400 hover:text-green-400">Contact</a></li>
+                        <li><a href="https://github.com/uziii2208" class="text-gray-400 hover:text-green-400" target="_blank">GitHub</a></li>
                     </ul>
                 </div>
             </div>
