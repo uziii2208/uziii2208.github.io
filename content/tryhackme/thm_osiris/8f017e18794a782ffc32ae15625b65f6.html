@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Protected Content - TryHackMe Write-up</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <link href="../../../css/input_board.css" rel="stylesheet">
     <style>
         body {
@@ -65,18 +66,7 @@
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    <div class="password-container">
-        <div class="password-form">
-            <h2>Protected Content</h2>
-            <p class="hint">To view this content, you need to find the correct password.</p>
-            <p class="hint">Hint: View the page source and look for an MD5 hash starting with "2391db***"</p>
-            <input type="password" class="password-input" id="password" placeholder="Enter password" autocomplete="off">
-            <button class="unlock-button" onclick="checkPassword()">Unlock Content</button>
-            <p id="error" class="error-message">Incorrect password. Please try again.</p>
-        </div>
-    <div class="protected-content" id="content" style="display: none;"></div>
-    </div>
+    <div class="stars" id="stars"></div>    <div class="protected-content" id="content"></div>
 
     <script src="../../../js/osiris.js"></script>
 </body>

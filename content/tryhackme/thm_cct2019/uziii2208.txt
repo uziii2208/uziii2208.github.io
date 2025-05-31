@@ -1,6 +1,6 @@
 HINT1: It's a pcap challenge. If you're doing stego or re, you're either down a rabbit hole or there's an easier way.
 
-HINT2: It is very important to do the first step correctly. If you don't recover the first file in its entirety, you may not be able to complete steps later on in the challenge. The second pcap file has 4588 packets in it. Contact me on Discord (send a DM to username zoobah) if you are struggling with this step.
+HINT2: It is very important to do the first step correctly. If you don't recover the first file in its entirety, you may not be able to complete steps later on in the challenge. The second pcap file has 4588 packets in it.
 
 HINT3: On the final step, this was built to run in a amd64 Kali Linux environment. If you are using a different Linux distro, you may run into some problems.
 Answer the questions below
