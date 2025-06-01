@@ -177,6 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
 const sections = {
     hackthebox: [
         { 
+            title: "Certificate: Hard - HackTheBox Season 8",
+            excerpt: "Certificate, a Hard-difficulty Windows machine on Hack The Box, simulates an Active Directory Certificate Services (ADCS) environment, perfect for honing enumeration, certificate-based exploitation, and privilege escalation skills.",
+            url: "/content/hackthebox/certificate/certificate_htb_ss8.html",
+            date: "2025-06-01"
+        },
+        { 
             title: "Fluffy: Easy - HackTheBox Season 8",
             excerpt: "Fluffy, an easy-difficulty Windows machine, simulates an Active Directory Certificate Services (ADCS) environment, ideal for practicing enumeration, certificate-based exploitation, and privilege escalation skills.",
             url: "/content/hackthebox/fluffy/fluffy_htb_ss8.html",
