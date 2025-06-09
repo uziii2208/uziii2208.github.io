@@ -20,9 +20,9 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="../../../favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <title>Machine: Fluffy - HackTheBox Season 8 Write-up</title>
-    <meta name="description" content="Fluffy, an easy-difficulty Windows machine, simulates an Active Directory Certificate Services (ADCS) environment, ideal for practicing enumeration, certificate-based exploitation, and privilege escalation skills.">
-    <meta name="date" content="2025-05-25">
+    <title>Machine: TombWatcher - HackTheBox Season 8 Write-up</title>
+    <meta name="description" content="TombWatcher, a medium-difficulty Windows machine, challenges players with a realistic Active Directory setup, focusing on web exploitation, enumeration, and privilege escalation techniques.">
+    <meta name="date" content="2025-06-08">
     <meta name="author" content="UZIII2208">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -165,14 +165,14 @@
     <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
         <article class="max-w-4xl mx-auto py-16 fade-in">
             <header class="mb-12">
-                <img src="../fluffy/fluffy_htb.png" alt="Fluffy Banner" class="rounded-lg shadow-lg mb-6">
-                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Fluffy: Easy - HackTheBox Season 8</h1>
+                <img src="../tombwatcher/tombwatcher_htb.png" alt="TombWatcher Banner" class="rounded-lg shadow-lg mb-6">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">TombWatcher: Medium - HackTheBox Season 8</h1>
                 <div class="flex items-center space-x-4 text-gray-400">
-                    <time datetime="2025-05-25">May 25, 2025</time>
+                    <time datetime="2025-06-08">Jun 08, 2025</time>
                     <span>•</span>
                     <span>HackTheBox</span>
                     <span>•</span>
-                    <span class="text-green-400">Easy</span>
+                    <span class="text-yellow-400">Medium</span>
                 </div>
             </header>
 
@@ -188,23 +188,23 @@
                   <tbody>
                     <tr>
                       <td class="border border-gray-700 p-2">Operating System (Distribution)</td>
-                      <td class="border border-gray-700 p-2">Microsoft Windows Server 2022 Standard</td>
+                      <td class="border border-gray-700 p-2">Windows Server 2019 (97%), Microsoft Windows 10 1903 - 21H1 (91%)</td>
                     </tr>
                     <tr>
                       <td class="border border-gray-700 p-2">Kernel OS Version</td>
-                      <td class="border border-gray-700 p-2">10.0.20348 N/A Build 20348</td>
+                      <td class="border border-gray-700 p-2">Undefined</td>
                     </tr>
                     <tr>
                       <td class="border border-gray-700 p-2">Web Server Software and Version</td>
-                      <td class="border border-gray-700 p-2">Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</td>
+                      <td class="border border-gray-700 p-2">Microsoft-IIS/10.0</td>
                     </tr>
                     <tr>
                       <td class="border border-gray-700 p-2">Available Ports</td>
-                      <td class="border border-gray-700 p-2">53, 88, 111, 135, 139, 389, 445, 464, 593, 636, 2049, 3260, 3268, 3269, 5985, 9389, 49667, 49677, 49678</td>
+                      <td class="border border-gray-700 p-2">53, 80, 88, 135, 139, 389, 445, 464, 593, 636, 3268, 3269, 5985, 9389, 49743, 49711, 49705, 49688, 49689, 49687, 49666</td>
                     </tr>
                     <tr>
                       <td class="border border-gray-700 p-2">Known Exploited Vulnerabilities</td>
-                      <td class="border border-gray-700 p-2">CVE-2025-2****</td>
+                      <td class="border border-gray-700 p-2">CVE-2024-49***</td>
                     </tr>
                   </tbody>
                 </table>
@@ -222,8 +222,8 @@ want to ask something, <strong class="text-green-400"><a href="/pages/contact.ht
                 </div>
 
                 <iframe 
-                  src="662.html" 
-                  title="https://www.hackthebox.com/achievement/machine/2125051/662" 
+                  src="664.htm" 
+                  title="https://www.hackthebox.com/achievement/machine/2125051/664" 
                   class="w-full" 
                   style="height:750px; border:none;" 
                   allowfullscreen

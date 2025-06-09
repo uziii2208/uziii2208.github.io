@@ -1,4 +1,3 @@
-// Create starry background
 function createStars() {
     const stars = document.getElementById('stars');
     const count = 100;
@@ -18,7 +17,6 @@ function createStars() {
     }
 }
 
-// Load protected content
 async function loadContent() {
     const contentDiv = document.getElementById('content');
     try {
@@ -27,7 +25,6 @@ async function loadContent() {
             throw new Error('Failed to load content');
         }
         const content = await response.text();
-        // Format the content as preformatted text with proper styling
         contentDiv.innerHTML = `<pre class="content-text" style="color: #4ade80; padding: 2rem; white-space: pre-wrap; font-family: 'JetBrains Mono', monospace;">${content}</pre>`;
     } catch (error) {
         console.error('Error loading content:', error);
@@ -35,14 +32,12 @@ async function loadContent() {
     }
 }
 
-// Initialize stars and load content on page load
 document.addEventListener('DOMContentLoaded', () => {
     createStars();
     loadContent();
 });
 
-// Password protection functionality
-const ENCRYPTED_KEY = '21d368f9af968770c0c9181d89cd4003'; // MD5 hash của mật khẩu thực
+const ENCRYPTED_KEY = '21d368f9af968770c0c9181d89cd4003';
 
 async function md5(message) {
     const msgBuffer = new TextEncoder().encode(message);
@@ -62,13 +57,11 @@ async function unlockContent() {
             passwordGate.classList.add('hidden');
             contentFrame.classList.remove('hidden');
             
-            // Load content securely
             const iframe = document.createElement('iframe');
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
             
-            // Set security attributes
             iframe.sandbox = 'allow-same-origin allow-scripts';
             iframe.src = '2e421a6054cdc10f0ef823a24b9a978a.html';
             
@@ -84,7 +77,6 @@ async function unlockContent() {
     }
 }
 
-// Handle Enter key press
 document.getElementById('content-password')?.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         unlockContent();

@@ -1,3 +1,75 @@
+```
+┌──(kali㉿kali)-[~]
+└─$ rustscan -a 10.10.134.236 --ulimit 5500 -b 65535 -- -A -Pn
+.----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
+| {}  }| { } |{ {__ {_   _}{ {__  /  ___} / {} \ |  `| |
+| .-. \| {_} |.-._} } | |  .-._} }\     }/  /\  \| |\  |
+`-' `-'`-----'`----'  `-'  `----'  `---' `-'  `-'`-' `-'
+The Modern Day Port Scanner.
+________________________________________
+: https://discord.gg/GFrQsGy           :
+: https://github.com/RustScan/RustScan :
+ --------------------------------------
+😵 https://admin.tryhackme.com
+
+[~] The config file is expected to be at "/home/kali/.rustscan.toml"
+[~] Automatically increasing ulimit value to 5500.
+[!] File limit is lower than default batch size. Consider upping with --ulimit. May cause harm to sensitive servers
+^C
+
+┌──(kali㉿kali)-[~]
+└─$ nmap -sC -sV -p- -Pn 10.10.134.236 -vv --min-rate 1500
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-01-02 19:24 EST
+NSE: Loaded 155 scripts for scanning.
+NSE: Script Pre-scanning.
+NSE: Starting runlevel 1 (of 3) scan.
+Initiating NSE at 19:24
+Completed NSE at 19:24, 0.00s elapsed
+NSE: Starting runlevel 2 (of 3) scan.
+Initiating NSE at 19:24
+Completed NSE at 19:24, 0.00s elapsed
+NSE: Starting runlevel 3 (of 3) scan.
+Initiating NSE at 19:24
+Completed NSE at 19:24, 0.00s elapsed
+Initiating Parallel DNS resolution of 1 host. at 19:24
+Completed Parallel DNS resolution of 1 host. at 19:24, 0.02s elapsed
+Initiating Connect Scan at 19:24
+Scanning 10.10.134.236 [65535 ports]
+Connect Scan Timing: About 23.54% done; ETC: 19:26 (0:01:41 remaining)
+Connect Scan Timing: About 46.60% done; ETC: 19:26 (0:01:10 remaining)
+Connect Scan Timing: About 69.72% done; ETC: 19:26 (0:00:40 remaining)
+Completed Connect Scan at 19:26, 130.84s elapsed (65535 total ports)
+Initiating Service scan at 19:26
+NSE: Script scanning 10.10.134.236.
+NSE: Starting runlevel 1 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 5.01s elapsed
+NSE: Starting runlevel 2 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+NSE: Starting runlevel 3 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+Nmap scan report for 10.10.134.236
+Host is up, received user-set.
+Scanned at 2023-01-02 19:24:34 EST for 136s
+All 65535 scanned ports on 10.10.134.236 are in ignored states.
+Not shown: 65535 filtered tcp ports (no-response)
+
+NSE: Script Post-scanning.
+NSE: Starting runlevel 1 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+NSE: Starting runlevel 2 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+NSE: Starting runlevel 3 (of 3) scan.
+Initiating NSE at 19:26
+Completed NSE at 19:26, 0.00s elapsed
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 138.08 seconds
+
 ┌──(kali㉿kali)-[~]
 └─$ mkdir Osiris    
                                                                                                                                                             
@@ -324,7 +396,7 @@ dir
 
 C:\Users\alcrez\Desktop>type Flag1.txt
 type Flag1.txt
-THM{89b***}
+THM{89b556686aa61301d4a72a7b12e59368a516c940}
 
 :)
 
@@ -1087,7 +1159,7 @@ dir
 
 C:\Users\chajoh\Desktop>type Flag2.txt
 type Flag2.txt
-THM{d9c***}
+THM{d9c19f35fccde779d645f19d5bb0ac41dcd3586f}
 
 reg query "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v TamperProtection
 
@@ -2237,8 +2309,10 @@ Password: hackP@ssw0rd
 
 then login (need to download ovpn from tryhackme and connect it :) )
 
-THM{a77***}
+THM{a77538464954d29a64c607f2318d930ccf4da5cccb308c7334c43fef9c94984448cf732f6de227cbfae9172ee2654e56704568ada698fb241c52148d338a3245}
 
 Was really fun!!
 
 :)
+
+```

@@ -176,6 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Blog post metadata
 const sections = {
     hackthebox: [
+        {
+            title: "TombWatcher: Medium - HackTheBox Season 8",
+            excerpt: "TombWatcher, a medium-difficulty Windows machine, challenges players with a realistic Active Directory setup, focusing on web exploitation, enumeration, and privilege escalation techniques.",
+            url: "/content/hackthebox/tombwatcher/tombwatcher_htb_ss8.html",
+            date: "2025-06-08"
+        },
         { 
             title: "Certificate: Hard - HackTheBox Season 8",
             excerpt: "Certificate, a Hard-difficulty Windows machine on Hack The Box, simulates an Active Directory Certificate Services (ADCS) environment, perfect for honing enumeration, certificate-based exploitation, and privilege escalation skills.",
