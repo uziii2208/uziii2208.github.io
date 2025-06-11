@@ -265,6 +265,12 @@ const sections = {
     ],
     blogs: [
         {
+            title: "Breaking Active Directory Certificate Services (ADCS)",
+            excerpt: "Khám phá chuyên sâu các lỗ hổng bảo mật trong ADCS và các kỹ thuật khai thác tiên tiến.",
+            url: "/content/blogs/breaking-active-directory-certificate-services-adcs/breaking-active-directory-certificate-services-adcs.html",
+            date: "2025-06-12"
+        },
+        {
             title: "Venice.ai: The Unshackled Muse of Code and Chaos",
             excerpt: "Venice.ai’s promise of uncensored AI and privacy-first design is turning heads, allowing users to generate content and code without typical ethical filters.",
             url: "/content/blogs/venice-ai-the-unshackled-muse-of-code-and-chaos/venice-ai-the-unshackled-muse-of-code-and-chaos.html",
