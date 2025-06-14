@@ -159,25 +159,51 @@
     </div>
 
     <!-- Main Content -->
-    <main class="pt-20 container mx-auto px-4 sm:px-6 lg:px-8">
-        <section class="max-w-4xl mx-auto py-16 fade-in">
-            <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-8">Welcome to My Security Research Blog</h1>
-            <p class="text-xl mb-8">Hi! I'm a security engineer passionate about CTFs, penetration testing, and sharing knowledge with the community. Here you'll find write-ups from HackTheBox, TryHackMe, and various cybersecurity topics.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-                <a href="/pages/blogs.html" class="card bg-gray-800 p-6 rounded-lg hover:shadow-lg transition-all duration-300">
-                    <h2 class="text-2xl text-green-400 mb-4">Security Blog</h2>
-                    <p class="text-gray-500">Articles, tutorials, and insights on cybersecurity.</p>
-                </a>
-                <a href="/pages/hackthebox.html" class="card bg-gray-800 p-6 rounded-lg hover:shadow-lg transition-all duration-300">
-                    <h2 class="text-2xl text-green-400 mb-4">HackTheBox Write-ups</h2>
-                    <p class="text-gray-500">Detailed walkthroughs and explanations of HackTheBox machines.</p>
-                </a>
-                <a href="/pages/tryhackme.html" class="card bg-gray-800 p-6 rounded-lg hover:shadow-lg transition-all duration-300">
-                    <h2 class="text-2xl text-green-400 mb-4">TryHackMe Rooms</h2>
-                    <p class="text-gray-500">Solutions and guides for TryHackMe challenges.</p>
-                </a>
+    <main class="min-h-screen pt-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <section class="max-w-4xl mx-auto py-16 fade-in">
+                <h1 class="text-4xl md:text-6xl text-green-400 font-bold mb-8">Welcome to My Security Research Blog</h1>
+                <p class="text-xl mb-8">Hi! I'm a security engineer passionate about CTFs, penetration testing, and sharing knowledge with the community. Here you'll find write-ups from HackTheBox, TryHackMe, and various cybersecurity topics.</p>
+            </section>
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column - Cards -->
+                <div class="order-2 md:order-1">
+                    <section class="py-8">
+                        <div class="grid grid-cols-1 gap-6">
+                            <a href="/pages/blogs.html" class="card bg-gray-800 p-6 rounded-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                                <h2 class="text-2xl text-green-400 mb-4">Security Blog</h2>
+                                <p class="text-gray-400">Articles, tutorials, and insights on cybersecurity.</p>
+                            </a>
+                            <a href="/pages/hackthebox.html" class="card bg-gray-800 p-6 rounded-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                                <h2 class="text-2xl text-green-400 mb-4">HackTheBox</h2>
+                                <p class="text-gray-400">Detailed walkthroughs and explanations of HTB machines.</p>
+                            </a>
+                            <a href="/pages/tryhackme.html" class="card bg-gray-800 p-6 rounded-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                                <h2 class="text-2xl text-green-400 mb-4">TryHackMe</h2>
+                                <p class="text-gray-400">Solutions and guides for THM challenges.</p>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column - Terminal -->
+                <div class="order-1 md:order-2">
+                    <div class="sticky top-24">
+                        <div class="terminal-container bg-gray-900 rounded-lg overflow-hidden shadow-lg w-full aspect-square max-w-[600px] mx-auto">
+                            <div class="terminal-header flex items-center p-3 bg-gray-800 border-b border-gray-700">
+                                <div class="flex gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+                                    <div class="w-3 h-3 rounded-full bg-[#febc2e]"></div>
+                                    <div class="w-3 h-3 rounded-full bg-[#28c840]"></div>
+                                </div>
+                            </div>
+                            <div id="terminal-content" class="terminal-body bg-gray-900 text-gray-100 h-[calc(100%-40px)] overflow-y-auto"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- Footer -->

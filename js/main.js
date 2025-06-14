@@ -485,3 +485,153 @@ document.addEventListener('DOMContentLoaded', () => {
     
     updatePageLanguage();
 });
+
+// Terminal class
+class ModernTerminal {
+    constructor(container) {
+        this.container = container;
+        this.commandHistory = [];
+        this.currentCommand = '';
+        this.cursorPosition = 0;
+        this.initializeTerminal();
+    }
+
+    initializeTerminal() {
+        this.terminalContent = document.createElement('div');
+        this.terminalContent.className = 'terminal-content';
+        this.container.appendChild(this.terminalContent);
+        
+        this.focusListener = () => this.focus();
+        this.container.addEventListener('click', this.focusListener);
+        
+        this.keyListener = (e) => this.handleKeyPress(e);
+        document.addEventListener('keydown', this.keyListener);
+        
+        this.startupSequence();
+    }
+
+    async startupSequence() {
+        const startupCommands = [
+                        {
+                command: './activate_operator.sh --mode stealth',
+                output: [
+                    '<> OPERATOR STATUS: ACTIVE <>',
+                    '',
+                    '[*] Establishing secure comms...',
+                    '[*] Loading offensive modules...',
+                    '[*] Initializing stealth protocols...',
+                    '[√] Operator ready for engagement',
+                    '',
+                    '[ Awaiting mission parameters... ]'
+                ].join('\n'),
+                delay: 800
+            },
+            { 
+                command: './verify_arsenal.sh',
+                output: [
+                    'Checking offensive toolkit status...',
+                    '[+] Custom Malware Development   [READY]',
+                    '[+] Stealth Remote Access Tools  [ACTIVE]',
+                    '[+] Anti-Analysis Modules        [ENABLED]',
+                    '[+] Advanced GUI Access Systems  [LOADED]',
+                    '[√] Arsenal verification complete'
+                ].join('\n'),
+                delay: 1000
+            }
+        ];
+
+        for (const cmd of startupCommands) {
+            await this.simulateCommand(cmd);
+        }
+        
+        this.showPrompt();
+    }
+
+    async simulateCommand(cmd) {
+        const line = this.createCommandLine();
+        
+        // Type command
+        if (cmd.command) {
+            await this.typeText(line.querySelector('.command-text'), cmd.command);
+        }
+        
+        // Show output with matrix effect if it exists
+        if (cmd.output) {
+            await this.sleep(300);
+            const output = document.createElement('div');
+            output.className = 'terminal-output';
+            this.terminalContent.appendChild(output);
+            await this.matrixEffect(output, cmd.output);
+        }
+
+        // Auto scroll to latest content
+        this.container.scrollTop = this.container.scrollHeight;
+        await this.sleep(cmd.delay || 500);
+    }
+
+    async typeText(element, text, speed = 50) {
+        for (const char of text) {
+            element.textContent += char;
+            await this.sleep(speed);
+        }
+    }
+
+    async matrixEffect(element, finalText) {
+        const lines = finalText.split('\n');
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = document.createElement('div');
+            element.appendChild(line);
+            
+            // Matrix effect
+            for (let j = 0; j < 3; j++) {
+                line.textContent = Array(lines[i].length)
+                    .fill(0)
+                    .map(() => chars[Math.floor(Math.random() * chars.length)])
+                    .join('');
+                await this.sleep(50);
+            }
+            
+            // Show actual text
+            line.textContent = lines[i];
+        }
+    }
+
+    createCommandLine() {
+        const line = document.createElement('div');
+        line.className = 'terminal-line';
+        
+        const prompt = document.createElement('span');
+        prompt.className = 'terminal-prompt';
+        prompt.textContent = '(root㉿uziii2208)-[~]';
+        
+        const command = document.createElement('span');
+        command.className = 'command-text';
+        
+        line.appendChild(prompt);
+        line.appendChild(command);
+        this.terminalContent.appendChild(line);
+        
+        return line;
+    }
+
+    showPrompt() {
+        const line = this.createCommandLine();
+        const cursor = document.createElement('span');
+        cursor.className = 'terminal-cursor';
+        line.appendChild(cursor);
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+}
+
+// Initialize Modern Terminal when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const terminalElement = document.getElementById('terminal-content');
+    if (terminalElement) {
+        const terminal = new ModernTerminal(terminalElement);
+    }
+});
