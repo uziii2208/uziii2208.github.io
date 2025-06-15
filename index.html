@@ -190,15 +190,18 @@
                 <!-- Right Column - Terminal -->
                 <div class="order-1 md:order-2">
                     <div class="sticky top-24">
-                        <div class="terminal-container bg-gray-900 rounded-lg overflow-hidden shadow-lg w-full aspect-square max-w-[600px] mx-auto">
-                            <div class="terminal-header flex items-center p-3 bg-gray-800 border-b border-gray-700">
-                                <div class="flex gap-2">
-                                    <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
-                                    <div class="w-3 h-3 rounded-full bg-[#febc2e]"></div>
-                                    <div class="w-3 h-3 rounded-full bg-[#28c840]"></div>
+                        <div class="terminal-container bg-gray-900 rounded-lg overflow-hidden shadow-lg" style="width: 700px; height: 400px; position: relative;">
+                            <div class="terminal-header flex items-center justify-between p-3 bg-gray-800 border-b border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-[#ff5f57] hover:opacity-75 transition-opacity"></div>
+                                    <div class="w-3 h-3 rounded-full bg-[#febc2e] hover:opacity-75 transition-opacity"></div>
+                                    <div class="w-3 h-3 rounded-full bg-[#28c840] hover:opacity-75 transition-opacity"></div>
+                                </div>
+                                <div class="terminal-title text-sm text-gray-400 absolute left-1/2 transform -translate-x-1/2">
+                                    Terminal @uziii2208
                                 </div>
                             </div>
-                            <div id="terminal-content" class="terminal-body bg-gray-900 text-gray-100 h-[calc(100%-40px)] overflow-y-auto"></div>
+                            <div id="terminal-content" class="terminal-body bg-gray-900 text-gray-100 p-4" style="height: calc(100% - 49px); overflow-y: auto; position: absolute; width: 100%; bottom: 0;"></div>
                         </div>
                     </div>
                 </div>

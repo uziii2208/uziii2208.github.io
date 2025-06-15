@@ -494,6 +494,7 @@ class ModernTerminal {
         this.currentCommand = '';
         this.cursorPosition = 0;
         this.initializeTerminal();
+        this.setupAutoScroll();
     }
 
     initializeTerminal() {
@@ -510,36 +511,117 @@ class ModernTerminal {
         this.startupSequence();
     }
 
+    setupAutoScroll() {
+        // Create a MutationObserver to watch for changes in terminal content
+        this.observer = new MutationObserver(() => {
+            this.scrollToBottom(true);
+        });
+
+        // Start observing the terminal content for changes
+        this.observer.observe(this.terminalContent, {
+            childList: true,
+            subtree: true
+        });
+    }
+
     async startupSequence() {
         const startupCommands = [
-                        {
-                command: './activate_operator.sh --mode stealth',
-                output: [
-                    '<> OPERATOR STATUS: ACTIVE <>',
-                    '',
-                    '[*] Establishing secure comms...',
-                    '[*] Loading offensive modules...',
-                    '[*] Initializing stealth protocols...',
-                    '[√] Operator ready for engagement',
-                    '',
-                    '[ Awaiting mission parameters... ]'
-                ].join('\n'),
-                delay: 800
-            },
-            { 
-                command: './verify_arsenal.sh',
-                output: [
-                    'Checking offensive toolkit status...',
-                    '[+] Custom Malware Development   [READY]',
-                    '[+] Stealth Remote Access Tools  [ACTIVE]',
-                    '[+] Anti-Analysis Modules        [ENABLED]',
-                    '[+] Advanced GUI Access Systems  [LOADED]',
-                    '[√] Arsenal verification complete'
-                ].join('\n'),
-                delay: 1000
-            }
-        ];
-
+                {
+            command: 'whoami',
+            output: [
+                'root',
+            ].join('\n'),
+            delay: 800
+        },
+        {
+            command: 'echo "secret6789@#$%^&*" | tee -a etc/hosts',
+            output: [
+                '╔════════════════════════════════════',
+                '║ Redirecting target: Mission Set    ',
+                '╟────────────────────────────────────',
+                '║  ↳ Status: Bound to /etc/hosts     ',
+                '║  ↳ Mode: Covert Ops (stealth)      ',
+                '╚════════════════════════════════════',
+                'xx.xx.xxx.xxx uziii2208.github.io'
+            ].join('\n'),
+            delay: 800
+        },
+        {
+            command: './activate_operator.sh --mode stealth',
+            output: [
+                '<> OPERATOR STATUS: ACTIVE <>',
+                '',
+                '[*] Establishing secure comms...',
+                '[*] Loading offensive modules...',
+                '[*] Initializing stealth protocols...',
+                '[√] Operator ready for engagement',
+                '',
+                '[ Awaiting mission parameters... ]'
+            ].join('\n'),
+            delay: 800
+        },
+        {
+            command: './deploy_shadowlink.sh --encrypt quantum',
+            output: [
+                'Initializing ShadowLink protocol...',
+                '[*] Generating quantum keypair...',
+                '[*] Establishing encrypted tunnel...',
+                '[+] Connection secured via AES-512-QKD',
+                '[√] ShadowLink online'
+            ].join('\n'),
+            delay: 1200
+        },
+        {
+            command: './verify_arsenal.sh',
+            output: [
+                'Checking offensive toolkit status...',
+                '[+] Custom Malware Development   [READY]',
+                '[+] Stealth Remote Access Tools  [ACTIVE]',
+                '[+] Anti-Analysis Modules        [ENABLED]',
+                '[+] Advanced GUI Access Systems  [LOADED]',
+                '[√] Arsenal verification complete'
+            ].join('\n'),
+            delay: 1000
+        },
+        {
+            command: './init_c2_infrastructure.sh --region darkpool',
+            output: [
+                'Spinning up C2 infrastructure...',
+                '[*] Deploying nodes in darkpool region...',
+                '[+] Onion routing enabled',
+                '[+] Decoy traffic generators active',
+                '[√] Command and Control servers online'
+            ].join('\n'),
+            delay: 1500
+        },
+        {
+            command: './scan_opsec.sh --level paranoid',
+            output: [
+                'Running operational security scan...',
+                '[*] Checking for telemetry leaks...',
+                '[*] Validating sandbox evasion...',
+                '[+] No anomalies detected',
+                '[√] OPSEC status: Clean'
+            ].join('\n'),
+            delay: 900
+        },
+        {
+            command: 'cat help.txt',
+            output: [
+                '╔══════════════════════════════════════╗',
+                '║       RED TEAM SIM TOOLKIT v1.0      ║',
+                '╟──────────────────────────────────────╢',
+                '║ • certipy   → Abuse AD CS (Certipy)  ║',
+                '║ • bloodyad  → Exploit ACL in AD      ║',
+                '║ • certutil  → Download via LOLBin    ║',
+                '║ • rubeus    → Ticket & Kerberoasting ║',
+                '║ • mimikatz  → Dump creds (lsass)     ║',
+                '╚══════════════════════════════════════╝',
+                'Type a command to simulate the action.'
+            ].join('\n'),
+            delay: 800
+        }
+    ];
         for (const cmd of startupCommands) {
             await this.simulateCommand(cmd);
         }
@@ -553,6 +635,8 @@ class ModernTerminal {
         // Type command
         if (cmd.command) {
             await this.typeText(line.querySelector('.command-text'), cmd.command);
+            // Scroll after typing command
+            this.smoothScroll();
         }
         
         // Show output with matrix effect if it exists
@@ -562,10 +646,10 @@ class ModernTerminal {
             output.className = 'terminal-output';
             this.terminalContent.appendChild(output);
             await this.matrixEffect(output, cmd.output);
+            // Scroll after each line of output
+            this.smoothScroll();
         }
 
-        // Auto scroll to latest content
-        this.container.scrollTop = this.container.scrollHeight;
         await this.sleep(cmd.delay || 500);
     }
 
@@ -591,11 +675,25 @@ class ModernTerminal {
                     .map(() => chars[Math.floor(Math.random() * chars.length)])
                     .join('');
                 await this.sleep(50);
+                // Scroll after each matrix effect update
+                this.smoothScroll();
             }
             
             // Show actual text
             line.textContent = lines[i];
+            // Scroll after showing final text
+            this.smoothScroll();
         }
+    }
+
+    smoothScroll() {
+        // Luôn scroll đến cuối cùng
+        requestAnimationFrame(() => {
+            this.container.scrollTo({
+                top: this.container.scrollHeight,
+                behavior: 'smooth'
+            });
+        });
     }
 
     createCommandLine() {
@@ -625,6 +723,34 @@ class ModernTerminal {
 
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    scrollToBottom(force = false) {
+        const scrollHeight = this.container.scrollHeight;
+        const clientHeight = this.container.clientHeight;
+        const maxScroll = scrollHeight - clientHeight;
+        
+        // If we're already near the bottom or force is true, scroll to bottom
+        if (force || (this.container.scrollTop >= maxScroll - 50)) {
+            this.container.scrollTo({
+                top: maxScroll,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    printLine(line) {
+        this.terminalContent.appendChild(line);
+    }
+
+    simulateTyping() {
+        this.terminalContent.appendChild(output);
+    }
+
+    cleanup() {
+        if (this.observer) {
+            this.observer.disconnect();
+        }
     }
 }
 

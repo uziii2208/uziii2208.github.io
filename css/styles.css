@@ -460,11 +460,28 @@ body.light-mode .nav-link.text-green-400 {
   }
 }
 
-/* Terminal Container */
+/* Terminal Container with fixed size and professional styling */
 .terminal-container {
     position: relative;
     border-radius: 8px;
     overflow: hidden;
+    box-shadow: 
+        0 0 2px rgba(74, 222, 128, 0.2), 
+        0 0 10px rgba(0, 0, 0, 0.1),
+        inset 0 0 2px rgba(74, 222, 128, 0.2);
+    background: #1a1b26;
+}
+
+.terminal-header {
+    user-select: none;
+    background: linear-gradient(180deg, #2a2b36, #1a1b26);
+}
+
+.terminal-title {
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.8;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .terminal-body {
@@ -474,31 +491,53 @@ body.light-mode .nav-link.text-green-400 {
     line-height: 1.5;
     overflow-y: auto;
     overflow-x: hidden;
+    background: 
+        linear-gradient(to bottom, 
+            rgba(26, 27, 38, 0.99), 
+            rgba(26, 27, 38, 0.95)
+        );
 }
 
-/* Apply animations */
-.fade-in {
-  animation: fadeIn 0.7s ease-in-out;
+.terminal-body::-webkit-scrollbar {
+    width: 6px;
 }
 
-.slide-in {
-  animation: slideInFromLeft 0.8s ease-out;
+.terminal-body::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-/* Subtle LED effect for cards and terminal */
-@keyframes subtleLedPulse {
-    0% {
-        box-shadow: 0 0 2px rgba(74, 222, 128, 0.2), inset 0 0 2px rgba(74, 222, 128, 0.2);
-        border-color: rgba(74, 222, 128, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 5px rgba(74, 222, 128, 0.3), inset 0 0 3px rgba(74, 222, 128, 0.3);
-        border-color: rgba(74, 222, 128, 0.5);
-    }
-    100% {
-        box-shadow: 0 0 2px rgba(74, 222, 128, 0.2), inset 0 0 2px rgba(74, 222, 128, 0.2);
-        border-color: rgba(74, 222, 128, 0.3);
-    }
+.terminal-body::-webkit-scrollbar-thumb {
+    background-color: rgba(74, 222, 128, 0.3);
+    border-radius: 3px;
+}
+
+.terminal-body::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(74, 222, 128, 0.5);
+}
+
+/* Screen glare effect */
+.terminal-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+        60deg,
+        transparent 0%,
+        rgba(74, 222, 128, 0.01) 45%,
+        rgba(74, 222, 128, 0.02) 50%,
+        rgba(74, 222, 128, 0.01) 55%,
+        transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: screenGlare 10s ease-in-out infinite;
+}
+
+@keyframes screenGlare {
+    0% { transform: translateX(-100%); }
+    20%, 100% { transform: translateX(100%); }
 }
 
 /* Theme toggle button */
