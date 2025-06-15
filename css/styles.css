@@ -736,3 +736,30 @@ body.light-mode .nav-link.text-green-400 {
 .terminal-prompt {
     color: #4ade80 !important; /* Keep prompt color green */
 }
+
+/* Terminal styles */
+.terminal-content {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.prompt-line {
+    margin: 4px 0;
+}
+
+.command-input {
+    position: relative;
+    display: inline-block;
+    min-width: 8px;
+    margin-left: 8px;
+}
+
+.command-input::after {
+    content: '█';
+    color: #4ade80;
+    animation: blink 1s step-end infinite;
+    margin-left: 1px;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}

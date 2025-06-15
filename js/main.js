@@ -495,6 +495,97 @@ class ModernTerminal {
         this.cursorPosition = 0;
         this.initializeTerminal();
         this.setupAutoScroll();
+        this.setupCommands();
+    }
+
+    setupCommands() {
+        this.availableCommands = {
+            'help': {
+                command: 'cat help.txt',
+                output: [
+                    '╔══════════════════════════════════════╗',
+                    '║       RED TEAM SIM TOOLKIT v1.0      ║',
+                    '╟──────────────────────────────────────╢',
+                    '║ • help      → Show tools menu        ║',
+                    '║ • certipy   → Abuse AD CS (Certipy)  ║',
+                    '║ • bloodyad  → Exploit ACL in AD      ║',
+                    '║ • certutil  → Download via LOLBin    ║',
+                    '║ • rubeus    → Ticket & Kerberoasting ║',
+                    '║ • mimikatz  → Dump creds (lsass)     ║',
+                    '╚══════════════════════════════════════╝',
+                    'Type a command to simulate the action.'
+                ].join('\n'),
+                delay: 800
+            },
+            'certipy': {
+                command: 'certipy',
+                output: [
+                    'Certipy v1.0.0 - AD CS Exploitation Tool',
+                    '[*] Targeting Enterprise CA...',
+                    '[*] Looking for vulnerable templates...',
+                    '[+] Found vulnerable template: ESC1',
+                    '[*] Requesting certificate...',
+                    '[+] Got certificate!',
+                    '[*] Saved certificate and private key',
+                    '[√] Done! Ready for authentication'
+                ].join('\n'),
+                delay: 1000
+            },
+            'bloodyad': {
+                command: 'bloodyad',
+                output: [
+                    'BloodyAD - Active Directory ACL Scanner',
+                    '[*] Scanning domain for misconfiguration...',
+                    '[+] Found WriteDacl on AdminSDHolder',
+                    '[*] Checking for inheritance...',
+                    '[+] Found propagated rights',
+                    '[*] Adding backdoor permission...',
+                    '[√] Successfully backdoored AdminSDHolder!'
+                ].join('\n'),
+                delay: 1000
+            },
+            'certutil': {
+                command: 'certutil',
+                output: [
+                    'CertUtil - Living Off The Land',
+                    '[*] Initiating download operation...',
+                    '[+] Base64 encoding engaged',
+                    '[*] Transferring payload...',
+                    '[+] Decoding on target...',
+                    '[*] Cleaning up traces...',
+                    '[√] Transfer complete and undetected'
+                ].join('\n'),
+                delay: 1000
+            },
+            'rubeus': {
+                command: 'rubeus',
+                output: [
+                    'Rubeus - Kerberos Exploitation Tool',
+                    '[*] Loading ticket operations...',
+                    '[*] Scanning for vulnerable SPNs...',
+                    '[+] Found Service Account: svc_backup',
+                    '[*] Starting Kerberoasting...',
+                    '[+] Got TGS-REP ticket',
+                    '[*] Saving hash for offline cracking',
+                    '[√] Operation completed successfully'
+                ].join('\n'),
+                delay: 1000
+            },
+            'mimikatz': {
+                command: 'mimikatz',
+                output: [
+                    'Mimikatz - Credential Access',
+                    '[*] Privilege::Debug',
+                    '[+] SeDebugPrivilege enabled',
+                    '[*] Sekurlsa::Logonpasswords',
+                    '[+] Dumping credentials...',
+                    '[*] Found 3 password hashes',
+                    '[*] Extracting NTLM hashes...',
+                    '[√] Credential dump completed'
+                ].join('\n'),
+                delay: 1000
+            }
+        };
     }
 
     initializeTerminal() {
@@ -536,12 +627,12 @@ class ModernTerminal {
         {
             command: 'echo "secret6789@#$%^&*" | tee -a etc/hosts',
             output: [
-                '╔════════════════════════════════════',
-                '║ Redirecting target: Mission Set    ',
-                '╟────────────────────────────────────',
-                '║  ↳ Status: Bound to /etc/hosts     ',
-                '║  ↳ Mode: Covert Ops (stealth)      ',
-                '╚════════════════════════════════════',
+                '═════════════════════════════════════',
+                'Redirecting target: Mission Set    ',
+                '─────────────────────────────────────',
+                '  ↳ Status: Bound to /etc/hosts     ',
+                '  ↳ Mode: Covert Ops (stealth)      ',
+                '═════════════════════════════════════',
                 'xx.xx.xxx.xxx uziii2208.github.io'
             ].join('\n'),
             delay: 800
@@ -550,7 +641,7 @@ class ModernTerminal {
             command: './activate_operator.sh --mode stealth',
             output: [
                 '<> OPERATOR STATUS: ACTIVE <>',
-                '',
+                '═════════════════════════════════════',
                 '[*] Establishing secure comms...',
                 '[*] Loading offensive modules...',
                 '[*] Initializing stealth protocols...',
@@ -564,6 +655,7 @@ class ModernTerminal {
             command: './deploy_shadowlink.sh --encrypt quantum',
             output: [
                 'Initializing ShadowLink protocol...',
+                '═══════════════════════════════════════',
                 '[*] Generating quantum keypair...',
                 '[*] Establishing encrypted tunnel...',
                 '[+] Connection secured via AES-512-QKD',
@@ -575,6 +667,7 @@ class ModernTerminal {
             command: './verify_arsenal.sh',
             output: [
                 'Checking offensive toolkit status...',
+                '═══════════════════════════════════════',
                 '[+] Custom Malware Development   [READY]',
                 '[+] Stealth Remote Access Tools  [ACTIVE]',
                 '[+] Anti-Analysis Modules        [ENABLED]',
@@ -587,6 +680,7 @@ class ModernTerminal {
             command: './init_c2_infrastructure.sh --region darkpool',
             output: [
                 'Spinning up C2 infrastructure...',
+                '═══════════════════════════════════════',
                 '[*] Deploying nodes in darkpool region...',
                 '[+] Onion routing enabled',
                 '[+] Decoy traffic generators active',
@@ -598,6 +692,7 @@ class ModernTerminal {
             command: './scan_opsec.sh --level paranoid',
             output: [
                 'Running operational security scan...',
+                '═══════════════════════════════════════',
                 '[*] Checking for telemetry leaks...',
                 '[*] Validating sandbox evasion...',
                 '[+] No anomalies detected',
@@ -606,17 +701,18 @@ class ModernTerminal {
             delay: 900
         },
         {
-            command: 'cat help.txt',
+            command: 'Auto loading: ███████████████████████████████ 100%',
             output: [
-                '╔══════════════════════════════════════╗',
-                '║       RED TEAM SIM TOOLKIT v1.0      ║',
-                '╟──────────────────────────────────────╢',
-                '║ • certipy   → Abuse AD CS (Certipy)  ║',
-                '║ • bloodyad  → Exploit ACL in AD      ║',
-                '║ • certutil  → Download via LOLBin    ║',
-                '║ • rubeus    → Ticket & Kerberoasting ║',
-                '║ • mimikatz  → Dump creds (lsass)     ║',
-                '╚══════════════════════════════════════╝',
+                '═════════════════════════════════════════',
+                '        HOWTOPWN :: APT TOOLKIT v2.1     ',
+                '─────────────────────────────────────────',
+                ' • nimplant       → C2-ready .NET implant',
+                ' • sharPersist    → Persistence handler  ',
+                ' • coercer        → Trigger forced auth  ',
+                ' • safetykatz     → Dump creds silently  ',
+                ' • powerview.dev  → Modern AD recon      ',
+                '═════════════════════════════════════════',
+                '   ⚠️  Simulation only – input disabled',
                 'Type a command to simulate the action.'
             ].join('\n'),
             delay: 800
@@ -750,6 +846,32 @@ class ModernTerminal {
     cleanup() {
         if (this.observer) {
             this.observer.disconnect();
+        }
+    }
+
+    handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            const command = this.currentCommand.trim();
+            if (command) {
+                this.executeCommand(command);
+                this.currentCommand = '';
+            }
+        } else if (e.key === 'Backspace') {
+            e.preventDefault();
+            this.currentCommand = this.currentCommand.slice(0, -1);
+        } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+            e.preventDefault();
+            this.currentCommand += e.key;
+            this.simulateTyping(e.key, 0);
+        }
+    }
+
+    async executeCommand(command) {
+        const cmd = this.availableCommands[command];
+        if (cmd) {
+            await this.printOutput(cmd.output, cmd.delay);
+        } else {
+            await this.printOutput('Command not recognized. This is a simulated environment.\nType "help" to see available commands.', 500);
         }
     }
 }
