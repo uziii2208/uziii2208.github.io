@@ -596,7 +596,12 @@ class ModernTerminal {
         this.focusListener = () => this.focus();
         this.container.addEventListener('click', this.focusListener);
         
-        this.keyListener = (e) => this.handleKeyPress(e);
+        this.keyListener = (e) => {
+            // Only handle keypress when terminal is focused
+            if (document.activeElement === this.container || this.container.contains(document.activeElement)) {
+                this.handleKeyPress(e);
+            }
+        };
         document.addEventListener('keydown', this.keyListener);
         
         this.startupSequence();
