@@ -175,44 +175,75 @@
             </header>
 
             <div class="prose prose-lg prose-invert max-w-none">
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Information</h2>
+                <div class="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 mb-8">
+                    <p class="text-red-400 font-bold">⚠️ Warning: Active Machine</p>
+                    <p class="text-gray-300">This machine is currently active on HackTheBox. Following their policies, detailed write-ups will only be published after the machine is retired.</p>
+                </div>
+
+                <!-- Table of Contents -->
+                <nav class="hidden lg:block fixed right-4 top-24 w-72">
+                    <div class="bg-gray-900/95 rounded-lg shadow-2xl border border-green-400/20 backdrop-blur-sm p-4">
+                        <h3 class="text-green-400 font-bold mb-2">Contents</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#machine-overview" class="text-gray-400 hover:text-green-400">Machine Overview</a></li>
+                            <li><a href="#technical-information" class="text-gray-400 hover:text-green-400">Technical Information</a></li>
+                            <li><a href="#skills-topics" class="text-gray-400 hover:text-green-400">Skills & Topics</a></li>
+                            <li><a href="#report-content" class="text-gray-400 hover:text-green-400">Report Content</a></li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <h2 id="machine-overview" class="text-2xl text-green-400 mt-8 mb-4">Machine Overview</h2>
+                <div class="bg-gray-800/50 rounded-lg p-6 mb-8">
+                    <p class="text-gray-300">WhiteRabbit is an insane-difficulty HackTheBox machine that challenges even the most experienced penetration testers. This machine requires advanced knowledge of complex enumeration techniques, exploitation methods, and privilege escalation strategies.</p>
+                </div>
+
+                <h2 id="technical-information" class="text-2xl text-green-400 mt-8 mb-4">Technical Information</h2>
                 <table class="w-full border-collapse border border-gray-700 mb-6">
-                  <thead>
-                    <tr class="bg-gray-800">
-                      <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">General Information</strong></th>
-                      <th class="border border-gray-700 p-2 text-left"><strong class="text-gray-400">IP Address: xx.xx.xx.xx</strong></th>
-                    </tr>
-                  </thead>
-                  <tbody>
                     <tr>
-                      <td class="border border-gray-700 p-2">Operating System (Distribution)</td>
-                      <td class="border border-gray-700 p-2">Ubuntu Linux (inferred from OpenSSH service info, versions 3ubuntu13.9 and 3ubuntu13.5)</td>
+                        <td class="border border-gray-700 p-2 bg-gray-800/50 w-1/4">Machine Name</td>
+                        <td class="border border-gray-700 p-2">WhiteRabbit</td>
                     </tr>
                     <tr>
-                      <td class="border border-gray-700 p-2">Kernel OS Version</td>
-                      <td class="border border-gray-700 p-2">Not explicitly provided in the scan, but the CPE indicates a Linux kernel (cpe:/o:linux:linux_kernel)</td>
+                        <td class="border border-gray-700 p-2 bg-gray-800/50">Difficulty</td>
+                        <td class="border border-gray-700 p-2">Insane</td>
                     </tr>
                     <tr>
-                      <td class="border border-gray-700 p-2">Web Server Software and Version</td>
-                      <td class="border border-gray-700 p-2">Caddy httpd (version not specified in the scan)</td>
+                        <td class="border border-gray-700 p-2 bg-gray-800/50">OS</td>
+                        <td class="border border-gray-700 p-2">Windows</td>
                     </tr>
                     <tr>
-                      <td class="border border-gray-700 p-2">Available Ports</td>
-                      <td class="border border-gray-700 p-2">22, 80, 2222</td>
+                        <td class="border border-gray-700 p-2 bg-gray-800/50">Release Date</td>
+                        <td class="border border-gray-700 p-2">April 9, 2025</td>
                     </tr>
-                  </tbody>
                 </table>
 
-                <h2 class="text-2xl text-green-400 mt-8 mb-4">Report Content Characteristics</h2>
-                <div class="bg-gray-800 p-6 rounded-lg mb-8">
-                <blockquote>
-                <li class="text-gray-400">I have explained in detail every task I performed in each
-                step, accompanied by screenshots and the exploits used.</li>
-                <li class="text-gray-400">The full write-up <strong class="text-yellow-400">will be made public after machine retire</strong> to
-ensure transparency with <strong class="text-green-400">HackTheBox policies</strong>. <strong class="text-red-400">Please read carefully
-before commenting, I’m not responsible for any issues that arise</strong>. If you
-want to ask something, <strong class="text-green-400"><a href="/pages/contact.html">Contact Here</a></strong>!</li>
-                </blockquote> 
+                <h2 id="skills-topics" class="text-2xl text-green-400 mt-8 mb-4">Skills & Topics Covered</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gray-800/50 p-4 rounded-lg">
+                        <h3 class="text-green-400 font-bold mb-2">Primary Skills</h3>
+                        <ul class="list-disc list-inside text-gray-300">
+                            <li>Advanced Exploitation</li>
+                            <li>Custom Exploit Development</li>
+                            <li>Advanced Privilege Escalation</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-800/50 p-4 rounded-lg">
+                        <h3 class="text-green-400 font-bold mb-2">Tools & Concepts</h3>
+                        <ul class="list-disc list-inside text-gray-300">
+                            <li>Advanced Windows Internals</li>
+                            <li>Complex Attack Chains</li>
+                            <li>Zero-day Exploitation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 id="report-content" class="text-2xl text-green-400 mt-8 mb-4">Report Content Characteristics</h2>
+                <div class="bg-gray-800/50 p-6 rounded-lg mb-8">
+                    <ul class="list-none space-y-2">
+                        <li class="text-gray-400">I have explained in detail every task I performed in each step, accompanied by screenshots and the exploits used.</li>
+                        <li class="text-gray-400">The full write-up <strong class="text-yellow-400">will be made public after machine retire</strong> to ensure transparency with <strong class="text-green-400">HackTheBox policies</strong>. <strong class="text-red-400">Please read carefully before commenting, I'm not responsible for any issues that arise</strong>. If you want to ask something, <strong class="text-green-400"><a href="/pages/contact.html">Contact Here</a></strong>!</li>
+                    </ul>
                 </div>
 
             </div>
