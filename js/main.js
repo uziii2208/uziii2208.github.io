@@ -1,4 +1,43 @@
 // Theme management
+// Random quotes array
+const randomQuotes = [
+    "uziii{69c9fc184af3599a3f0cfcb70c20a615}",
+    "I hack because I can.",
+    "Keep calm and hack on!",
+    "Coffee + Code = Life",
+    "Error 404: Sleep not found",
+    "Time to hack the planet!",
+    "sudo make me a sandwich",
+    "It's not a bug, it's a feature",
+    "Eat. Sleep. Hack. Repeat.",
+    "chmod 777 world",
+    "Hackers gonna hack",
+    "rm -rf /problems",
+    "Hello World!",
+    "In Root We Trust",
+    "Life is short, use Python",
+    "Keep coding and carry on"
+];
+
+function showRandomQuote() {
+    const randomIndex = Math.floor(Math.random() * randomQuotes.length);
+    const quote = randomQuotes[randomIndex];
+    
+    // Create toast notification
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = quote;
+    
+    // Add to document
+    document.body.appendChild(toast);
+    
+    // Remove after animation
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 500);
+    }, 2000);
+}
+
 function toggleTheme() {
     const body = document.body;
     const isDarkMode = body.classList.toggle('light-mode');
