@@ -817,10 +817,39 @@ function getTagClass(tag) {
 }
 
 function updateStats() {
+  const dataset = Array.isArray(posts) && posts.length > 0 ? posts : (window.POSTS_DATA || []);
+  const total = dataset.length;
+
   const postsCountEl = document.getElementById('stat-posts');
   const cveCountEl = document.getElementById('stat-cve');
-  if (postsCountEl) postsCountEl.textContent = posts.length || '3';
+  if (postsCountEl) postsCountEl.textContent = total || '5';
   if (cveCountEl) cveCountEl.textContent = '15+';
+
+  // For post/index.html telemetry cards
+  const statsTotalPosts = document.getElementById('stats-total-posts');
+  const statsCveCount = document.getElementById('stats-cve-count');
+  const statsLabCount = document.getElementById('stats-lab-count');
+  const statusCountNum = document.querySelector('.archive-status-badge .count-num');
+
+  if (statsTotalPosts || statsCveCount || statsLabCount || statusCountNum) {
+    let cveTotal = 0;
+    let labTotal = 0;
+
+    dataset.forEach(p => {
+      const tags = (p.tags || []).map(t => (t || '').toLowerCase());
+      if (tags.includes('cve')) {
+        cveTotal++;
+      }
+      if (tags.some(t => t === 'htb' || t === 'ctf' || t === 'hackthebox' || t === 'pentest' || t === 'lab')) {
+        labTotal++;
+      }
+    });
+
+    if (statsTotalPosts) statsTotalPosts.textContent = total;
+    if (statsCveCount) statsCveCount.textContent = cveTotal;
+    if (statsLabCount) statsLabCount.textContent = labTotal;
+    if (statusCountNum) statusCountNum.textContent = total;
+  }
 }
 
 /* ─── 10. SCROLLSPY FOR TABLE OF CONTENTS ─── */
