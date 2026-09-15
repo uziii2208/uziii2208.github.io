@@ -1,0 +1,45 @@
+name: Auto-Build Blog Posts
+
+on:
+  push:
+    paths:
+      - 'posts/**'
+      - 'build.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run Blog Generator
+        run: python build.py
+
+      - name: Check for changes
+        id: git_status
+        run: |
+          git status --porcelain
+          if [ -n "$(git status --porcelain posts.json js/posts-data.js)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push if changed
+        if: steps.git_status.outputs.has_changes == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts.json js/posts-data.js
+          git commit -m "chore(auto): rebuild posts.json & js/posts-data.js [skip ci]"
+          git push

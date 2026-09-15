@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>uziii2208 — security research &amp; 0day disclosures</title>
+
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+  <link rel="alternate icon" href="favicon.ico">
+
+  <!-- Favicon & Meta -->
+  <meta name="description" content="Security research blog by @uziii2208 (zeropwn). 0-day disclosures, CTF write-ups, and HackTheBox walkthroughs.">
+  <meta name="author" content="Tong Hoang Gia (@uziii2208)">
+
+  <!-- OpenGraph / Twitter -->
+  <meta property="og:title" content="zeropwn — security research">
+  <meta property="og:description" content="Independent security research, CVE disclosures, and authorized pentest walkthroughs by @uziii2208.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://uziii2208.github.io/">
+  <meta property="og:image" content="https://uziii2208.github.io/og-hero.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="zeropwn — security research">
+  <meta name="twitter:description" content="Independent security research, CVE disclosures, and authorized pentest walkthroughs by @uziii2208.">
+  <meta name="twitter:image" content="https://uziii2208.github.io/og-hero.png">
+
+  <!-- Fonts & CDNs -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  
+  <!-- Modular Cyber Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Pre-compiled Post Data for instant search & offline support -->
+  <script src="js/posts-data.js"></script>
+
+  <!-- Application Logic -->
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+<!-- ─── MIGRATION NOTICE BANNER ─── -->
+<div id="migration-banner">
+  <div class="banner-inner">
+    <div class="banner-content">
+      <span class="banner-tag">Notice</span>
+      <span>
+        <strong>0pwn0.github.io</strong> is no longer active — old posts are still available there:
+        <a class="banner-link" href="https://0pwn0.github.io" target="_blank" rel="noopener noreferrer">https://0pwn0.github.io ↗</a>
+      </span>
+    </div>
+    <button class="banner-close" onclick="dismissBanner()" aria-label="Dismiss banner" title="Dismiss notice">✕</button>
+  </div>
+</div>
+
+<!-- ─── NAVIGATION ─── -->
+<nav>
+  <div class="nav-left">
+    <a class="nav-logo scramble-hover" href="/" onclick="return navigateToHome(event)">uziii<span>2208</span></a>
+    <ul class="nav-links">
+      <li><a href="/" id="nav-link-home" class="active" onclick="return navigateToHome(event)">home</a></li>
+      <li><a href="post/">write-ups</a></li>
+      <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a></li>
+    </ul>
+  </div>
+  
+  <div class="nav-right">
+    <!-- Cyber Audio SFX Toggle -->
+    <button id="sfx-toggle" class="btn-sfx" onclick="toggleSFX()" title="Toggle Cyber Sound Effects">
+      <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path class="sfx-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path class="sfx-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+      <span>SFX:</span> <span id="sfx-status">ON</span>
+    </button>
+    <div class="nav-shortcuts" title="Keyboard Shortcuts">
+      <span class="shortcut-chip" onclick="openCmdPalette()"><kbd>/</kbd> search</span>
+      <span class="shortcut-chip" onclick="window.scrollTo({top:0,behavior:'smooth'})"><kbd>esc</kbd> top</span>
+    </div>
+    <a class="nav-tag" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">@uziii2208</a>
+  </div>
+</nav>
+
+<!-- ─── HOME VIEW ─── -->
+<div id="home-view">
+  <section id="hero">
+    <!-- Interactive Cyber Constellation Canvas -->
+    <canvas id="cyber-canvas"></canvas>
+    <div class="hero-bg"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="pulse-dot"></span>
+        <span>INDEPENDENT SECURITY RESEARCH // ZERO_PWN</span>
+      </div>
+      <h1>
+        Vulnerabilities<br>
+        <span class="red">don't hide forever.</span>
+      </h1>
+
+      <p class="hero-sub">
+        CVE disclosures, CTF write-ups, and HackTheBox walkthroughs documented for the offensive and defensive security community. White hat research under the uziii2208 (zeropwn) handle.
+      </p>
+
+      <!-- Senior Operations HUD -->
+      <div class="hero-ops-grid">
+        <div class="ops-item">
+          <div class="ops-label">CVE DISCLOSURES</div>
+          <div class="ops-val" id="stat-cve">15+</div>
+        </div>
+        <div class="ops-item">
+          <div class="ops-label">PUBLIC WRITE-UPS</div>
+          <div class="ops-val" id="stat-posts">3</div>
+        </div>
+        <div class="ops-item">
+          <div class="ops-label">RESEARCH ACTIVE</div>
+          <div class="ops-val">2021-NOW</div>
+        </div>
+        <div class="ops-item">
+          <div class="ops-label">TARGET VECTORS</div>
+          <div class="ops-val highlight">ANYTHING I CAN</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main id="posts">
+    <div class="section-header">
+      <span class="section-title scramble-hover"><span>//</span> WRITE-UPS &amp; ADVISORIES</span>
+      <span class="section-count" id="posts-count-indicator">Showing all write-ups</span>
+    </div>
+
+    <!-- ─── SEARCH & FILTERS TOOLBAR ─── -->
+    <div class="toolbar-container">
+      <div class="search-box">
+        <span class="search-icon">//</span>
+        <input type="text" id="search-input" placeholder="Search write-ups by title, CVE, tag, or content excerpt..." oninput="onSearchInput(this.value)" autocomplete="off" spellcheck="false">
+        <button id="search-clear-btn" class="search-clear" onclick="clearSearch()" title="Clear search (Esc)" style="display:none">✕</button>
+        <span class="search-shortcut" onclick="openCmdPalette()" title="Press / or Ctrl+K to search">/</span>
+      </div>
+
+      <div class="filters-row">
+        <div class="filters" id="tag-filters">
+          <button class="filter-btn active" data-tag="all" onclick="filterPosts('all')">all</button>
+          <button class="filter-btn" data-tag="cve" onclick="filterPosts('cve')">cve</button>
+          <button class="filter-btn" data-tag="ctf" onclick="filterPosts('ctf')">ctf</button>
+          <button class="filter-btn" data-tag="htb" onclick="filterPosts('htb')">hackthebox</button>
+          <button class="filter-btn" data-tag="research" onclick="filterPosts('research')">research</button>
+        </div>
+        <div class="search-status-bar" id="search-status-text"></div>
+      </div>
+    </div>
+
+    <!-- ─── POST LIST (DIRECT POST LINKS) ─── -->
+    <div class="post-list" id="post-list">
+      <a href="post/cve-2026-88899/" class="post-item cyber-card" onclick="return navigateToPost(event, 'cve-2026-88899')">
+        <div class="post-header-row">
+          <div class="post-meta-inline">
+            <span class="meta-date">2026-09-10</span>
+            <span class="meta-sep">/</span>
+            <span class="meta-readtime">10 min read</span>
+          </div>
+          <div class="post-tags-inline">
+            <span class="tag tag-cve" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('cve')" title="Filter by tag: cve">cve</span><span class="tag tag-research" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('research')" title="Filter by tag: research">research</span>
+          </div>
+        </div>
+        <div class="post-title-block">
+          <div class="post-title">CVE-2026-88899: Knowns 0.30.0 - Unauthenticated Header Injection Grants AI Agent Unrestricted Access to Host Filesystem</div>
+          <div class="post-excerpt">Verified. An improper authorization and header-spoofing vulnerability exists in Knowns&#x27; reverse proxy for the embedded OpenCode AI agent daemon (server.go:1249-1305)....</div>
+        </div>
+        <div class="post-footer-row">
+          <span class="post-action-cue">
+            ACCESS WRITE-UP
+            <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+          <span class="post-auth-badge">RESEARCH // VERIFIED</span>
+        </div>
+      </a>
+      <a href="post/cve-2026-86543/" class="post-item cyber-card" onclick="return navigateToPost(event, 'cve-2026-86543')">
+        <div class="post-header-row">
+          <div class="post-meta-inline">
+            <span class="meta-date">2026-09-07</span>
+            <span class="meta-sep">/</span>
+            <span class="meta-readtime">4 min read</span>
+          </div>
+          <div class="post-tags-inline">
+            <span class="tag tag-cve" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('cve')" title="Filter by tag: cve">cve</span><span class="tag tag-research" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('research')" title="Filter by tag: research">research</span>
+          </div>
+        </div>
+        <div class="post-title-block">
+          <div class="post-title">CVE-2026-86543: Knowns 0.29.1 - Insecure Default Configuration leads to Unauthenticated Management API Exposure on All Interfaces</div>
+          <div class="post-excerpt">Verified by Nguyen Huy Hoang (hoanggxyuuki) &amp; Tong Hoang Gia (uziii2208). The default deployment of the Knowns browser server operates in a fully unauthenticated state,...</div>
+        </div>
+        <div class="post-footer-row">
+          <span class="post-action-cue">
+            ACCESS WRITE-UP
+            <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+          <span class="post-auth-badge">RESEARCH // VERIFIED</span>
+        </div>
+      </a>
+      <a href="post/cve-2026-86259/" class="post-item cyber-card" onclick="return navigateToPost(event, 'cve-2026-86259')">
+        <div class="post-header-row">
+          <div class="post-meta-inline">
+            <span class="meta-date">2026-09-06</span>
+            <span class="meta-sep">/</span>
+            <span class="meta-readtime">8 min read</span>
+          </div>
+          <div class="post-tags-inline">
+            <span class="tag tag-cve" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('cve')" title="Filter by tag: cve">cve</span><span class="tag tag-research" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('research')" title="Filter by tag: research">research</span>
+          </div>
+        </div>
+        <div class="post-title-block">
+          <div class="post-title">CVE-2026-86259: OpenMAIC 1.0.0 - Unauthenticated Outbound SSRF to Cloud Metadata Service via Fail-Open Middleware and Environment-Gated Validation Bypass</div>
+          <div class="post-excerpt">Verified. A two-leg exploit chain exists in OpenMAIC&#x27;s authentication middleware and outbound provider request layer that allows an unauthenticated remote attacker to...</div>
+        </div>
+        <div class="post-footer-row">
+          <span class="post-action-cue">
+            ACCESS WRITE-UP
+            <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+          <span class="post-auth-badge">RESEARCH // VERIFIED</span>
+        </div>
+      </a>
+      <a href="post/hackthebox-hercules/" class="post-item cyber-card" onclick="return navigateToPost(event, 'hackthebox-hercules')">
+        <div class="post-header-row">
+          <div class="post-meta-inline">
+            <span class="meta-date">2025-10-21</span>
+            <span class="meta-sep">/</span>
+            <span class="meta-readtime">31 min read</span>
+          </div>
+          <div class="post-tags-inline">
+            <span class="tag tag-htb" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('htb')" title="Filter by tag: htb">htb</span><span class="tag tag-ctf" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('ctf')" title="Filter by tag: ctf">ctf</span><span class="tag tag-windows" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('windows')" title="Filter by tag: windows">windows</span>
+          </div>
+        </div>
+        <div class="post-title-block">
+          <div class="post-title">HackTheBox - Hercules: Active Directory, Kerberos Delegation &amp; LDAP Injection Walkthrough</div>
+          <div class="post-excerpt">Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...</div>
+        </div>
+        <div class="post-footer-row">
+          <span class="post-action-cue">
+            ACCESS WRITE-UP
+            <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+          <span class="post-auth-badge">RESEARCH // VERIFIED</span>
+        </div>
+      </a>
+      <a href="post/hackthebox-zazamarin/" class="post-item cyber-card" onclick="return navigateToPost(event, 'hackthebox-zazamarin')">
+        <div class="post-header-row">
+          <div class="post-meta-inline">
+            <span class="meta-date">2025-09-15</span>
+            <span class="meta-sep">/</span>
+            <span class="meta-readtime">14 min read</span>
+          </div>
+          <div class="post-tags-inline">
+            <span class="tag tag-htb" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('htb')" title="Filter by tag: htb">htb</span><span class="tag tag-ctf" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('ctf')" title="Filter by tag: ctf">ctf</span><span class="tag tag-challenge" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('challenges')" title="Filter by tag: challenges">challenges</span>
+          </div>
+        </div>
+        <div class="post-title-block">
+          <div class="post-title">HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation</div>
+          <div class="post-excerpt">Challenge: ZaZamarin Category: Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography) Platform: HackTheBox Difficulty: Hard Captured Flag:...</div>
+        </div>
+        <div class="post-footer-row">
+          <span class="post-action-cue">
+            ACCESS WRITE-UP
+            <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+          <span class="post-auth-badge">RESEARCH // VERIFIED</span>
+        </div>
+      </a>
+    </div>
+
+    <div id="no-posts" style="display:none; font-family: var(--mono); font-size:0.82rem; color: var(--text-muted); padding: 4rem 0; text-align:center;">
+      no matching write-ups found — <button onclick="resetSearchAndFilter()" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--mono);font-size:0.82rem;text-decoration:underline;">reset filters</button>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>uziii2208 © 2026 — Tong Hoang Gia (zeropwn)</span>
+      <span>
+        <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a>
+        &nbsp;·&nbsp;
+        <a href="https://pypi.org/user/uziii2208/" target="_blank" rel="noopener noreferrer">pypi</a>
+        &nbsp;·&nbsp;
+        <a href="https://0pwn0.github.io" target="_blank" rel="noopener noreferrer">0pwn0 archive ↗</a>
+      </span>
+    </div>
+  </footer>
+</div>
+
+<!-- ─── FLOATING BACK TO TOP ─── -->
+<button id="back-to-top" class="back-to-top-btn" onclick="scrollToTop()" title="Back to top">▲</button>
+
+<!-- ─── COMMAND PALETTE HUD (Ctrl+K or /) ─── -->
+<div id="cmd-palette" class="cmd-overlay" onclick="closeCmdPalette()">
+  <div class="cmd-dialog" onclick="event.stopPropagation()">
+    <div class="cmd-header">
+      <span class="cmd-prompt">&gt;</span>
+      <input type="text" id="cmd-input" placeholder="Quick search write-ups, tags, CVEs..." autocomplete="off" spellcheck="false">
+      <span class="cmd-badge">ESC to close</span>
+    </div>
+    <div class="cmd-results" id="cmd-results">
+      <!-- Real-time search targets populated by app.js -->
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST NOTIFICATION ─── -->
+<div id="toast">
+  <svg class="ui-icon toast-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <span id="toast-text"></span>
+</div>
+
+</body>
+</html>

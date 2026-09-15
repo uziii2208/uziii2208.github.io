@@ -1,0 +1,79 @@
+[
+  {
+    "id": "cve-2026-88899",
+    "slug": "cve-2026-88899",
+    "path": "posts/CVEs/CVE-2026-88899.md",
+    "url": "post/cve-2026-88899/",
+    "title": "CVE-2026-88899: Knowns 0.30.0 - Unauthenticated Header Injection Grants AI Agent Unrestricted Access to Host Filesystem",
+    "date": "2026-09-10",
+    "tags": [
+      "cve",
+      "research"
+    ],
+    "excerpt": "Verified. An improper authorization and header-spoofing vulnerability exists in Knowns' reverse proxy for the embedded OpenCode AI agent daemon (server.go:1249-1305)....",
+    "readTime": "10 min read",
+    "author": "@uziii2208"
+  },
+  {
+    "id": "cve-2026-86543",
+    "slug": "cve-2026-86543",
+    "path": "posts/CVEs/CVE-2026-86543.md",
+    "url": "post/cve-2026-86543/",
+    "title": "CVE-2026-86543: Knowns 0.29.1 - Insecure Default Configuration leads to Unauthenticated Management API Exposure on All Interfaces",
+    "date": "2026-09-07",
+    "tags": [
+      "cve",
+      "research"
+    ],
+    "excerpt": "Verified by Nguyen Huy Hoang (hoanggxyuuki) & Tong Hoang Gia (uziii2208). The default deployment of the Knowns browser server operates in a fully unauthenticated state,...",
+    "readTime": "4 min read",
+    "author": "@uziii2208 && @hoanggxyuuki"
+  },
+  {
+    "id": "cve-2026-86259",
+    "slug": "cve-2026-86259",
+    "path": "posts/CVEs/CVE-2026-86259.md",
+    "url": "post/cve-2026-86259/",
+    "title": "CVE-2026-86259: OpenMAIC 1.0.0 - Unauthenticated Outbound SSRF to Cloud Metadata Service via Fail-Open Middleware and Environment-Gated Validation Bypass",
+    "date": "2026-09-06",
+    "tags": [
+      "cve",
+      "research"
+    ],
+    "excerpt": "Verified. A two-leg exploit chain exists in OpenMAIC's authentication middleware and outbound provider request layer that allows an unauthenticated remote attacker to...",
+    "readTime": "8 min read",
+    "author": "@uziii2208"
+  },
+  {
+    "id": "hackthebox-hercules",
+    "slug": "hackthebox-hercules",
+    "path": "posts/HackTheBox/HackTheBox-Hercules.md",
+    "url": "post/hackthebox-hercules/",
+    "title": "HackTheBox - Hercules: Active Directory, Kerberos Delegation & LDAP Injection Walkthrough",
+    "date": "2025-10-21",
+    "tags": [
+      "htb",
+      "ctf",
+      "windows"
+    ],
+    "excerpt": "Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...",
+    "readTime": "31 min read",
+    "author": "@uziii2208"
+  },
+  {
+    "id": "hackthebox-zazamarin",
+    "slug": "hackthebox-zazamarin",
+    "path": "posts/HackTheBox/HackTheBox-ZaZamarin.md",
+    "url": "post/hackthebox-zazamarin/",
+    "title": "HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation",
+    "date": "2025-09-15",
+    "tags": [
+      "htb",
+      "ctf",
+      "challenges"
+    ],
+    "excerpt": "Challenge: ZaZamarin Category: Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography) Platform: HackTheBox Difficulty: Hard Captured Flag:...",
+    "readTime": "14 min read",
+    "author": "@uziii2208"
+  }
+]

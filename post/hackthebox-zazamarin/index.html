@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation | uziii2208</title>
+
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="../../favicon.png">
+  <link rel="alternate icon" href="../../favicon.ico">
+
+  <!-- OpenGraph / Twitter Meta -->
+  <meta name="description" content="Challenge: ZaZamarin Category: Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography) Platform: HackTheBox Difficulty: Hard Captured Flag:...">
+  <meta name="author" content="@uziii2208">
+  <meta property="og:title" content="HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation">
+  <meta property="og:description" content="Challenge: ZaZamarin Category: Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography) Platform: HackTheBox Difficulty: Hard Captured Flag:...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://uziii2208.github.io/post/hackthebox-zazamarin/">
+  <meta property="og:image" content="https://uziii2208.github.io/og-hero.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation">
+  <meta name="twitter:description" content="Challenge: ZaZamarin Category: Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography) Platform: HackTheBox Difficulty: Hard Captured Flag:...">
+  <meta name="twitter:image" content="https://uziii2208.github.io/og-hero.png">
+
+  <!-- Fonts & Stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  
+  <!-- Relative link to CSS -->
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <!-- Code Highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- Application Logic -->
+  <script src="../../js/app.js" defer></script>
+</head>
+<body class="page-post">
+
+<!-- ─── INTERACTIVE CYBER BACKGROUND CANVAS ─── -->
+<canvas id="cyber-canvas"></canvas>
+
+<!-- ─── READING PROGRESS LASER BAR ─── -->
+<div id="reading-progress"></div>
+
+<!-- ─── NAVIGATION ─── -->
+<nav>
+  <div class="nav-left">
+    <a class="nav-logo scramble-hover" href="/" onclick="return navigateToHome(event)">uziii<span>2208</span></a>
+    <ul class="nav-links">
+      <li><a href="/" id="nav-link-home" onclick="return navigateToHome(event)">home</a></li>
+      <li><a href="../../post/" class="active">write-ups</a></li>
+      <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a></li>
+    </ul>
+  </div>
+  
+  <div class="nav-right">
+    <button id="sfx-toggle" class="btn-sfx" onclick="toggleSFX()" title="Toggle Cyber Sound Effects">
+      <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path class="sfx-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path class="sfx-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+      <span>SFX:</span> <span id="sfx-status">ON</span>
+    </button>
+    <div class="nav-shortcuts" title="Keyboard Shortcuts">
+      <span class="shortcut-chip" onclick="openCmdPalette()"><kbd>/</kbd> search</span>
+      <span class="shortcut-chip" onclick="navigateToHome(event)"><kbd>esc</kbd> home</span>
+    </div>
+    <a class="nav-tag" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">@uziii2208</a>
+  </div>
+</nav>
+
+<!-- ─── POST VIEW CONTAINER ─── -->
+<div id="post-view" style="display:block;">
+  <main>
+    <!-- Breadcrumbs -->
+    <div class="breadcrumb">
+      <a href="/" onclick="return navigateToHome(event)">home</a>
+      <span class="sep">//</span>
+      <a href="../../post/">write-ups</a>
+      <span class="sep">//</span>
+      <span class="crumb-current">hackthebox-zazamarin</span>
+    </div>
+
+    <!-- Top Action Bar -->
+    <div class="post-view-top-bar">
+      <a class="back-btn" href="../../post/">
+        <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>ALL WRITE-UPS</span>
+      </a>
+      <div class="post-ctrl-btns">
+        <button class="btn-ctrl" onclick="sharePost()" title="Share Advisory Link">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          <span>SHARE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Article Header -->
+    <div class="post-view-header">
+      <div class="post-tags" style="flex-direction:row;margin-bottom:1.2rem;gap:8px;align-items:center;">
+        <a href="../../post/?tag=htb" class="tag tag-htb" onclick="return navigateToTag(event, 'htb')" title="Filter by tag: htb">htb</a><a href="../../post/?tag=ctf" class="tag tag-ctf" onclick="return navigateToTag(event, 'ctf')" title="Filter by tag: ctf">ctf</a><a href="../../post/?tag=challenges" class="tag tag-challenge" onclick="return navigateToTag(event, 'challenges')" title="Filter by tag: challenges">challenges</a>
+      </div>
+      <h1 class="post-view-title">HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation</h1>
+      <div class="post-meta-bar">
+        <span class="meta-item">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          2025-09-15
+        </span>
+        <span class="meta-sep">/</span>
+        <span class="meta-item">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          14 min read
+        </span>
+        <span class="meta-sep">/</span>
+        <span class="meta-item meta-author">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          @uziii2208
+        </span>
+      </div>
+    </div>
+
+    <!-- Two-Column Article Layout with Sticky TOC -->
+    <div class="post-body-layout">
+      <article class="post-main-content">
+        <div class="md-content" id="post-view-content">
+<blockquote>
+<p><strong>Challenge:</strong> ZaZamarin<br />
+<strong>Category:</strong> Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography)<br />
+<strong>Platform:</strong> HackTheBox<br />
+<strong>Difficulty:</strong> Hard<br />
+<strong>Captured Flag:</strong> <code>HTB{redacted}</code></p>
+</blockquote>
+<hr />
+<h2 id="1-challenge-overview-amp-scenario-analysis">1. Challenge Overview &amp; Scenario Analysis</h2>
+<p>The challenge description provides crucial narrative clues:</p>
+<blockquote>
+<p><em>&quot;The app promised a reward. Six years, zero rewards. The company that built it is long gone, the framework it used changed names twice, and the only thing the original developer ever said about the 'unbreakable protection' was a laughing emoji. My grandfather still taps that button every morning before coffee. Today he tapped it and told me: 'someone will claim it one day; probably a n00bie.'&quot;</em></p>
+</blockquote>
+<p>Three primary technical insights emerge from this lore:</p>
+<ol>
+<li><strong>&quot;The framework it used changed names twice&quot;</strong>: References the lineage: <strong>MonoTouch/MonoDroid $\rightarrow$ Xamarin $\rightarrow$ .NET MAUI</strong>.</li>
+<li><strong>&quot;Taps that button every morning&quot;</strong>: The user interface features a single action button (&quot;Claim Reward&quot;) triggering the validation routine.</li>
+<li><strong>&quot;Unbreakable protection&quot;</strong>: Multi-layered defense including anti-debugging, anti-Frida, custom hashing, dynamic bytecode decryption, and a custom virtual machine.</li>
+</ol>
+<hr />
+<h2 id="2-apk-reconnaissance-amp-environment-architecture">2. APK Reconnaissance &amp; Environment Architecture</h2>
+<h3 id="2-1-file-triage">2.1 File Triage</h3>
+<p>Extracting the contents of <code>ZaZamarin.apk</code> reveals the file layout:</p>
+<pre><code class="language-text">mobile_zazamarin/ZaZamarin.apk
+├── AndroidManifest.xml
+├── classes.dex
+├── classes2.dex
+├── assets/
+│   └── vault.dat                  &lt;-- 4096 bytes of binary entropy
+├── lib/
+│   ├── arm64-v8a/
+│   │   ├── libassemblies.arm64-v8a.blob.so
+│   │   ├── libflagnative.so
+│   │   └── libmonosgen-2.0.so
+│   └── x86_64/
+│       ├── libassemblies.x86_64.blob.so
+│       ├── libflagnative.so
+│       └── libmonosgen-2.0.so
+└── res/ ...
+</code></pre>
+<p>Two critical artifacts immediately stand out:</p>
+<ol>
+<li><code>assets/vault.dat</code>: Exactly 4096 bytes of pseudo-random binary data.</li>
+<li><code>libassemblies.&lt;arch&gt;.blob.so</code>: A non-standard shared library storing .NET assemblies.</li>
+</ol>
+<h3 id="2-2-the-evolution-of-xamarin-to-net-maui-architecture">2.2 The Evolution of Xamarin to .NET MAUI Architecture</h3>
+<p>In older Xamarin applications:</p>
+<ul>
+<li>Assemblies were packaged either as raw <code>.dll</code> files in <code>assemblies/</code> or compressed via LZ4 (<code>assemblies.blob</code> accompanied by <code>assemblies.manifest</code>).</li>
+<li>Tools like <code>pyxamstore</code> could directly decompress <code>assemblies.blob</code>.</li>
+</ul>
+<p>In modern <strong>.NET MAUI (specifically .NET 9 for Android)</strong>:</p>
+<ul>
+<li>Assemblies are compiled and bundled directly inside an ELF shared object (<code>libassemblies.&lt;arch&gt;.blob.so</code>).</li>
+<li>The bundle is stored inside a dedicated ELF section named <code>payload</code>.</li>
+<li>Standard tools expecting <code>.dll</code> files in the APK fail completely.</li>
+</ul>
+<h3 id="2-3-demystifying-the-xaba-assembly-store">2.3 Demystifying the XABA Assembly Store</h3>
+<p>Inspecting the <code>payload</code> section of <code>libassemblies.x86_64.blob.so</code> with Python:</p>
+<pre><code class="language-python">with open('libassemblies.x86_64.blob.so', 'rb') as f:
+    f.seek(0x4000) # Offset of 'payload' section
+    header = f.read(32)
+</code></pre>
+<p>The header layout follows the <strong>XABA</strong> format:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Offset</th>
+<th style="text-align:left">Field</th>
+<th style="text-align:left">Value</th>
+<th style="text-align:left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>0x00 - 0x03</code></td>
+<td style="text-align:left">Magic</td>
+<td style="text-align:left"><code>58 41 42 41</code></td>
+<td style="text-align:left">ASCII string <code>&quot;XABA&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>0x04 - 0x05</code></td>
+<td style="text-align:left">Version</td>
+<td style="text-align:left"><code>02 00</code></td>
+<td style="text-align:left">Format Version 2</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>0x06 - 0x07</code></td>
+<td style="text-align:left">Flags</td>
+<td style="text-align:left"><code>03 80</code></td>
+<td style="text-align:left">Assembly store descriptor flags</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>0x08 - 0x0B</code></td>
+<td style="text-align:left">Count</td>
+<td style="text-align:left"><code>7A 00 00 00</code></td>
+<td style="text-align:left">122 assemblies bundled in the store</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>0x0C - 0x0F</code></td>
+<td style="text-align:left">Index Size</td>
+<td style="text-align:left"><code>F4 00 00 00</code></td>
+<td style="text-align:left">Index table entries</td>
+</tr>
+</tbody>
+</table>
+<p>Each index entry defines:</p>
+<ul>
+<li>Hash of assembly name</li>
+<li>Offset to assembly data in the blob</li>
+<li>Compressed length &amp; uncompressed length</li>
+<li>Name table index</li>
+</ul>
+<hr />
+<h2 id="3-decompressing-amp-extracting-managed-assemblies">3. Decompressing &amp; Extracting Managed Assemblies</h2>
+<h3 id="3-1-extracting-the-payload-section">3.1 Extracting the Payload Section</h3>
+<p>To unpack assemblies from modern .NET MAUI applications, we use the <code>xablob</code> utility (version 1.2+ supports XABA v2/v3):</p>
+<pre><code class="language-bash">pip install https://github.com/Kirlif/XaBlob/releases/download/1.2/xablob-1.2-py3-none-any.whl
+</code></pre>
+<h3 id="3-2-unpacking-with-xablob">3.2 Unpacking with XaBlob</h3>
+<p>Running <code>xablob</code> on the ELF file:</p>
+<pre><code class="language-bash">python -c &quot;import xablob; xablob.unpack('extracted/lib/x86_64/libassemblies.x86_64.blob.so')&quot;
+</code></pre>
+<p>Output:</p>
+<pre><code class="language-text">pt-BR/Microsoft.Maui.Controls.resources.dll ...
+Microsoft.Maui.Controls.dll ...
+AppCTF.dll                                   77    77    39824 bytes
+System.Private.CoreLib.dll ...
+Mono.Android.dll ...
+dll files unpacked to extracted/lib/x86_64/assemblies
+</code></pre>
+<p>The primary user code resides in <code>AppCTF.dll</code> (39,824 bytes).</p>
+<hr />
+<h2 id="4-managed-code-reverse-engineering-appctf-dll">4. Managed Code Reverse Engineering (AppCTF.dll)</h2>
+<h3 id="4-1-decompiling-with-ilspycmd">4.1 Decompiling with ilspycmd</h3>
+<p>We decompile <code>AppCTF.dll</code> to C# using the official .NET decompiler tool <code>ilspycmd</code>:</p>
+<pre><code class="language-bash">dotnet tool install -g ilspycmd
+ilspycmd extracted/lib/x86_64/assemblies/AppCTF.dll -o decompiled_appctf
+</code></pre>
+<p>This outputs <code>AppCTF.decompiled.cs</code>. Inspecting the classes:</p>
+<ul>
+<li><code>AppCTF.MainPage</code></li>
+<li><code>AppCTF.DecoyFlagGenerator</code></li>
+<li><code>AppCTF.FridaDetector</code></li>
+<li><code>AppCTF.BlobReader</code></li>
+<li><code>AppCTF.ChainRunner</code></li>
+<li>Auxiliary data classes: <code>AnalyticsTracker</code>, <code>CacheService</code>, <code>ConfigManager</code>, etc.</li>
+</ul>
+<h3 id="4-2-the-decoy-trap-decoyflaggenerator">4.2 The Decoy Trap: DecoyFlagGenerator</h3>
+<p>In <code>MainPage.xaml.cs</code>:</p>
+<pre><code class="language-csharp">public MainPage()
+{
+    InitializeComponent();
+    _legacyDiagnosticsToken = DecoyFlagGenerator.GetFlag();
+    StartDetectorTimer(base.Dispatcher);
+}
+</code></pre>
+<p>Looking inside <code>DecoyFlagGenerator</code>:</p>
+<pre><code class="language-csharp">public static class DecoyFlagGenerator
+{
+    private static readonly byte[] SpreadKey = new byte[4] { 90, 195, 25, 126 };
+
+    public static string GetFlag()
+    {
+        byte[] array = Concat(ConfigManager.GetBufferConfig(), CacheService.GetCacheConfig(), ThemeProvider.GetPrimaryColorBytes());
+        byte[] array2 = Concat(AnalyticsTracker.GetSessionConfig(), PreferenceManager.GetDefaultValues(), ResourceLoader.GetBundleData());
+        byte[] array3 = new byte[array.Length];
+        for (int i = 0; i &lt; array3.Length; i++)
+            array3[i] = (byte)(array[i] ^ array2[i]);
+        array3 = Spread(array3);
+        string text = Encoding.ASCII.GetString(array3);
+        return (text.StartsWith(&quot;HTB{&quot;) &amp;&amp; text.EndsWith(&quot;}&quot;)) ? text : string.Empty;
+    }
+}
+</code></pre>
+<p>Executing this code produces a fake flag string. This is an intentional trap for automated string extractors and casual reversers.</p>
+<h3 id="4-3-defensive-instrumentation-fridadetector">4.3 Defensive Instrumentation: FridaDetector</h3>
+<p>The application runs periodic background checks every 2 seconds via <code>IDispatcherTimer</code>:</p>
+<ol>
+<li><strong><code>CheckProcMapsForFrida()</code></strong>: Reads <code>/proc/self/maps</code> scanning for the string <code>&quot;frida&quot;</code>.</li>
+<li><strong><code>CheckEnvironmentVariables()</code></strong>: Inspects <code>FRIDA</code>, <code>LD_PRELOAD</code>, and <code>DYLD_INSERT_LIBRARIES</code>.</li>
+<li><strong><code>CheckPtrace()</code></strong>: Inspects <code>/proc/self/status</code> for <code>TracerPid != 0</code>.</li>
+<li><strong><code>CheckFridaTcpPort()</code></strong>: Attempts a TCP connection to <code>127.0.0.1:27042</code>.</li>
+<li><strong><code>CheckListeningOnLoopback()</code></strong>: Attempts a TCP connection to <code>127.0.0.1:27043</code>.</li>
+</ol>
+<p>If any check triggers:</p>
+<pre><code class="language-csharp">private static void TriggerDetection()
+{
+    _fridaDetected = true;
+    Log.Error(&quot;BUSTED&quot;, &quot;========================================&quot;);
+    Log.Error(&quot;BUSTED&quot;, &quot;   Try harder (maybe faster) ! ;)&quot;);
+    Log.Error(&quot;BUSTED&quot;, &quot;========================================&quot;);
+}
+// Followed by an intentional DivideByZeroException:
+int num = 0;
+_ = 5 / num;
+</code></pre>
+<h3 id="4-4-integrity-verification-blobreader">4.4 Integrity Verification: BlobReader</h3>
+<p>Before triggering validation, <code>BlobReader.ComputeBlobWord()</code> calculates a dynamic checksum:</p>
+<pre><code class="language-csharp">public static uint ComputeBlobWord()
+{
+    byte[] array = ReadBlobSlice();
+    uint num = 2166136261u; // FNV-1a 32-bit offset basis
+    foreach (byte b in array)
+    {
+        num ^= b;
+        num *= 16777619;    // FNV-1a 32-bit prime
+    }
+    return num;
+}
+</code></pre>
+<p><code>ReadBlobSlice()</code> operates as follows:</p>
+<ol>
+<li>Obtains the APK path via <code>ApplicationInfo.SourceDir</code>.</li>
+<li>Opens the APK archive and resolves <code>lib/{abi}/libassemblies.{abi}.blob.so</code>.</li>
+<li>Skips the first <strong>8,192 bytes</strong> (skipping ELF headers).</li>
+<li>Reads the subsequent <strong>65,536 bytes</strong> (64 KB).</li>
+<li>Computes standard 32-bit <strong>FNV-1a</strong>:
+<ul>
+<li>For <code>x86_64</code>: <code>blobWord = 0x8bdaee2f</code></li>
+<li>For <code>arm64-v8a</code>: <code>blobWord = 0xbdfd7043</code></li>
+</ul>
+</li>
+</ol>
+<p>This binds the execution integrity directly to the physical binary bits of the assembly store.</p>
+<h3 id="4-5-the-core-orchestrator-chainrunner">4.5 The Core Orchestrator: ChainRunner</h3>
+<p>When the user taps &quot;Claim Reward&quot;, <code>ChainRunner.ClaimCoreAsync()</code> runs:</p>
+<pre><code class="language-csharp">private static async Task&lt;bool&gt; ClaimCoreAsync()
+{
+    // 1. Read vault.dat
+    byte[] vault = ... Read assets/vault.dat ...; // 4096 bytes
+    uint blobWord = BlobReader.ComputeBlobWord();
+    
+    // 2. Step 1: Native Seed &amp; Settle
+    uint[] cells = new uint[64];
+    if (Native_SeedAndSettle(vault, vault.Length, blobWord, cells) != 0)
+        return false;
+        
+    // 3. Step 2: Managed Transform M1
+    cells = M1(cells);
+    
+    // 4. Step 3: Native Unseal Program
+    byte[] programBuf = new byte[1024];
+    int progLen = programBuf.Length;
+    if (Native_UnsealProgram(cells, programBuf, ref progLen) != 0)
+        return false;
+        
+    byte[] unsealedProg = new byte[progLen];
+    Array.Copy(programBuf, unsealedProg, progLen);
+    
+    // 5. Step 4: Managed Transform M2
+    byte[] mangledProg = M2(unsealedProg, cells);
+    
+    // 6. Step 5: Native Run Program
+    if (Native_RunProgram(mangledProg, mangledProg.Length, cells) != 0)
+        return false;
+        
+    // 7. Step 6: Native Final Open
+    return Native_FinalOpen() == 0;
+}
+</code></pre>
+<p>This 6-step alternating state machine forms the complete cryptographic pipeline.</p>
+<hr />
+<h2 id="5-native-library-deep-dive-libflagnative-so">5. Native Library Deep-Dive (<a href="http://libflagnative.so">libflagnative.so</a>)</h2>
+<h3 id="5-1-elf-symbol-amp-relocation-mapping">5.1 ELF Symbol &amp; Relocation Mapping</h3>
+<p>Inspecting <code>libflagnative.so</code> via <code>pyelftools</code>:</p>
+<pre><code class="language-text">Section .text: 0x1430 - 0x462e (size: 0x31fe)
+Dynamic Exported Functions:
+  - Native_SeedAndSettle  (0x1490, size 1107)
+  - Native_UnsealProgram  (0x1ac0, size 1365)
+  - Native_RunProgram     (0x2020, size 2335)
+  - Native_FinalOpen      (0x2940, size 1158)
+  - flag_commit           (0x2dd0, size 281)
+</code></pre>
+<h3 id="5-2-anti-analysis-amp-native-sentinel-mechanisms">5.2 Anti-Analysis &amp; Native Sentinel Mechanisms</h3>
+<p>All native functions (<code>Native_SeedAndSettle</code>, <code>Native_UnsealProgram</code>, <code>Native_RunProgram</code>, <code>Native_FinalOpen</code>) execute inline anti-debugging checks:</p>
+<ul>
+<li>Inspect <code>/proc/self/maps</code> for <code>&quot;frida&quot;</code>, <code>&quot;gadget&quot;</code>, <code>&quot;gum&quot;</code>.</li>
+<li>Inspect <code>/proc/self/status</code> for <code>&quot;TracerPid:&quot;</code>.</li>
+<li>Create AF_INET sockets and attempt TCP connections to <code>127.0.0.1:27042</code> and <code>127.0.0.1:27043</code>.</li>
+</ul>
+<p>If any check passes (meaning a debugger or Frida is detected):</p>
+<ul>
+<li>A global sentinel variable at <code>.bss + 0x00</code> (<code>0xc960</code>) is set to <code>1</code>:<pre><code class="language-assembly">0x1848: cmp dword ptr [rip + 0xb111], 0  ; [0xc960]
+0x1851: mov dword ptr [rip + 0xb105], 1  ; [0xc960] = 1
+</code></pre>
+</li>
+<li>If <code>[0xc960] != 0</code>, the native routines corrupt the state cells by XORing them with a garbage pattern (<code>0xd5</code>, <code>0x3c</code>, <code>0x62</code> sequence), causing subsequent cryptographic operations to fail.</li>
+</ul>
+<h3 id="5-3-stage-1-native-seedandsettle-amp-cellular-mixing">5.3 Stage 1: Native_SeedAndSettle &amp; Cellular Mixing</h3>
+<p><code>Native_SeedAndSettle</code> accepts <code>(vault, vaultLen, blobWord, outCells)</code>:</p>
+<ol>
+<li>Absorbs <code>vault.dat</code> into 64 words using FNV/Murmur operations in sub-function <code>0x3580</code>:<pre><code class="language-c">edx = blobWord ^ 0x811c9dc5;
+for (int i = 0; i &lt; 64; i++) {
+    uint r9 = edx;
+    for (int off = 0; off &lt; vaultLen; off += 2) {
+        uint b0 = vault[off] + i;
+        r9 = ((b0 ^ r9) * 0x1000193);
+        uint b1 = vault[off + 1] + i;
+        r9 = (r9 &gt;&gt; 11) ^ ((b1 ^ r9) * 0x1000193);
+        r9 = (r9 &gt;&gt; 11) ^ r9;
+    }
+    cells[i] = r9;
+}
+</code></pre>
+</li>
+<li>Passes <code>cells</code> into <code>0x3650</code>, executing <strong>4,096 rounds</strong> of a cellular automaton network:<pre><code class="language-c">uint r8 = 0;
+for (int round = 0; round &lt; 4096; round++) {
+    int rot1 = ((7 * round) &amp; 15) + 1;
+    int rot2 = ((11 * round) &amp; 15) + 1;
+    int rot3 = ((round &gt;&gt; 3) &amp; 15) + 1;
+    for (int i = 0; i &lt; 64; i++) {
+        uint prev = in[(i - 1) &amp; 63];
+        uint curr = in[i];
+        uint next = in[(i + 1) &amp; 63];
+        uint m = curr ^ rotl(prev, rot1) ^ rotr(next, rot2);
+        uint t = (m * 0x85ebca77) + r8 + i;
+        t ^= (t &gt;&gt; 15);
+        uint out = rotl(curr, rot3) ^ (t * 0xc2b2ae3d);
+        out ^= (out &gt;&gt; 16);
+        next_in[i] = out;
+    }
+    r8 += 0x9e3779b9; // Golden ratio constant
+    swap(in, next_in);
+}
+</code></pre>
+</li>
+</ol>
+<h3 id="5-4-stage-2-managed-transform-m1">5.4 Stage 2: Managed Transform M1</h3>
+<p>In C#, <code>ChainRunner.M1</code> executes 5 bi-directional mixing passes:</p>
+<pre><code class="language-csharp">public static uint[] M1(uint[] cells)
+{
+    uint[] array = new uint[64];
+    Array.Copy(cells, array, 64);
+    for (int i = 0; i &lt; 5; i++)
+    {
+        bool flag = i % 2 == 0;
+        for (int j = 0; j &lt; 64; j++)
+        {
+            int num = flag ? j : (63 - j);
+            uint x = array[(num - 1) &amp; 0x3F];
+            uint num2 = array[num];
+            uint x2 = array[(num + 1) &amp; 0x3F];
+            uint num3 = num2 + Rotl32(x, 7) + Rotr32(x2, 17);
+            num3 *= 2246822507u;
+            array[num] = Rotl32(num3, 13);
+        }
+    }
+    return array;
+}
+</code></pre>
+<h3 id="5-5-stage-3-native-unsealprogram-amp-aes-256-gcm-unsealing">5.5 Stage 3: Native_UnsealProgram &amp; AES-256-GCM Unsealing</h3>
+<p><code>Native_UnsealProgram</code> takes the <code>M1</code>-churned cells:</p>
+<ol>
+<li>Calls <code>0x3880(cells, outKey)</code>: Hashes the 64 state cells into a <strong>32-byte (256-bit) AES key</strong>.</li>
+<li>Calls <code>0x3980</code> (an inlined implementation of <strong>AES-256-GCM</strong> authenticated decryption):
+<ul>
+<li><strong>Key:</strong> Derived 32-byte key</li>
+<li><strong>Nonce / IV:</strong> 12 bytes at <code>.rodata + 0x8f4</code></li>
+<li><strong>Tag:</strong> 16 bytes at <code>.rodata + 0x900</code></li>
+<li><strong>Ciphertext:</strong> 212 bytes (<code>0xd4</code>) at <code>.rodata + 0x930</code></li>
+</ul>
+</li>
+<li>Decrypts and verifies the 212-byte binary payload (the unsealed program).</li>
+</ol>
+<h3 id="5-6-stage-4-managed-keystream-permutation-m2">5.6 Stage 4: Managed Keystream Permutation M2</h3>
+<p>In C#, <code>ChainRunner.M2</code> generates a stream cipher keystream using <code>AdvanceKeystreamBlock</code>:</p>
+<pre><code class="language-csharp">public static byte[] M2(byte[] program, uint[] cellsChurned)
+{
+    uint[] state = new uint[64];
+    Array.Copy(cellsChurned, state, 64);
+    byte[] result = new byte[program.Length];
+    byte[] block = new byte[256];
+    int offset = 0, blockIndex = 0;
+    while (offset &lt; program.Length)
+    {
+        AdvanceKeystreamBlock(state, blockIndex++, block);
+        int take = Math.Min(256, program.Length - offset);
+        for (int i = 0; i &lt; take; i++)
+            result[offset + i] = (byte)(program[offset + i] ^ block[i]);
+        offset += take;
+    }
+    return result;
+}
+</code></pre>
+<p>This XORs the 212-byte unsealed program with the keystream.</p>
+<h3 id="5-7-stage-5-native-runprogram-amp-custom-vm-disassembly">5.7 Stage 5: Native_RunProgram &amp; Custom VM Disassembly</h3>
+<p><code>Native_RunProgram</code> takes <code>(mangledProgram, 212, cells)</code>:</p>
+<ol>
+<li>Recomputes the exact same keystream from <code>cells</code> (lines <code>0x241c</code> to <code>0x24eb</code>) and XORs it against <code>mangledProgram</code>.
+$$\text{Program} = \text{M2}(\text{Program}) \oplus \text{Keystream} = \text{Original Unsealed Bytecode}$$</li>
+<li>Clears the 32-byte master key buffer in <code>.bss</code> (<code>0xc964</code> to <code>0xc983</code>).</li>
+<li>Invokes the virtual machine interpreter at <code>0x4110</code>:<pre><code class="language-assembly">0x2738: lea rdi, [rsp + 0x100]  ; Decoded 212-byte bytecode
+0x2740: lea rdx, [rsp + 0x600]  ; State cells (64 words)
+0x2748: mov esi, 0xd4           ; Bytecode length (212)
+0x274d: mov ecx, 0xf42400       ; Fuel limit (16,000,000 cycles)
+0x2752: call 0x4110             ; VM Execution
+</code></pre>
+</li>
+</ol>
+<h4>The Custom Virtual Machine (Function 0x4110)</h4>
+<ul>
+<li><strong>Architecture:</strong> Fixed 4-byte instruction length (<code>uint32</code>):
+<ul>
+<li>Byte 0: Opcode index</li>
+<li>Byte 1: Operand / Register index</li>
+<li>Byte 2: Register index / Offset</li>
+<li>Byte 3: Immediate / Register index</li>
+</ul>
+</li>
+<li><strong>Registers:</strong> 8 general-purpose 32-bit registers stored on stack (<code>rsp + 0x110</code> to <code>rsp + 0x12c</code>).</li>
+<li><strong>Memory Map:</strong> State cells mapped to virtual memory space.</li>
+<li><strong>Dispatch:</strong> An indirect jump table indexed by opcode byte:<pre><code class="language-assembly">0x4413: movsxd rsi, dword ptr [r12 + rsi*4]
+0x4417: add    rsi, r12
+0x441a: jmp    rsi
+</code></pre>
+</li>
+<li><strong>Goal of the Bytecode:</strong> The 212-byte program executes mathematical permutations over the state cells and writes the derived <strong>32-byte Master AES Key</strong> directly into <code>0xc964</code> (<code>.bss</code>).</li>
+</ul>
+<h3 id="5-8-stage-6-native-finalopen-amp-flag-decryption">5.8 Stage 6: Native_FinalOpen &amp; Flag Decryption</h3>
+<p><code>Native_FinalOpen</code> executes the final phase:</p>
+<ol>
+<li>Verifies anti-debugging: ensures <code>[0xc960] == 0</code>.</li>
+<li>Sets up parameters for AES-256-GCM (<code>0x3980</code>):<pre><code class="language-assembly">0x2cac: lea r10, [rip - 0x2393] ; Tag (16 bytes) at .rodata + 0x920
+0x2cb3: lea rdi, [rip + 0x9caa] ; Master AES Key (32 bytes) at .bss + 0xc964
+0x2cba: lea rsi, [rip - 0x23b1] ; Nonce / IV (12 bytes) at .rodata + 0x910
+0x2cc1: lea rdx, [rip - 0x1f98] ; Ciphertext (41 bytes) at .rodata + 0xd30
+0x2cc8: mov ecx, 0x29          ; Length = 41 bytes (0x29)
+0x2ccd: xor r8d, r8d           ; AAD = NULL
+0x2cd0: xor r9d, r9d           ; AAD len = 0
+0x2cd3: push rax               ; Plaintext destination buffer on stack (rsp)
+0x2cd4: push r10               ; Tag pointer
+0x2cd6: call 0x3980            ; AES-256-GCM Decrypt
+</code></pre>
+</li>
+<li>If decryption succeeds (<code>eax == 0</code>), it calls <code>flag_commit(rsp, 41)</code>:<pre><code class="language-assembly">0x2cea: mov rdi, rsp           ; Pointer to plaintext flag
+0x2ced: mov esi, 0x29          ; Length: 41
+0x2cf2: call flag_commit
+</code></pre>
+</li>
+<li><code>flag_commit</code> writes the flag into <code>.bss + 0xc984</code>, and immediately overwrites it with zeroes before returning.</li>
+</ol>
+<hr />
+<h2 id="6-developing-the-automated-solver-via-unicorn-cpu-emulation">6. Developing the Automated Solver via Unicorn CPU Emulation</h2>
+<h3 id="6-1-why-cpu-emulation-over-on-device-dynamic-hooking">6.1 Why CPU Emulation Over On-Device Dynamic Hooking?</h3>
+<p>Attempting to run the app on an Android emulator or device with Frida/Frida-gadget encounters multiple friction points:</p>
+<ol>
+<li>Frida is actively detected via ports 27042/27043, maps, and TracerPid.</li>
+<li>Android x86/ARM translation layers introduce latency and ABI mismatches.</li>
+<li>Modifying APK files requires repackaging, aligning, and re-signing, which breaks the <code>BlobReader</code> integrity hash.</li>
+</ol>
+<p><strong>CPU Emulation using Unicorn</strong> solves all these issues:</p>
+<ul>
+<li>Runs headless on any operating system in pure Python.</li>
+<li>Fast execution ($\sim 5$ seconds).</li>
+<li>Complete, transparent control over CPU registers, memory, and PLT imports.</li>
+<li>Anti-analysis checks can be trivially spoofed by returning clean mock values.</li>
+</ul>
+<h3 id="6-2-setting-up-the-x86-64-virtual-machine">6.2 Setting Up the x86_64 Virtual Machine</h3>
+<pre><code class="language-python">from unicorn import *
+from unicorn.x86_const import *
+
+uc = Uc(UC_ARCH_X86, UC_MODE_64)
+
+BASE = 0x400000
+# Map Text + Rodata (RX)
+uc.mem_map(BASE, 0x5000, UC_PROT_ALL)
+# Map Data + GOT + BSS (RW)
+uc.mem_map(BASE + 0x8000, 0x6000, UC_PROT_ALL)
+# Map Stack (RW)
+STACK_BASE = 0x700000
+uc.mem_map(STACK_BASE, 0x80000, UC_PROT_ALL)
+RSP = STACK_BASE + 0x80000 - 0x1000
+
+# Map TLS &amp; Stack Canary (FS Base)
+FS_BASE = 0x800000
+uc.mem_map(FS_BASE, 0x2000, UC_PROT_ALL)
+uc.mem_write(FS_BASE + 0x28, struct.pack('&lt;Q', 0x1122334455667788))
+uc.msr_write(0xc0000100, FS_BASE) # Set IA32_FS_BASE MSR
+</code></pre>
+<h3 id="6-3-neutralizing-anti-analysis-via-plt-interception">6.3 Neutralizing Anti-Analysis via PLT Interception</h3>
+<p>By placing a single code hook across the PLT address range (<code>0x404640</code> to <code>0x404720</code>), we intercept every libc call:</p>
+<pre><code class="language-python">def hook_plt(uc, address, size, user_data):
+    rel = address - BASE
+    rsp = uc.reg_read(UC_X86_REG_RSP)
+    ret_addr = struct.unpack('&lt;Q', uc.mem_read(rsp, 8))[0]
+    uc.reg_write(UC_X86_REG_RSP, rsp + 8)
+    uc.reg_write(UC_X86_REG_RIP, ret_addr)
+
+    if rel in (0x4640, 0x4650, 0x46b0): # __cxa_finalize, close
+        uc.reg_write(UC_X86_REG_RAX, 0)
+    elif rel in (0x4660, 0x4670, 0x46e0): # fopen, fgets, fread
+        uc.reg_write(UC_X86_REG_RAX, 0) # Return NULL: /proc files 'do not exist'
+    elif rel in (0x4690, 0x46a0): # socket, connect
+        uc.reg_write(UC_X86_REG_RAX, 0xFFFFFFFFFFFFFFFF) # Return -1: ports closed
+    elif rel in (0x46c0, 0x4710): # memcpy, __memcpy_chk
+        dst = uc.reg_read(UC_X86_REG_RDI)
+        src = uc.reg_read(UC_X86_REG_RSI)
+        n = uc.reg_read(UC_X86_REG_RDX)
+        uc.mem_write(dst, bytes(uc.mem_read(src, n)))
+        uc.reg_write(UC_X86_REG_RAX, dst)
+    elif rel == 0x4700: # memset
+        dst = uc.reg_read(UC_X86_REG_RDI)
+        val = uc.reg_read(UC_X86_REG_RSI) &amp; 0xff
+        n = uc.reg_read(UC_X86_REG_RDX)
+        uc.mem_write(dst, bytes([val] * n))
+        uc.reg_write(UC_X86_REG_RAX, dst)
+    elif rel == 0x46f0: # flag_commit
+        rdi = uc.reg_read(UC_X86_REG_RDI)
+        esi = uc.reg_read(UC_X86_REG_RSI)
+        captured['flag'] = bytes(uc.mem_read(rdi, esi)).decode('ascii')
+</code></pre>
+<p>Because <code>fopen</code> and <code>connect</code> return failure, the application concludes that no debugger or Frida server is present, leaving <code>[0xc960] == 0</code>.</p>
+<h3 id="6-4-executing-the-end-to-end-pipeline">6.4 Executing the End-to-End Pipeline</h3>
+<p>The solver script drives the execution through each stage:</p>
+<pre><code class="language-python"># 1. Native Seed &amp; Settle
+call_func(BASE + 0x1490, VAULT_PTR, len(vault), blob_word, CELLS_PTR)
+cells = list(struct.unpack('&lt;64I', bytes(uc.mem_read(CELLS_PTR, 256))))
+
+# 2. Managed M1
+cells = M1(cells)
+uc.mem_write(CELLS_PTR, struct.pack('&lt;64I', *cells))
+
+# 3. Native Unseal Program
+call_func(BASE + 0x1ac0, CELLS_PTR, PROG_BUF_PTR, INOUT_LEN_PTR)
+prog_len = struct.unpack('&lt;I', bytes(uc.mem_read(INOUT_LEN_PTR, 4)))[0]
+unsealed_prog = bytes(uc.mem_read(PROG_BUF_PTR, prog_len))
+
+# 4. Managed M2
+mangled_prog = M2(unsealed_prog, cells)
+uc.mem_write(MANGLED_PTR, mangled_prog)
+
+# 5. Native Run Program (VM)
+call_func(BASE + 0x2020, MANGLED_PTR, len(mangled_prog), CELLS_PTR)
+
+# 6. Native Final Open (Flag Decryption)
+call_func(BASE + 0x2940)
+</code></pre>
+<hr />
+<h2 id="7-verification-amp-flag-output">7. Verification &amp; Flag Output</h2>
+<p>Running <code>uziii2208_workspace/ctf/solves/ZaZamarin/solve.py</code>:</p>
+<pre><code class="language-bash">$ python uziii2208_workspace/ctf/solves/ZaZamarin/solve.py
+[+] Flag captured successfully: HTB{redacted}
+</code></pre>
+<p>The flag format conforms to <code>HTB{...}</code>:</p>
+<pre><code class="language-text">HTB{redacted}
+</code></pre>
+<hr />
+<h2 id="8-key-takeaways-amp-educational-lessons">8. Key Takeaways &amp; Educational Lessons</h2>
+<ol>
+<li><strong>Modern .NET Android Assembly Packing (<code>XABA</code>):</strong>
+<ul>
+<li>Reverse engineers targeting Android apps built with .NET 6/7/8/9 MAUI must look beyond conventional <code>assets/assemblies/</code> folders.</li>
+<li>Assemblies are embedded in the <code>payload</code> section of <code>libassemblies.&lt;arch&gt;.blob.so</code> using the <code>XABA</code> container format.</li>
+</ul>
+</li>
+<li><strong>Layered Decoys &amp; Anti-Analysis:</strong>
+<ul>
+<li>Static string searches are defeated by synthetic decoy generators (<code>DecoyFlagGenerator</code>).</li>
+<li>Anti-instrumentation sentinels (<code>0xc960</code>) silently corrupt cryptographic states rather than crashing immediately.</li>
+</ul>
+</li>
+<li><strong>Hybrid Cross-Boundary Architectures:</strong>
+<ul>
+<li>Modern CTF challenges increasingly distribute cryptographic operations across runtime boundaries (C# managed runtime $\leftrightarrow$ Native C ELF $\leftrightarrow$ Custom Bytecode VM).</li>
+</ul>
+</li>
+<li><strong>Power of CPU Emulation:</strong>
+<ul>
+<li>Instead of struggling with complex multi-architecture Android emulators and Frida bypass scripts, native libraries can be loaded and executed directly via <code>Unicorn</code>, providing total visibility and determinism.</li>
+</ul>
+</li>
+</ol>
+
+        </div>
+      </article>
+
+      <aside class="post-toc-sidebar" id="post-toc-sidebar">
+        <div class="toc-title"><span>//</span> ON THIS PAGE</div>
+        <ul class="toc-nav" id="toc-nav">
+<li class="toc-h2"><a href="#1-challenge-overview-amp-scenario-analysis" class="toc-link" data-slug="1-challenge-overview-amp-scenario-analysis">1. Challenge Overview &amp;amp; Scenario Analysis</a></li><li class="toc-h2"><a href="#2-apk-reconnaissance-amp-environment-architecture" class="toc-link" data-slug="2-apk-reconnaissance-amp-environment-architecture">2. APK Reconnaissance &amp;amp; Environment Architecture</a></li><li class="toc-h3"><a href="#2-1-file-triage" class="toc-link" data-slug="2-1-file-triage">2.1 File Triage</a></li><li class="toc-h3"><a href="#2-2-the-evolution-of-xamarin-to-net-maui-architecture" class="toc-link" data-slug="2-2-the-evolution-of-xamarin-to-net-maui-architecture">2.2 The Evolution of Xamarin to .NET MAUI Architecture</a></li><li class="toc-h3"><a href="#2-3-demystifying-the-xaba-assembly-store" class="toc-link" data-slug="2-3-demystifying-the-xaba-assembly-store">2.3 Demystifying the XABA Assembly Store</a></li><li class="toc-h2"><a href="#3-decompressing-amp-extracting-managed-assemblies" class="toc-link" data-slug="3-decompressing-amp-extracting-managed-assemblies">3. Decompressing &amp;amp; Extracting Managed Assemblies</a></li><li class="toc-h3"><a href="#3-1-extracting-the-payload-section" class="toc-link" data-slug="3-1-extracting-the-payload-section">3.1 Extracting the Payload Section</a></li><li class="toc-h3"><a href="#3-2-unpacking-with-xablob" class="toc-link" data-slug="3-2-unpacking-with-xablob">3.2 Unpacking with XaBlob</a></li><li class="toc-h2"><a href="#4-managed-code-reverse-engineering-appctf-dll" class="toc-link" data-slug="4-managed-code-reverse-engineering-appctf-dll">4. Managed Code Reverse Engineering (AppCTF.dll)</a></li><li class="toc-h3"><a href="#4-1-decompiling-with-ilspycmd" class="toc-link" data-slug="4-1-decompiling-with-ilspycmd">4.1 Decompiling with ilspycmd</a></li><li class="toc-h3"><a href="#4-2-the-decoy-trap-decoyflaggenerator" class="toc-link" data-slug="4-2-the-decoy-trap-decoyflaggenerator">4.2 The Decoy Trap: DecoyFlagGenerator</a></li><li class="toc-h3"><a href="#4-3-defensive-instrumentation-fridadetector" class="toc-link" data-slug="4-3-defensive-instrumentation-fridadetector">4.3 Defensive Instrumentation: FridaDetector</a></li><li class="toc-h3"><a href="#4-4-integrity-verification-blobreader" class="toc-link" data-slug="4-4-integrity-verification-blobreader">4.4 Integrity Verification: BlobReader</a></li><li class="toc-h3"><a href="#4-5-the-core-orchestrator-chainrunner" class="toc-link" data-slug="4-5-the-core-orchestrator-chainrunner">4.5 The Core Orchestrator: ChainRunner</a></li><li class="toc-h2"><a href="#5-native-library-deep-dive-libflagnative-so" class="toc-link" data-slug="5-native-library-deep-dive-libflagnative-so">5. Native Library Deep-Dive (libflagnative.so)</a></li><li class="toc-h3"><a href="#5-1-elf-symbol-amp-relocation-mapping" class="toc-link" data-slug="5-1-elf-symbol-amp-relocation-mapping">5.1 ELF Symbol &amp;amp; Relocation Mapping</a></li><li class="toc-h3"><a href="#5-2-anti-analysis-amp-native-sentinel-mechanisms" class="toc-link" data-slug="5-2-anti-analysis-amp-native-sentinel-mechanisms">5.2 Anti-Analysis &amp;amp; Native Sentinel Mechanisms</a></li><li class="toc-h3"><a href="#5-3-stage-1-native-seedandsettle-amp-cellular-mixing" class="toc-link" data-slug="5-3-stage-1-native-seedandsettle-amp-cellular-mixing">5.3 Stage 1: Native_SeedAndSettle &amp;amp; Cellular Mixing</a></li><li class="toc-h3"><a href="#5-4-stage-2-managed-transform-m1" class="toc-link" data-slug="5-4-stage-2-managed-transform-m1">5.4 Stage 2: Managed Transform M1</a></li><li class="toc-h3"><a href="#5-5-stage-3-native-unsealprogram-amp-aes-256-gcm-unsealing" class="toc-link" data-slug="5-5-stage-3-native-unsealprogram-amp-aes-256-gcm-unsealing">5.5 Stage 3: Native_UnsealProgram &amp;amp; AES-256-GCM Unsealing</a></li><li class="toc-h3"><a href="#5-6-stage-4-managed-keystream-permutation-m2" class="toc-link" data-slug="5-6-stage-4-managed-keystream-permutation-m2">5.6 Stage 4: Managed Keystream Permutation M2</a></li><li class="toc-h3"><a href="#5-7-stage-5-native-runprogram-amp-custom-vm-disassembly" class="toc-link" data-slug="5-7-stage-5-native-runprogram-amp-custom-vm-disassembly">5.7 Stage 5: Native_RunProgram &amp;amp; Custom VM Disassembly</a></li><li class="toc-h3"><a href="#5-8-stage-6-native-finalopen-amp-flag-decryption" class="toc-link" data-slug="5-8-stage-6-native-finalopen-amp-flag-decryption">5.8 Stage 6: Native_FinalOpen &amp;amp; Flag Decryption</a></li><li class="toc-h2"><a href="#6-developing-the-automated-solver-via-unicorn-cpu-emulation" class="toc-link" data-slug="6-developing-the-automated-solver-via-unicorn-cpu-emulation">6. Developing the Automated Solver via Unicorn CPU Emulation</a></li><li class="toc-h3"><a href="#6-1-why-cpu-emulation-over-on-device-dynamic-hooking" class="toc-link" data-slug="6-1-why-cpu-emulation-over-on-device-dynamic-hooking">6.1 Why CPU Emulation Over On-Device Dynamic Hooking?</a></li><li class="toc-h3"><a href="#6-2-setting-up-the-x86-64-virtual-machine" class="toc-link" data-slug="6-2-setting-up-the-x86-64-virtual-machine">6.2 Setting Up the x86_64 Virtual Machine</a></li><li class="toc-h3"><a href="#6-3-neutralizing-anti-analysis-via-plt-interception" class="toc-link" data-slug="6-3-neutralizing-anti-analysis-via-plt-interception">6.3 Neutralizing Anti-Analysis via PLT Interception</a></li><li class="toc-h3"><a href="#6-4-executing-the-end-to-end-pipeline" class="toc-link" data-slug="6-4-executing-the-end-to-end-pipeline">6.4 Executing the End-to-End Pipeline</a></li><li class="toc-h2"><a href="#7-verification-amp-flag-output" class="toc-link" data-slug="7-verification-amp-flag-output">7. Verification &amp;amp; Flag Output</a></li><li class="toc-h2"><a href="#8-key-takeaways-amp-educational-lessons" class="toc-link" data-slug="8-key-takeaways-amp-educational-lessons">8. Key Takeaways &amp;amp; Educational Lessons</a></li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>uziii2208 © 2026 - Build with no brain actual:D</span>
+      <span>
+        <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a>
+        &nbsp;·&nbsp;
+        <a href="https://pypi.org/user/uziii2208/" target="_blank" rel="noopener noreferrer">pypi</a>
+        &nbsp;·&nbsp;
+        <a href="https://0pwn0.github.io" target="_blank" rel="noopener noreferrer">0pwn0 archive ↗</a>
+      </span>
+    </div>
+  </footer>
+</div>
+
+<!-- ─── FLOATING BACK TO TOP ─── -->
+<button id="back-to-top" class="back-to-top-btn" onclick="scrollToTop()" title="Back to top">▲</button>
+
+<!-- ─── IMAGE LIGHTBOX MODAL ─── -->
+<div id="image-lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+  <div class="lightbox-container" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="Proof of concept">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <div id="lightbox-caption" class="lightbox-caption"></div>
+  </div>
+</div>
+
+<!-- ─── COMMAND PALETTE HUD (Ctrl+K or /) ─── -->
+<div id="cmd-palette" class="cmd-overlay" onclick="closeCmdPalette()">
+  <div class="cmd-dialog" onclick="event.stopPropagation()">
+    <div class="cmd-header">
+      <span class="cmd-prompt">&gt;</span>
+      <input type="text" id="cmd-input" placeholder="Quick search write-ups, tags, CVEs..." autocomplete="off" spellcheck="false">
+      <span class="cmd-badge">ESC to close</span>
+    </div>
+    <div class="cmd-results" id="cmd-results">
+      <!-- Search results generated by app.js -->
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST NOTIFICATION ─── -->
+<div id="toast">
+  <svg class="ui-icon toast-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <span id="toast-text"></span>
+</div>
+
+<script>
+  window.__POST_SLUG__ = "hackthebox-zazamarin";
+</script>
+</body>
+</html>
