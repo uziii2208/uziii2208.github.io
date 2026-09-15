@@ -17,13 +17,13 @@
   <meta property="og:description" content="Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://uziii2208.github.io/post/hackthebox-hercules/">
-  <meta property="og:image" content="https://uziii2208.github.io/og-hero.png">
+  <meta property="og:image" content="https://uziii2208.github.io/post/hackthebox-hercules/hero.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="HackTheBox - Hercules: Active Directory, Kerberos Delegation &amp; LDAP Injection Walkthrough">
   <meta name="twitter:description" content="Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...">
-  <meta name="twitter:image" content="https://uziii2208.github.io/og-hero.png">
+  <meta name="twitter:image" content="https://uziii2208.github.io/post/hackthebox-hercules/hero.png">
 
   <!-- Fonts & Stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,6 +125,11 @@
     <!-- Two-Column Article Layout with Sticky TOC -->
     <div class="post-body-layout">
       <article class="post-main-content">
+        <!-- Post Hero Banner -->
+        <div class="post-hero-banner">
+          <img src="hero.png" alt="HackTheBox - Hercules: Active Directory, Kerberos Delegation &amp; LDAP Injection Walkthrough" class="post-hero-img" loading="eager">
+        </div>
+
         <div class="md-content" id="post-view-content">
 <p><img src="../../photos/hercules/image.png" alt="image.png" /></p>
 <h2 id="introduction">Introduction</h2>
@@ -1097,7 +1102,10 @@ PS C:\Tools&gt; Add-MpPreference -ExclusionPath &quot;C:\Tools&quot;
       </article>
 
       <aside class="post-toc-sidebar" id="post-toc-sidebar">
-        <div class="toc-title"><span>//</span> ON THIS PAGE</div>
+        <div class="toc-title">
+          <div class="toc-title-left"><span>//</span> ON THIS PAGE</div>
+          <span class="toc-status-pulse"></span>
+        </div>
         <ul class="toc-nav" id="toc-nav">
 <li class="toc-h2"><a href="#introduction" class="toc-link" data-slug="introduction">Introduction</a></li><li class="toc-h2"><a href="#attack-narrative" class="toc-link" data-slug="attack-narrative">Attack Narrative</a></li><li class="toc-h2"><a href="#initial-reconnaissance" class="toc-link" data-slug="initial-reconnaissance">Initial Reconnaissance</a></li><li class="toc-h2"><a href="#hosting" class="toc-link" data-slug="hosting">Hosting</a></li><li class="toc-h2"><a href="#krb5-config" class="toc-link" data-slug="krb5-config">Krb5 Config</a></li><li class="toc-h2"><a href="#user-enumeration" class="toc-link" data-slug="user-enumeration">User Enumeration</a></li><li class="toc-h2"><a href="#directory-fuzzing" class="toc-link" data-slug="directory-fuzzing">Directory Fuzzing</a></li><li class="toc-h2"><a href="#web-exploring" class="toc-link" data-slug="web-exploring">Web Exploring</a></li><li class="toc-h2"><a href="#ldap-injection-attacks-explaining" class="toc-link" data-slug="ldap-injection-attacks-explaining">LDAP Injection Attacks Explaining</a></li><li class="toc-h2"><a href="#bruteforce-username-description-ldap-filter-injection-password-spraying" class="toc-link" data-slug="bruteforce-username-description-ldap-filter-injection-password-spraying">Bruteforce Username Description (LDAP-Filter-Injection - Password Spraying)</a></li><li class="toc-h2"><a href="#verify-ldap-credentials" class="toc-link" data-slug="verify-ldap-credentials">Verify LDAP Credentials</a></li><li class="toc-h2"><a href="#local-file-inclusion-lfi" class="toc-link" data-slug="local-file-inclusion-lfi">Local File Inclusion (LFI)</a></li><li class="toc-h2"><a href="#get-web-config-via-lfi-machinekey" class="toc-link" data-slug="get-web-config-via-lfi-machinekey">Get web.config via LFI (machineKey)</a></li><li class="toc-h2"><a href="#cookie-forgery-attack-formsauthenticationticket" class="toc-link" data-slug="cookie-forgery-attack-formsauthenticationticket">Cookie Forgery Attack (FormsAuthenticationTicket)</a></li><li class="toc-h2"><a href="#web-admin-portal" class="toc-link" data-slug="web-admin-portal">Web Admin Portal</a></li><li class="toc-h2"><a href="#file-upload" class="toc-link" data-slug="file-upload">File Upload</a></li><li class="toc-h2"><a href="#bloodhound-enumeration" class="toc-link" data-slug="bloodhound-enumeration">Bloodhound Enumeration</a></li><li class="toc-h3"><a href="#lateral-movement" class="toc-link" data-slug="lateral-movement">Lateral Movement</a></li><li class="toc-h3"><a href="#critical-bypass" class="toc-link" data-slug="critical-bypass">Critical Bypass</a></li><li class="toc-h2"><a href="#root" class="toc-link" data-slug="root">Root</a></li><li class="toc-h3"><a href="#amsi-bypassing" class="toc-link" data-slug="amsi-bypassing">⚠️ AMSI Bypassing</a></li><li class="toc-h3"><a href="#enable-fernando-r-amp-request-enrollmentagentoffline-certificate" class="toc-link" data-slug="enable-fernando-r-amp-request-enrollmentagentoffline-certificate">Enable fernando.r &amp;amp; Request EnrollmentAgentOffline Certificate</a></li><li class="toc-h3"><a href="#request-certificate-on-behalf-of-ashley-b-esc8" class="toc-link" data-slug="request-certificate-on-behalf-of-ashley-b-esc8">Request Certificate On-Behalf-Of ashley.b (ESC8)</a></li><li class="toc-h3"><a href="#from-auditor-shell-grant-full-control-over-forest-migration-ou" class="toc-link" data-slug="from-auditor-shell-grant-full-control-over-forest-migration-ou">From Auditor Shell: Grant Full Control Over Forest Migration OU</a></li><li class="toc-h3"><a href="#authenticate-as-ashley-b-ashley-b-shell" class="toc-link" data-slug="authenticate-as-ashley-b-ashley-b-shell">Authenticate as ashley.b (Ashley.B Shell)</a></li><li class="toc-h2"><a href="#road-to-administrator" class="toc-link" data-slug="road-to-administrator">Road to Administrator</a></li><li class="toc-h3"><a href="#from-ashley-b-shell-enable-iis-administrator-amp-reset-iis-webserver-password" class="toc-link" data-slug="from-ashley-b-shell-enable-iis-administrator-amp-reset-iis-webserver-password">From ashley.b Shell: Enable iis_administrator &amp;amp; Reset iis_webserver$ Password</a></li><li class="toc-h3"><a href="#extract-iis-webserver-session-key" class="toc-link" data-slug="extract-iis-webserver-session-key">Extract iis_webserver$ Session Key</a></li><li class="toc-h3"><a href="#change-iis-webserver-password-using-session-key-bypass-cleanup" class="toc-link" data-slug="change-iis-webserver-password-using-session-key-bypass-cleanup">Change iis_webserver$ Password Using Session Key (Bypass Cleanup)</a></li><li class="toc-h3"><a href="#final-abuse-unconstrained-delegation-s4u2self-s4u2proxy" class="toc-link" data-slug="final-abuse-unconstrained-delegation-s4u2self-s4u2proxy">Final Abuse: Unconstrained Delegation → S4U2Self + S4U2Proxy</a></li><li class="toc-h2"><a href="#more-exploitation-from-administrator-session" class="toc-link" data-slug="more-exploitation-from-administrator-session">More Exploitation From Administrator Session</a></li><li class="toc-h3"><a href="#dump-local-sam-hashes-administrator-account" class="toc-link" data-slug="dump-local-sam-hashes-administrator-account">### Dump Local SAM Hashes (Administrator account)</a></li><li class="toc-h3"><a href="#dcsync-extract-krbtgt-hash-golden-ticket-ready" class="toc-link" data-slug="dcsync-extract-krbtgt-hash-golden-ticket-ready">DCSync – Extract krbtgt Hash (Golden Ticket Ready)</a></li>
         </ul>
