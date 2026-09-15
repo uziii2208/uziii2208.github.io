@@ -1,5 +1,21 @@
 [
   {
+    "id": "hackthebox-zazamarin",
+    "slug": "hackthebox-zazamarin",
+    "path": "posts/HackTheBox/HackTheBox-ZaZamarin.md",
+    "url": "post/hackthebox-zazamarin/",
+    "title": "HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation",
+    "date": "2026-09-15",
+    "tags": [
+      "htb",
+      "ctf",
+      "challenges"
+    ],
+    "excerpt": "Challenge: ZaZamarin Category: Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography) Platform: HackTheBox Difficulty: Hard Captured Flag:...",
+    "readTime": "14 min read",
+    "author": "@uziii2208"
+  },
+  {
     "id": "cve-2026-88899",
     "slug": "cve-2026-88899",
     "path": "posts/CVEs/CVE-2026-88899.md",
@@ -58,22 +74,6 @@
     ],
     "excerpt": "Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...",
     "readTime": "31 min read",
-    "author": "@uziii2208"
-  },
-  {
-    "id": "hackthebox-zazamarin",
-    "slug": "hackthebox-zazamarin",
-    "path": "posts/HackTheBox/HackTheBox-ZaZamarin.md",
-    "url": "post/hackthebox-zazamarin/",
-    "title": "HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation",
-    "date": "2025-09-15",
-    "tags": [
-      "htb",
-      "ctf",
-      "challenges"
-    ],
-    "excerpt": "Challenge: ZaZamarin Category: Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography) Platform: HackTheBox Difficulty: Hard Captured Flag:...",
-    "readTime": "14 min read",
     "author": "@uziii2208"
   }
 ]
