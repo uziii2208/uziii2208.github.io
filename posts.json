@@ -1,5 +1,22 @@
 [
   {
+    "id": "hackthebox-sandcastle",
+    "slug": "hackthebox-sandcastle",
+    "path": "posts/HackTheBox/HackTheBox-Sandcastle.md",
+    "url": "post/hackthebox-sandcastle/",
+    "title": "HackTheBox - Sandcastle: Reverse Engineering a Multi-Process Bytecode VM & IPC Sandbox Escape",
+    "date": "2026-09-16",
+    "tags": [
+      "htb",
+      "ctf",
+      "challenges"
+    ],
+    "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
+    "readTime": "17 min read",
+    "author": "@uziii2208",
+    "locked": true
+  },
+  {
     "id": "hackthebox-zazamarin",
     "slug": "hackthebox-zazamarin",
     "path": "posts/HackTheBox/HackTheBox-ZaZamarin.md",
@@ -11,9 +28,10 @@
       "ctf",
       "challenges"
     ],
-    "excerpt": "Challenge: ZaZamarin Category: Reverse Engineering (Mobile / .NET MAUI / Native C / Custom VM / Cryptography) Platform: HackTheBox Difficulty: Hard Captured Flag:...",
+    "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
     "readTime": "14 min read",
-    "author": "@uziii2208"
+    "author": "@uziii2208",
+    "locked": true
   },
   {
     "id": "cve-2026-88899",
@@ -28,7 +46,8 @@
     ],
     "excerpt": "Verified. An improper authorization and header-spoofing vulnerability exists in Knowns' reverse proxy for the embedded OpenCode AI agent daemon (server.go:1249-1305)....",
     "readTime": "10 min read",
-    "author": "@uziii2208"
+    "author": "@uziii2208",
+    "locked": false
   },
   {
     "id": "cve-2026-86543",
@@ -43,7 +62,8 @@
     ],
     "excerpt": "Verified by Nguyen Huy Hoang (hoanggxyuuki) & Tong Hoang Gia (uziii2208). The default deployment of the Knowns browser server operates in a fully unauthenticated state,...",
     "readTime": "4 min read",
-    "author": "@uziii2208 && @hoanggxyuuki"
+    "author": "@uziii2208 && @hoanggxyuuki",
+    "locked": false
   },
   {
     "id": "cve-2026-86259",
@@ -58,7 +78,8 @@
     ],
     "excerpt": "Verified. A two-leg exploit chain exists in OpenMAIC's authentication middleware and outbound provider request layer that allows an unauthenticated remote attacker to...",
     "readTime": "8 min read",
-    "author": "@uziii2208"
+    "author": "@uziii2208",
+    "locked": false
   },
   {
     "id": "hackthebox-hercules",
@@ -74,6 +95,7 @@
     ],
     "excerpt": "Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...",
     "readTime": "31 min read",
-    "author": "@uziii2208"
+    "author": "@uziii2208",
+    "locked": false
   }
 ]

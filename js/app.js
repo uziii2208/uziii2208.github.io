@@ -465,11 +465,13 @@ function filterCmdPalette(query) {
       }
     }
 
+    const isLocked = Boolean(p.locked);
     return `
       <a href="${href}" class="cmd-item ${idx === cmdSelectedIndex ? 'selected' : ''}" data-index="${idx}">
-        <div class="cmd-item-title">${escapeHtml(p.title)}</div>
+        <div class="cmd-item-title">${isLocked ? '🔒 ' : ''}${escapeHtml(p.title)}</div>
         <div class="cmd-item-meta">
           <span>${p.date || ''}</span>
+          ${isLocked ? '<span style="color:var(--red);font-weight:600;">[LOCKED]</span>' : ''}
           <span>${(p.tags || []).map(t => `[${t}]`).join(' ')}</span>
         </div>
       </a>
@@ -769,11 +771,15 @@ function renderPostList(items) {
 
   listEl.innerHTML = items.map(post => {
     const slug = post.slug || post.id;
+    const isLocked = Boolean(post.locked);
+    const actionCue = isLocked ? 'ENTER ACCESS KEY' : 'ACCESS WRITE-UP';
+    const authBadge = isLocked ? 'CLASSIFIED // RESTRICTED' : 'RESEARCH // VERIFIED';
+    const lockTag = isLocked ? '<span class="tag tag-locked" title="Password Protected">🔒 LOCKED</span>' : '';
     // Under file:// use <prefix><slug>/index.html; on HTTP use <prefix><slug>/
     const url = window.location.protocol === 'file:' ? `${prefix}${slug}/index.html` : `${prefix}${slug}/`;
 
     return `
-      <a href="${url}" class="post-item cyber-card" onclick="return navigateToPost(event, '${slug}')">
+      <a href="${url}" class="post-item cyber-card${isLocked ? ' is-locked-card' : ''}" onclick="return navigateToPost(event, '${slug}')">
         <div class="post-header-row">
           <div class="post-meta-inline">
             <span class="meta-date">${formatDate(post.date)}</span>
@@ -781,6 +787,7 @@ function renderPostList(items) {
             <span class="meta-readtime">${post.readTime || '5 min read'}</span>
           </div>
           <div class="post-tags-inline">
+            ${lockTag}
             ${(post.tags || []).map(t => `
               <span class="tag tag-${getTagClass(t)}" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('${t}')" title="Filter by tag: ${escapeHtml(t)}">
                 ${escapeHtml(t)}
@@ -789,15 +796,15 @@ function renderPostList(items) {
           </div>
         </div>
         <div class="post-title-block">
-          <div class="post-title">${escapeHtml(post.title)}</div>
+          <div class="post-title">${isLocked ? '🔒 ' : ''}${escapeHtml(post.title)}</div>
           <div class="post-excerpt">${escapeHtml(post.excerpt || '')}</div>
         </div>
         <div class="post-footer-row">
           <span class="post-action-cue">
-            ACCESS WRITE-UP
+            ${actionCue}
             <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </span>
-          <span class="post-auth-badge">RESEARCH // VERIFIED</span>
+          <span class="post-auth-badge">${authBadge}</span>
         </div>
       </a>
     `;

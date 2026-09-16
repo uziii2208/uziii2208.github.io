@@ -1098,6 +1098,25 @@ PS C:\Tools&gt; Add-MpPreference -ExclusionPath &quot;C:\Tools&quot;
 <p>With these two hashes you now have permanent domain dominance – even if the machine is wiped, you can always come back anytime with a fresh Golden or Silver ticket.</p>
 <p>Hercules fully pwned – from initial LDAP injection all the way to krbtgt.</p>
 
+        <div class="post-end-encrypt-bar" id="post-end-encrypt-bar">
+          <div class="post-end-encrypt-inner">
+            <div class="post-end-encrypt-meta">
+              <div class="post-end-encrypt-tag">
+                <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>// PRIVACY SHIELD // ZERO-KNOWLEDGE LOCK</span>
+              </div>
+              <div class="post-end-encrypt-title">Finished reading or stepping away?</div>
+              <p class="post-end-encrypt-desc">Conceal this advisory and lock the viewport in-browser using WebCrypto AES-256-GCM.</p>
+            </div>
+            <div class="post-end-encrypt-action">
+              <button type="button" id="btn-end-encrypt" class="btn-end-encrypt" onclick="window.togglePrivacyLock()">
+                <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>ENCRYPT &amp; LOCK POST</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         </div>
       </article>
 
@@ -1158,6 +1177,142 @@ PS C:\Tools&gt; Add-MpPreference -ExclusionPath &quot;C:\Tools&quot;
   <svg class="ui-icon toast-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
   <span id="toast-text"></span>
 </div>
+
+
+<script>
+
+(function() {
+  'use strict';
+  let privacyContainer = null;
+
+  window.togglePrivacyLock = async function() {
+    const contentEl = document.getElementById('post-view-content');
+    if (!contentEl) return;
+
+    const pass = prompt('Enter a temporary passkey to encrypt this post view (AES-256-GCM):');
+    if (!pass || !pass.trim()) return;
+
+    try {
+      const originalHTML = contentEl.innerHTML;
+      const tocSidebar = document.getElementById('post-toc-sidebar');
+
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(pass), { name: 'PBKDF2' }, false, ['deriveKey']);
+      const aesKey = await crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+      const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aesKey, enc.encode(originalHTML));
+
+      privacyContainer = {
+        salt,
+        iv,
+        ciphertext
+      };
+
+      if (tocSidebar) tocSidebar.style.display = 'none';
+
+      contentEl.innerHTML = `
+        <div class="locked-gate-wrap" id="privacy-gate">
+          <div class="locked-gate-card">
+            <div class="locked-gate-header">
+              <div class="locked-gate-icon-pulse">
+                <svg class="lock-svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <div class="locked-gate-eyebrow">// PRIVACY SHIELD ACTIVE</div>
+              <h2 class="locked-gate-title">VIEWPORT ENCRYPTED</h2>
+              <p class="locked-gate-desc">
+                This document is encrypted in browser memory with <strong>AES-256-GCM</strong>. Enter your passkey to restore the viewport.
+              </p>
+            </div>
+            <form id="privacy-auth-form" class="locked-auth-form" onsubmit="return handlePrivacyUnlock(event)" autocomplete="off">
+              <div class="locked-input-group">
+                <span class="locked-prompt-symbol">KEY &gt;</span>
+                <input type="password" id="privacy-pass-input" class="locked-pass-input" placeholder="Enter your passkey..." autocomplete="off" required>
+              </div>
+              <div class="locked-actions-row">
+                <button type="submit" id="privacy-unlock-btn" class="locked-submit-btn">
+                  <span class="btn-text">DECRYPT &amp; RESTORE</span>
+                  <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </div>
+              <div id="privacy-feedback" class="locked-feedback feedback-error" style="display:none;"></div>
+            </form>
+            <div class="locked-footer-notice">
+              <span>// PRIVACY LOCK: Decryption key is validated via 128-bit AES-GCM MAC tag in browser memory.</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      window.scrollTo({ top: contentEl.offsetTop - 80, behavior: 'smooth' });
+      if (typeof showToast === 'function') {
+        showToast('POST ENCRYPTED // VIEWPORT CONCEALED');
+      }
+    } catch (err) {
+      alert('Encryption failed: ' + err.message);
+    }
+  };
+
+  window.handlePrivacyUnlock = async function(e) {
+    e.preventDefault();
+    const input = document.getElementById('privacy-pass-input');
+    const feedback = document.getElementById('privacy-feedback');
+    const contentEl = document.getElementById('post-view-content');
+    if (!input || !privacyContainer || !contentEl) return false;
+
+    const pass = input.value;
+    input.value = '';
+
+    try {
+      const { salt, iv, ciphertext } = privacyContainer;
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(pass), { name: 'PBKDF2' }, false, ['deriveKey']);
+      const aesKey = await crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['decrypt']
+      );
+      const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, aesKey, ciphertext);
+      const dec = new TextDecoder();
+      const restoredHTML = dec.decode(decrypted);
+
+      contentEl.innerHTML = restoredHTML;
+      privacyContainer = null;
+
+      const tocSidebar = document.getElementById('post-toc-sidebar');
+      if (tocSidebar) tocSidebar.style.display = '';
+
+      if (typeof processCodeBlocks === 'function') {
+        try { processCodeBlocks(contentEl); } catch (err) {}
+      }
+      if (typeof initImageLightbox === 'function') {
+        try { initImageLightbox(); } catch (err) {}
+      }
+      if (typeof showToast === 'function') {
+        showToast('ACCESS GRANTED // VIEWPORT RESTORED');
+      }
+    } catch (err) {
+      if (feedback) {
+        feedback.textContent = '[AUTHENTICATION FAILED] Invalid passkey. Decryption denied.';
+        feedback.style.display = 'block';
+      }
+    }
+    return false;
+  };
+})();
+
+</script>
 
 <script>
   window.__POST_SLUG__ = "hackthebox-hercules";
