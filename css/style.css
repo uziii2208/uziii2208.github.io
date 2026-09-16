@@ -2603,6 +2603,26 @@ footer a:hover { color: #ff4455; text-decoration: underline; }
   color: #ff4d5a !important;
   font-weight: 700 !important;
   box-shadow: 0 0 8px rgba(232, 25, 44, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tag-locked svg {
+  vertical-align: -1px;
+}
+
+.lock-icon-inline {
+  vertical-align: -1px;
+  margin-right: 6px;
+  color: var(--red);
+  stroke: var(--red);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.post-item:hover .lock-icon-inline {
+  filter: drop-shadow(0 0 6px var(--red-glow));
+  transform: scale(1.1);
 }
 
 .post-item.is-locked-card {

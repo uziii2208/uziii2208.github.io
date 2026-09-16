@@ -12,6 +12,9 @@ let audioCtx = null;
 let cmdSelectedIndex = 0;
 let cmdFilteredList = [];
 
+// Cyberpunk SVG Lock Icon (Vector - Zero raw emoji fallback)
+const LOCK_ICON_SVG = '<svg class="ui-icon lock-icon-inline" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:5px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+
 /* ─── 1. SYNTHESIZED CYBER WEB AUDIO (ZERO EXTERNAL ASSETS) ─── */
 function initAudio() {
   if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
@@ -468,10 +471,10 @@ function filterCmdPalette(query) {
     const isLocked = Boolean(p.locked);
     return `
       <a href="${href}" class="cmd-item ${idx === cmdSelectedIndex ? 'selected' : ''}" data-index="${idx}">
-        <div class="cmd-item-title">${isLocked ? '🔒 ' : ''}${escapeHtml(p.title)}</div>
+        <div class="cmd-item-title">${isLocked ? LOCK_ICON_SVG : ''}${escapeHtml(p.title)}</div>
         <div class="cmd-item-meta">
           <span>${p.date || ''}</span>
-          ${isLocked ? '<span style="color:var(--red);font-weight:600;">[LOCKED]</span>' : ''}
+          ${isLocked ? `<span class="tag tag-locked" style="padding:1px 6px;font-size:0.65rem;border-radius:2px;display:inline-flex;align-items:center;">${LOCK_ICON_SVG}LOCKED</span>` : ''}
           <span>${(p.tags || []).map(t => `[${t}]`).join(' ')}</span>
         </div>
       </a>
@@ -774,7 +777,7 @@ function renderPostList(items) {
     const isLocked = Boolean(post.locked);
     const actionCue = isLocked ? 'ENTER ACCESS KEY' : 'ACCESS WRITE-UP';
     const authBadge = isLocked ? 'CLASSIFIED // RESTRICTED' : 'RESEARCH // VERIFIED';
-    const lockTag = isLocked ? '<span class="tag tag-locked" title="Password Protected">🔒 LOCKED</span>' : '';
+    const lockTag = isLocked ? `<span class="tag tag-locked" title="Password Protected">${LOCK_ICON_SVG}LOCKED</span>` : '';
     // Under file:// use <prefix><slug>/index.html; on HTTP use <prefix><slug>/
     const url = window.location.protocol === 'file:' ? `${prefix}${slug}/index.html` : `${prefix}${slug}/`;
 
@@ -796,7 +799,7 @@ function renderPostList(items) {
           </div>
         </div>
         <div class="post-title-block">
-          <div class="post-title">${isLocked ? '🔒 ' : ''}${escapeHtml(post.title)}</div>
+          <div class="post-title">${isLocked ? LOCK_ICON_SVG : ''}${escapeHtml(post.title)}</div>
           <div class="post-excerpt">${escapeHtml(post.excerpt || '')}</div>
         </div>
         <div class="post-footer-row">
