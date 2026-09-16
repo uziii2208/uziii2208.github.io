@@ -3,22 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 - Access Denied | uziii2208</title>
+  <title>404 — Target Payload Not Found | uziii2208</title>
+
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+  <link rel="alternate icon" href="/favicon.ico">
+
+  <!-- OpenGraph / Twitter -->
+  <meta name="description" content="404 — Target payload not found. Requested resource does not exist or has been relocated.">
+  <meta name="author" content="Tong Hoang Gia (@uziii2208)">
+  <meta property="og:title" content="404 — Target Payload Not Found | uziii2208">
+  <meta property="og:description" content="Requested route is unallocated or has been purged from memory.">
+  <meta property="og:type" content="website">
+
+  <!-- Fonts & CDNs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Modular Cyber Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- Pre-compiled Post Data & App Logic for instant HUD palette search -->
+  <script src="/js/posts-data.js"></script>
+  <script src="/js/app.js" defer></script>
 </head>
-<body style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:2rem;">
-  <div style="max-width:550px;">
-    <div style="font-family:var(--mono);font-size:0.85rem;color:var(--red);margin-bottom:1rem;">// ERROR 404_PAGE_FAULT</div>
-    <h1 style="font-size:3.5rem;font-family:var(--heading);margin-bottom:1rem;color:#fff;text-shadow:0 0 20px rgba(232,25,44,0.5);">PAYLOAD_NOT_FOUND</h1>
-    <p style="font-family:var(--mono);color:var(--text-dim);font-size:0.85rem;line-height:1.7;margin-bottom:2rem;">
-      The requested target path does not exist on this host or has been wiped from memory.
-    </p>
-    <a href="/" style="display:inline-block;background:var(--red);color:#fff;font-family:var(--mono);padding:10px 24px;text-decoration:none;font-weight:600;font-size:0.82rem;clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));box-shadow:0 0 15px var(--red-glow);">
-      RETURN TO BASE //
-    </a>
+<body class="page-404">
+
+<!-- ─── INTERACTIVE CYBER BACKGROUND CANVAS ─── -->
+<canvas id="cyber-canvas"></canvas>
+
+<!-- ─── NAVIGATION ─── -->
+<nav>
+  <div class="nav-left">
+    <a class="nav-logo scramble-hover" href="/">uziii<span>2208</span></a>
+    <ul class="nav-links">
+      <li><a href="/">home</a></li>
+      <li><a href="/post/">write-ups</a></li>
+      <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a></li>
+    </ul>
   </div>
+  
+  <div class="nav-right">
+    <!-- Cyber Audio SFX Toggle -->
+    <button id="sfx-toggle" class="btn-sfx" onclick="toggleSFX()" title="Toggle Cyber Sound Effects">
+      <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path class="sfx-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path class="sfx-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+      <span>SFX:</span> <span id="sfx-status">ON</span>
+    </button>
+    <div class="nav-shortcuts" title="Keyboard Shortcuts">
+      <span class="shortcut-chip" onclick="openCmdPalette()"><kbd>/</kbd> search</span>
+      <span class="shortcut-chip" onclick="window.location.href='/'"><kbd>esc</kbd> home</span>
+    </div>
+    <a class="nav-tag" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">@uziii2208</a>
+  </div>
+</nav>
+
+<!-- ─── 404 MAIN CONTAINER ─── -->
+<div class="container-404">
+  <div class="card-404">
+    <div class="eyebrow-404">
+      <span class="pulse-dot"></span>
+      <span>// EXCEPTION_0x404 // KERNEL_PAGE_FAULT</span>
+    </div>
+
+    <div class="glitch-404-wrap" data-text="404">404</div>
+
+    <h1 class="title-404">TARGET_PAYLOAD_NOT_FOUND</h1>
+    <p class="desc-404">
+      The requested execution route does not exist on this host, has been re-indexed, or was wiped from active memory. Verify the target endpoint or consult the write-up index below.
+    </p>
+
+    <!-- Terminal Diagnostic Display -->
+    <div class="terminal-404">
+      <div class="terminal-404-header">
+        <div class="terminal-dots">
+          <span class="terminal-dot dot-red"></span>
+          <span class="terminal-dot dot-yellow"></span>
+          <span class="terminal-dot dot-green"></span>
+        </div>
+        <span class="terminal-title">bash — 404_page_fault_diagnostic.sh</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-red">[!] CRITICAL_FAULT:</span> route_resolve_target() returned NULL (exit 127)</div>
+        <div><span class="t-white">[-] REQUEST_URI:</span> <span id="dyn-request-path" class="t-cyan">/unknown-route</span></div>
+        <div><span class="t-white">[-] HOST_ADDR:</span> <span class="t-yellow">uziii2208.github.io [xxx.xxx.xxx.xxx]</span></div>
+        <div><span class="t-white">[-] KERNEL_MEM:</span> 0x00007FFF_PAGE_FAULT (Segment unallocated or purged)</div>
+        <div><span class="t-green">[+] RECOMMENDED_OPS:</span> Return to base, search catalog via HUD palette, or inspect archive.</div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions-404-grid">
+      <a href="/" class="btn-404-primary">
+        <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>RETURN TO BASE //</span>
+      </a>
+      <button type="button" class="btn-404-secondary" onclick="openCmdPalette()">
+        <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span>SEARCH WRITE-UPS</span> <kbd>/</kbd>
+      </button>
+      <a href="/post/" class="btn-404-secondary">
+        <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <span>BROWSE ARCHIVE</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer style="margin-top:auto; position:relative; z-index:2;">
+  <div class="footer-inner">
+    <span>uziii2208 © 2026 — Build with no brain actual:D</span>
+    <span>
+      <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a>
+      &nbsp;·&nbsp;
+      <a href="https://pypi.org/user/uziii2208/" target="_blank" rel="noopener noreferrer">pypi</a>
+      &nbsp;·&nbsp;
+      <a href="https://0pwn0.github.io" target="_blank" rel="noopener noreferrer">0pwn0 archive ↗</a>
+    </span>
+  </div>
+</footer>
+
+<!-- ─── FLOATING BACK TO TOP ─── -->
+<button id="back-to-top" class="back-to-top-btn" onclick="scrollToTop()" title="Back to top">▲</button>
+
+<!-- ─── COMMAND PALETTE HUD (Ctrl+K or /) ─── -->
+<div id="cmd-palette" class="cmd-overlay" onclick="closeCmdPalette()">
+  <div class="cmd-dialog" onclick="event.stopPropagation()">
+    <div class="cmd-header">
+      <span class="cmd-prompt">&gt;</span>
+      <input type="text" id="cmd-input" placeholder="Quick search write-ups, tags, CVEs..." autocomplete="off" spellcheck="false">
+      <span class="cmd-badge">ESC to close</span>
+    </div>
+    <div class="cmd-results" id="cmd-results">
+      <!-- Search targets populated by app.js -->
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST NOTIFICATION ─── -->
+<div id="toast">
+  <svg class="ui-icon toast-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <span id="toast-text"></span>
+</div>
+
+<script>
+  // Detect and display current missing path in terminal diagnostics
+  (function() {
+    try {
+      const pathEl = document.getElementById('dyn-request-path');
+      if (pathEl && window.location.pathname) {
+        pathEl.textContent = window.location.pathname;
+      }
+    } catch (e) {}
+  })();
+</script>
 </body>
 </html>
