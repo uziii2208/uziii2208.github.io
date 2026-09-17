@@ -21,6 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="/fonts/uziii2208-pixel.ttf" as="font" type="font/ttf" crossorigin>
   
   <!-- Modular Cyber Stylesheet -->
   <link rel="stylesheet" href="/css/style.css">
@@ -36,26 +37,51 @@
 
 <!-- ─── NAVIGATION ─── -->
 <nav>
-  <div class="nav-left">
-    <a class="nav-logo scramble-hover" href="/">uziii<span>2208</span></a>
-    <ul class="nav-links">
-      <li><a href="/">home</a></li>
-      <li><a href="/post/">write-ups</a></li>
-      <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a></li>
-    </ul>
-  </div>
-  
-  <div class="nav-right">
-    <!-- Cyber Audio SFX Toggle -->
-    <button id="sfx-toggle" class="btn-sfx" onclick="toggleSFX()" title="Toggle Cyber Sound Effects">
-      <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path class="sfx-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path class="sfx-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
-      <span>SFX:</span> <span id="sfx-status">ON</span>
-    </button>
-    <div class="nav-shortcuts" title="Keyboard Shortcuts">
-      <span class="shortcut-chip" onclick="openCmdPalette()"><kbd>/</kbd> search</span>
-      <span class="shortcut-chip" onclick="window.location.href='/'"><kbd>esc</kbd> home</span>
+  <div class="nav-container">
+    <div class="nav-left">
+      <a class="nav-brand scramble-hover" href="/" onclick="return navigateToHome(event)" title="uziii2208 // Security Lab">
+        <span class="brand-prompt">&gt;</span>
+        <span class="brand-name">uziii<span class="brand-num">2208</span></span>
+        <span class="brand-cursor">_</span>
+        <span class="brand-badge">[0x0D]</span>
+      </a>
+      <ul class="nav-routes">
+        <li><a href="/" id="nav-link-home" class="nav-route-item" onclick="return navigateToHome(event)"><span class="route-num">01</span><span class="route-label">HOME</span></a></li>
+        <li><a href="/post/" class="nav-route-item"><span class="route-num">02</span><span class="route-label">WRITE-UPS</span></a></li>
+        <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" class="nav-route-item"><span class="route-num">03</span><span class="route-label">GITHUB ↗</span></a></li>
+      </ul>
     </div>
-    <a class="nav-tag" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">@uziii2208</a>
+    
+    <div class="nav-right">
+      <!-- SFX Equalizer Toggle -->
+      <button id="sfx-toggle" class="btn-sfx-hud" onclick="toggleSFX()" title="Toggle Sound Engine (Minecraft &amp; Casual Game SFX)" aria-label="Toggle Sound Effects">
+        <span class="sfx-eq-bars" aria-hidden="true">
+          <span class="sfx-bar bar-1"></span>
+          <span class="sfx-bar bar-2"></span>
+          <span class="sfx-bar bar-3"></span>
+        </span>
+        <span class="sfx-label">SFX:</span>
+        <span id="sfx-status" class="sfx-val">ON</span>
+      </button>
+
+      <!-- Universal Interactive Shortcut Controls -->
+      <div class="nav-shortcuts" role="toolbar" aria-label="Global Navigation Shortcuts">
+        <button type="button" class="nav-shortcut-btn" onclick="openCmdPalette()" title="Search Write-ups &amp; CVEs (Press / or Ctrl+K)">
+          <kbd class="shortcut-key">/</kbd>
+          <span class="shortcut-text">SEARCH</span>
+        </button>
+        <button type="button" class="nav-shortcut-btn" onclick="scrollToTop()" title="Scroll smoothly to top (Press ESC)">
+          <kbd class="shortcut-key">ESC</kbd>
+          <span class="shortcut-text">TOP</span>
+        </button>
+      </div>
+
+      <!-- Operator Badge -->
+      <a class="nav-operator-badge" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" title="Security Researcher Profile">
+        <span class="operator-dot"></span>
+        <span class="operator-id">@uziii2208</span>
+      </a>
+    </div>
   </div>
 </nav>
 
@@ -63,7 +89,7 @@
 <div class="container-404">
   <div class="card-404">
     <div class="eyebrow-404">
-      <span class="pulse-dot"></span>
+      <span class="eyebrow-terminal-tag">[EXCEPTION // 404]</span>
       <span>// EXCEPTION_0x404 // KERNEL_PAGE_FAULT</span>
     </div>
 

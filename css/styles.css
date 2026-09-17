@@ -1,16 +1,37 @@
+@font-face {
+  font-family: 'Minecraftia';
+  src: url('../fonts/uziii2208-pixel.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --primary-color: #10B981;
   --text-color: #F3F4F6;
   --bg-color: #111827;
   --card-bg: #1F2937;
   --hover-color: #059669;
+  --font-ui: 'Minecraftia', sans-serif;
+  --font-heading: 'Minecraftia', sans-serif;
+  --font-content: 'Chakra Petch', sans-serif;
+  --font-meta: 'Chakra Petch', sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
 }
 
 /* Dark mode is default */
 body {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-content);
   background-color: var(--bg-color);
   color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6, .nav-link, .theme-toggle {
+  font-family: var(--font-ui);
+}
+
+code, pre {
+  font-family: var(--font-code);
 }
 
 /* Light mode styles */

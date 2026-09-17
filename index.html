@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>uziii2208 — security research &amp; 0day disclosures</title>
+  <title>uziii2208 - security research &amp; 0day disclosures</title>
 
   <!-- Favicon & Brand Icons -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -15,7 +15,7 @@
   <meta name="author" content="Tong Hoang Gia (@uziii2208)">
 
   <!-- OpenGraph / Twitter -->
-  <meta property="og:title" content="zeropwn — security research">
+  <meta property="og:title" content="zeropwn - security research">
   <meta property="og:description" content="Independent security research, CVE disclosures, and authorized pentest walkthroughs by @uziii2208.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://uziii2208.github.io/">
@@ -23,7 +23,7 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="zeropwn — security research">
+  <meta name="twitter:title" content="zeropwn - security research">
   <meta name="twitter:description" content="Independent security research, CVE disclosures, and authorized pentest walkthroughs by @uziii2208.">
   <meta name="twitter:image" content="https://uziii2208.github.io/og-hero.png">
 
@@ -31,6 +31,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="preload" href="fonts/uziii2208-pixel.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   
   <!-- Modular Cyber Stylesheet -->
@@ -50,7 +51,7 @@
     <div class="banner-content">
       <span class="banner-tag">Notice</span>
       <span>
-        <strong>0pwn0.github.io</strong> is no longer active — old posts are still available there:
+        <strong>0pwn0.github.io</strong> is no longer active - old posts are still available there:
         <a class="banner-link" href="https://0pwn0.github.io" target="_blank" rel="noopener noreferrer">https://0pwn0.github.io ↗</a>
       </span>
     </div>
@@ -60,26 +61,51 @@
 
 <!-- ─── NAVIGATION ─── -->
 <nav>
-  <div class="nav-left">
-    <a class="nav-logo scramble-hover" href="/" onclick="return navigateToHome(event)">uziii<span>2208</span></a>
-    <ul class="nav-links">
-      <li><a href="/" id="nav-link-home" class="active" onclick="return navigateToHome(event)">home</a></li>
-      <li><a href="post/">write-ups</a></li>
-      <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a></li>
-    </ul>
-  </div>
-  
-  <div class="nav-right">
-    <!-- Cyber Audio SFX Toggle -->
-    <button id="sfx-toggle" class="btn-sfx" onclick="toggleSFX()" title="Toggle Cyber Sound Effects">
-      <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path class="sfx-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path class="sfx-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
-      <span>SFX:</span> <span id="sfx-status">ON</span>
-    </button>
-    <div class="nav-shortcuts" title="Keyboard Shortcuts">
-      <span class="shortcut-chip" onclick="openCmdPalette()"><kbd>/</kbd> search</span>
-      <span class="shortcut-chip" onclick="window.scrollTo({top:0,behavior:'smooth'})"><kbd>esc</kbd> top</span>
+  <div class="nav-container">
+    <div class="nav-left">
+      <a class="nav-brand scramble-hover" href="/" onclick="return navigateToHome(event)" title="uziii2208 // Security Lab">
+        <span class="brand-prompt">&gt;</span>
+        <span class="brand-name">uziii<span class="brand-num">2208</span></span>
+        <span class="brand-cursor">_</span>
+        <span class="brand-badge">[0x0D]</span>
+      </a>
+      <ul class="nav-routes">
+        <li><a href="/" id="nav-link-home" class="nav-route-item active" onclick="return navigateToHome(event)"><span class="route-num">01</span><span class="route-label">HOME</span></a></li>
+        <li><a href="post/" class="nav-route-item"><span class="route-num">02</span><span class="route-label">WRITE-UPS</span></a></li>
+        <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" class="nav-route-item"><span class="route-num">03</span><span class="route-label">GITHUB ↗</span></a></li>
+      </ul>
     </div>
-    <a class="nav-tag" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">@uziii2208</a>
+    
+    <div class="nav-right">
+      <!-- SFX Equalizer Toggle -->
+      <button id="sfx-toggle" class="btn-sfx-hud" onclick="toggleSFX()" title="Toggle Sound Engine (Minecraft &amp; Casual Game SFX)" aria-label="Toggle Sound Effects">
+        <span class="sfx-eq-bars" aria-hidden="true">
+          <span class="sfx-bar bar-1"></span>
+          <span class="sfx-bar bar-2"></span>
+          <span class="sfx-bar bar-3"></span>
+        </span>
+        <span class="sfx-label">SFX:</span>
+        <span id="sfx-status" class="sfx-val">ON</span>
+      </button>
+
+      <!-- Universal Interactive Shortcut Controls -->
+      <div class="nav-shortcuts" role="toolbar" aria-label="Global Navigation Shortcuts">
+        <button type="button" class="nav-shortcut-btn" onclick="openCmdPalette()" title="Search Write-ups &amp; CVEs (Press / or Ctrl+K)">
+          <kbd class="shortcut-key">/</kbd>
+          <span class="shortcut-text">SEARCH</span>
+        </button>
+        <button type="button" class="nav-shortcut-btn" onclick="scrollToTop()" title="Scroll smoothly to top (Press ESC)">
+          <kbd class="shortcut-key">ESC</kbd>
+          <span class="shortcut-text">TOP</span>
+        </button>
+      </div>
+
+      <!-- Operator Badge -->
+      <a class="nav-operator-badge" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" title="Security Researcher Profile">
+        <span class="operator-dot"></span>
+        <span class="operator-id">@uziii2208</span>
+      </a>
+    </div>
   </div>
 </nav>
 
@@ -92,7 +118,7 @@
 
     <div class="hero-content">
       <div class="hero-eyebrow">
-        <span class="pulse-dot"></span>
+        <span class="eyebrow-terminal-tag">[SEC_LAB // 0x0D]</span>
         <span>INDEPENDENT SECURITY RESEARCH // ZERO_PWN</span>
       </div>
       <h1>
@@ -167,7 +193,7 @@
           </div>
         </div>
         <div class="post-title-block">
-          <div class="post-title"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>HackTheBox - Sandcastle: Reverse Engineering a Multi-Process Bytecode VM &amp; IPC Sandbox Escape</div>
+          <div class="post-title">HackTheBox - Sandcastle: Reverse Engineering a Multi-Process Bytecode VM &amp; IPC Sandbox Escape</div>
           <div class="post-excerpt">CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.</div>
         </div>
         <div class="post-footer-row">
@@ -190,7 +216,7 @@
           </div>
         </div>
         <div class="post-title-block">
-          <div class="post-title"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation</div>
+          <div class="post-title">HackTheBox - ZaZamarin: Unboxing a .NET MAUI Android CTF Through Native Emulation</div>
           <div class="post-excerpt">CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.</div>
         </div>
         <div class="post-footer-row">
@@ -295,14 +321,14 @@
       </a>
     </div>
 
-    <div id="no-posts" style="display:none; font-family: var(--mono); font-size:0.82rem; color: var(--text-muted); padding: 4rem 0; text-align:center;">
-      no matching write-ups found — <button onclick="resetSearchAndFilter()" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--mono);font-size:0.82rem;text-decoration:underline;">reset filters</button>
+    <div id="no-posts" style="display:none; font-family: var(--font-meta); font-size:0.82rem; color: var(--text-muted); padding: 4rem 0; text-align:center;">
+      no matching write-ups found - <button onclick="resetSearchAndFilter()" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font-ui);font-size:0.82rem;text-decoration:underline;">reset filters</button>
     </div>
   </main>
 
   <footer>
     <div class="footer-inner">
-      <span>uziii2208 © 2026 — Build with no brain actual:D</span>
+      <span>uziii2208 © 2026 - Build with no brain actual:D</span>
       <span>
         <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a>
         &nbsp;·&nbsp;

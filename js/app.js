@@ -15,11 +15,12 @@ let cmdFilteredList = [];
 // Cyberpunk SVG Lock Icon (Vector - Zero raw emoji fallback)
 const LOCK_ICON_SVG = '<svg class="ui-icon lock-icon-inline" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:5px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
 
-/* ─── 1. SYNTHESIZED CYBER WEB AUDIO (ZERO EXTERNAL ASSETS) ─── */
+/* ─── 1. SYNTHESIZED MINECRAFT & CASUAL-GAME AUDIO ENGINE (ZERO EXTERNAL ASSETS) ─── */
 function initAudio() {
   if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
     try {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContextClass();
     } catch (e) {
       console.warn('Web Audio API not supported', e);
     }
@@ -35,38 +36,117 @@ function playCyberSound(type = 'click') {
       audioCtx.resume();
     }
     const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
 
     if (type === 'click') {
-      // High-tech sine micro-blip (800Hz -> 1400Hz in 40ms)
+      // Authentic Minecraft UI Wooden Button Click
+      // Layer 1: Crisp attack transient (950Hz -> 200Hz in 22ms)
+      const osc1 = audioCtx.createOscillator();
+      const gain1 = audioCtx.createGain();
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(950, now);
+      osc1.frequency.exponentialRampToValueAtTime(200, now + 0.022);
+      gain1.gain.setValueAtTime(0.32, now);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.022);
+
+      // Layer 2: Hollow wooden resonance body (380Hz -> 310Hz over 55ms)
+      const osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(380, now);
+      osc2.frequency.exponentialRampToValueAtTime(310, now + 0.055);
+      gain2.gain.setValueAtTime(0.28, now);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+      osc2.connect(gain2);
+      gain2.connect(audioCtx.destination);
+      osc2.start(now);
+      osc2.stop(now + 0.055);
+
+    } else if (type === 'pop' || type === 'pickup') {
+      // Minecraft Item Pickup Bubble Pop (Rapid upward resonant chirp)
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, now);
-      osc.frequency.exponentialRampToValueAtTime(1400, now + 0.04);
-      gain.gain.setValueAtTime(0.04, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc.frequency.setValueAtTime(420, now);
+      osc.frequency.exponentialRampToValueAtTime(1350, now + 0.07);
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
       osc.start(now);
-      osc.stop(now + 0.04);
-    } else if (type === 'copy') {
-      // Affirmative cyber dual-tone chirp
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(587.33, now); // D5
-      osc.frequency.setValueAtTime(880, now + 0.05); // A5
-      gain.gain.setValueAtTime(0.05, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-      osc.start(now);
-      osc.stop(now + 0.12);
+      osc.stop(now + 0.075);
+
+    } else if (type === 'copy' || type === 'success') {
+      // Minecraft XP Orb / Casual Game Level-Up Chime (Dual Crystal Harmonic Bells)
+      // Bell 1: C6 (1046.5Hz)
+      const osc1 = audioCtx.createOscillator();
+      const gain1 = audioCtx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(1046.5, now);
+      gain1.gain.setValueAtTime(0.26, now);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.15);
+
+      // Bell 2: G6 (1567.98Hz)
+      const osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(1567.98, now + 0.04);
+      gain2.gain.setValueAtTime(0.001, now);
+      gain2.gain.setValueAtTime(0.30, now + 0.04);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc2.connect(gain2);
+      gain2.connect(audioCtx.destination);
+      osc2.start(now + 0.04);
+      osc2.stop(now + 0.22);
+
     } else if (type === 'open') {
-      // Riser frequency sweep
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(320, now);
-      osc.frequency.exponentialRampToValueAtTime(950, now + 0.07);
-      gain.gain.setValueAtTime(0.035, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+      // Minecraft Chest Open / Casual Window Reveal (Wood friction sweep)
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.exponentialRampToValueAtTime(490, now + 0.085);
+      gain.gain.setValueAtTime(0.28, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
       osc.start(now);
-      osc.stop(now + 0.07);
+      osc.stop(now + 0.09);
+
+    } else if (type === 'close') {
+      // Minecraft Chest Shut / Modal Dismiss (Snap Thud)
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(480, now);
+      osc.frequency.exponentialRampToValueAtTime(150, now + 0.06);
+      gain.gain.setValueAtTime(0.28, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.065);
+
+    } else if (type === 'error') {
+      // Minecraft Block Thud / Action Denied
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.09);
+      gain.gain.setValueAtTime(0.26, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.09);
     }
   } catch (e) {
     // AudioContext blocked or not allowed
@@ -77,20 +157,20 @@ function toggleSFX() {
   sfxEnabled = !sfxEnabled;
   localStorage.setItem('zeropwn_sfx', sfxEnabled ? 'true' : 'false');
   updateSFXButtonUI();
-  if (sfxEnabled) playCyberSound('click');
-  showToast(`Cyber SFX: ${sfxEnabled ? 'ENABLED' : 'DISABLED'}`);
+  if (sfxEnabled) playCyberSound('pop');
+  showToast(`Sound Effects: ${sfxEnabled ? 'MINECRAFT / CASUAL ON' : 'MUTED'}`);
 }
 
 function updateSFXButtonUI() {
   const btn = document.getElementById('sfx-toggle');
   const statusEl = document.getElementById('sfx-status');
-  if (!btn || !statusEl) return;
+  if (!btn) return;
   if (sfxEnabled) {
     btn.classList.remove('muted');
-    statusEl.textContent = 'ON';
+    if (statusEl) statusEl.textContent = 'ON';
   } else {
     btn.classList.add('muted');
-    statusEl.textContent = 'OFF';
+    if (statusEl) statusEl.textContent = 'OFF';
   }
 }
 
@@ -133,12 +213,15 @@ function scrambleText(element, finalText, duration = 650) {
 }
 
 function initScrambleEffects() {
-  // Scramble on hero title on load
+  // Scramble on hero title on load using its actual HTML text
   const heroRed = document.querySelector('#hero h1 .red');
   if (heroRed) {
-    setTimeout(() => {
-      scrambleText(heroRed, "don't hide forever.", 900);
-    }, 200);
+    const targetText = (heroRed.getAttribute('data-text') || heroRed.textContent).trim();
+    if (targetText) {
+      setTimeout(() => {
+        scrambleText(heroRed, targetText, 850);
+      }, 200);
+    }
   }
 
   // Scramble hover on logo and headers
@@ -439,7 +522,7 @@ function filterCmdPalette(query) {
   }
 
   if (cmdFilteredList.length === 0) {
-    resultsContainer.innerHTML = '<div style="padding:18px;text-align:center;font-family:var(--mono);color:var(--text-muted);font-size:0.75rem;">no matching targets found</div>';
+    resultsContainer.innerHTML = '<div style="padding:18px;text-align:center;font-family:var(--font-meta);color:var(--text-muted);font-size:0.75rem;">no matching targets found</div>';
     return;
   }
 
@@ -799,7 +882,7 @@ function renderPostList(items) {
           </div>
         </div>
         <div class="post-title-block">
-          <div class="post-title">${isLocked ? LOCK_ICON_SVG : ''}${escapeHtml(post.title)}</div>
+          <div class="post-title">${escapeHtml(post.title)}</div>
           <div class="post-excerpt">${escapeHtml(post.excerpt || '')}</div>
         </div>
         <div class="post-footer-row">
@@ -912,6 +995,7 @@ function scrollToTop() {
   playCyberSound('click');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+window.scrollToTop = scrollToTop;
 
 /* ─── 12. KEYBOARD SHORTCUTS ─── */
 document.addEventListener('keydown', (e) => {
@@ -934,14 +1018,29 @@ document.addEventListener('keydown', (e) => {
     return;
   }
 
-  // Escape key: close palette, lightbox, or search
+  // Escape key: close overlays or smoothly scroll to top of page
   if (e.key === 'Escape') {
-    closeCmdPalette();
-    closeLightbox();
+    const palette = document.getElementById('cmd-palette');
+    const isPaletteOpen = palette && palette.classList.contains('active');
+    const lb = document.getElementById('image-lightbox');
+    const isLbOpen = lb && lb.classList.contains('active');
+
+    if (isPaletteOpen) {
+      closeCmdPalette();
+      return;
+    }
+    if (isLbOpen) {
+      closeLightbox();
+      return;
+    }
     if (activeElement && activeElement.id === 'search-input') {
       clearSearch();
       activeElement.blur();
+      return;
     }
+
+    // Default global action when no modals are open: scroll smoothly to top
+    scrollToTop();
     return;
   }
 
