@@ -99,6 +99,23 @@
     "locked": false
   },
   {
+    "id": "hackthebox-reaper",
+    "slug": "hackthebox-reaper",
+    "path": "posts/HackTheBox/HackTheBox-Reaper.md",
+    "url": "post/hackthebox-reaper/",
+    "title": "HackTheBox - Reaper: Format String ASLR Leak, VirtualAlloc ROP Chain, DPAPI Decryption & Kernel Token Stealing",
+    "date": "2026-02-03",
+    "tags": [
+      "htb",
+      "ctf",
+      "windows"
+    ],
+    "excerpt": "Reaper is an Insane-difficulty Windows target on HackTheBox that tests the full spectrum of modern offensive security engineering-bridging userland reverse engineering,...",
+    "readTime": "25 min read",
+    "author": "@uziii2208",
+    "locked": false
+  },
+  {
     "id": "hackthebox-hercules",
     "slug": "hackthebox-hercules",
     "path": "posts/HackTheBox/HackTheBox-Hercules.md",

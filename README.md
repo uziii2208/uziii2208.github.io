@@ -55,6 +55,7 @@ uziii2208.github.io/
 | **CVE-2026-86543** | `cve`, `research` | `@uziii2208` | `https://uziii2208.github.io/post/cve-2026-86543` |
 | **CVE-2026-86259** | `cve`, `research` | `@uziii2208` | `https://uziii2208.github.io/post/cve-2026-86259` |
 | **HackTheBox - Sorcery** | `htb`, `ctf`, `linux` | `@0xdf` | `https://uziii2208.github.io/post/hackthebox-sorcery` |
+| **HackTheBox - Reaper** | `htb`, `ctf`, `windows` | `@uziii2208` | `https://uziii2208.github.io/post/hackthebox-reaper` |
 | **HackTheBox - Hercules** | `htb`, `ctf`, `windows` | `@uziii2208` | `https://uziii2208.github.io/post/hackthebox-hercules` |
 
 ---

