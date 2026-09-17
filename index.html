@@ -105,9 +105,82 @@
         <span class="operator-dot"></span>
         <span class="operator-id">@uziii2208</span>
       </a>
+
+      <!-- Mobile Menu Hamburger Toggle -->
+      <button id="nav-hamburger-btn" class="nav-hamburger-btn" onclick="toggleMobileMenu()" title="Toggle Navigation Menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
+        <span class="hamburger-box">
+          <span class="hamburger-line line-1"></span>
+          <span class="hamburger-line line-2"></span>
+          <span class="hamburger-line line-3"></span>
+        </span>
+      </button>
     </div>
   </div>
 </nav>
+
+<!-- ─── MOBILE NAVIGATION DRAWER & BACKDROP ─── -->
+<div id="mobile-menu-backdrop" class="mobile-menu-backdrop" onclick="closeMobileMenu()"></div>
+<div id="mobile-menu-drawer" class="mobile-menu-drawer" aria-hidden="true">
+  <div class="mobile-drawer-header">
+    <div class="mobile-drawer-brand">
+      <span class="brand-prompt">&gt;</span>
+      <span class="brand-name">uziii<span class="brand-num">2208</span></span>
+      <span class="brand-badge">[0x0D]</span>
+    </div>
+    <button class="mobile-drawer-close" onclick="closeMobileMenu()" aria-label="Close navigation menu">✕</button>
+  </div>
+
+  <div class="mobile-drawer-content">
+    <div class="mobile-section-tag">// NAVIGATION</div>
+    <ul class="mobile-routes-list">
+      <li>
+        <a href="/" id="mobile-link-home" class="mobile-route-item active" onclick="closeMobileMenu(); return navigateToHome(event)">
+          <span class="m-route-num">01</span>
+          <span class="m-route-label">HOME</span>
+          <span class="m-route-arrow">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="post/" class="mobile-route-item" onclick="closeMobileMenu()">
+          <span class="m-route-num">02</span>
+          <span class="m-route-label">WRITE-UPS</span>
+          <span class="m-route-arrow">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" class="mobile-route-item" onclick="closeMobileMenu()">
+          <span class="m-route-num">03</span>
+          <span class="m-route-label">GITHUB ↗</span>
+          <span class="m-route-arrow">↗</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="mobile-section-tag">// TOOLS &amp; CONTROLS</div>
+    <div class="mobile-tools-grid">
+      <button type="button" class="mobile-tool-btn" onclick="closeMobileMenu(); openCmdPalette()">
+        <span class="m-tool-kbd">/</span>
+        <span class="m-tool-name">SEARCH WRITE-UPS</span>
+        <span class="m-tool-hint">Ctrl+K</span>
+      </button>
+      <button type="button" class="mobile-tool-btn" onclick="toggleSFX()">
+        <span class="m-tool-icon">♫</span>
+        <span class="m-tool-name">SOUND ENGINE</span>
+        <span id="mobile-sfx-status" class="m-tool-val">ON</span>
+      </button>
+    </div>
+
+    <div class="mobile-drawer-footer">
+      <a class="mobile-operator-badge" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">
+        <span class="operator-dot"></span>
+        <div class="mobile-operator-meta">
+          <span class="m-operator-handle">@uziii2208</span>
+          <span class="m-operator-desc">INDEPENDENT SECURITY RESEARCH</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
 
 <!-- ─── HOME VIEW ─── -->
 <div id="home-view">
@@ -289,6 +362,29 @@
         <div class="post-title-block">
           <div class="post-title">CVE-2026-86259: OpenMAIC 1.0.0 - Unauthenticated Outbound SSRF to Cloud Metadata Service via Fail-Open Middleware and Environment-Gated Validation Bypass</div>
           <div class="post-excerpt">Verified. A two-leg exploit chain exists in OpenMAIC&#x27;s authentication middleware and outbound provider request layer that allows an unauthenticated remote attacker to...</div>
+        </div>
+        <div class="post-footer-row">
+          <span class="post-action-cue">
+            ACCESS WRITE-UP
+            <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+          <span class="post-auth-badge">RESEARCH // VERIFIED</span>
+        </div>
+      </a>
+      <a href="post/hackthebox-sorcery/" class="post-item cyber-card" onclick="return navigateToPost(event, 'hackthebox-sorcery')">
+        <div class="post-header-row">
+          <div class="post-meta-inline">
+            <span class="meta-date">2026-04-25</span>
+            <span class="meta-sep">/</span>
+            <span class="meta-readtime">157 min read</span>
+          </div>
+          <div class="post-tags-inline">
+            <span class="tag tag-htb" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('htb')" title="Filter by tag: htb">htb</span><span class="tag tag-ctf" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('ctf')" title="Filter by tag: ctf">ctf</span><span class="tag tag-linux" onclick="event.preventDefault(); event.stopPropagation(); filterByTag('linux')" title="Filter by tag: linux">linux</span>
+          </div>
+        </div>
+        <div class="post-title-block">
+          <div class="post-title">HackTheBox - Sorcery: Cypher Injection, Kafka SSRF to RCE &amp; FreeIPA Privilege Escalation</div>
+          <div class="post-excerpt">Sorcery is a Linux box with a Rust Rocket web app backed by Neo4j, Gitea, and a Kafka message bus. I’ll exploit Cypher injection in a derive-macro-generated query to...</div>
         </div>
         <div class="post-footer-row">
           <span class="post-action-cue">

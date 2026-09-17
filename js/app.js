@@ -164,14 +164,57 @@ function toggleSFX() {
 function updateSFXButtonUI() {
   const btn = document.getElementById('sfx-toggle');
   const statusEl = document.getElementById('sfx-status');
-  if (!btn) return;
-  if (sfxEnabled) {
-    btn.classList.remove('muted');
-    if (statusEl) statusEl.textContent = 'ON';
-  } else {
-    btn.classList.add('muted');
-    if (statusEl) statusEl.textContent = 'OFF';
+  const mobileStatusEl = document.getElementById('mobile-sfx-status');
+  if (btn) {
+    if (sfxEnabled) {
+      btn.classList.remove('muted');
+      if (statusEl) statusEl.textContent = 'ON';
+    } else {
+      btn.classList.add('muted');
+      if (statusEl) statusEl.textContent = 'OFF';
+    }
   }
+  if (mobileStatusEl) {
+    mobileStatusEl.textContent = sfxEnabled ? 'ON' : 'OFF';
+    mobileStatusEl.style.color = sfxEnabled ? 'var(--red)' : 'var(--text-muted)';
+  }
+}
+
+/* ─── MOBILE NAVIGATION DRAWER ─── */
+function toggleMobileMenu() {
+  if (document.body.classList.contains('mobile-menu-open')) {
+    closeMobileMenu();
+  } else {
+    openMobileMenu();
+  }
+}
+
+function openMobileMenu() {
+  document.body.classList.add('mobile-menu-open');
+  const btn = document.getElementById('nav-hamburger-btn');
+  const drawer = document.getElementById('mobile-menu-drawer');
+  if (btn) {
+    btn.classList.add('is-active');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  if (drawer) {
+    drawer.setAttribute('aria-hidden', 'false');
+  }
+  playCyberSound('open');
+}
+
+function closeMobileMenu() {
+  document.body.classList.remove('mobile-menu-open');
+  const btn = document.getElementById('nav-hamburger-btn');
+  const drawer = document.getElementById('mobile-menu-drawer');
+  if (btn) {
+    btn.classList.remove('is-active');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+  if (drawer) {
+    drawer.setAttribute('aria-hidden', 'true');
+  }
+  playCyberSound('close');
 }
 
 /* ─── 2. HACKER TEXT SCRAMBLE / DECODER EFFECT ─── */
@@ -1020,6 +1063,10 @@ document.addEventListener('keydown', (e) => {
 
   // Escape key: close overlays or smoothly scroll to top of page
   if (e.key === 'Escape') {
+    if (document.body.classList.contains('mobile-menu-open')) {
+      closeMobileMenu();
+      return;
+    }
     const palette = document.getElementById('cmd-palette');
     const isPaletteOpen = palette && palette.classList.contains('active');
     const lb = document.getElementById('image-lightbox');

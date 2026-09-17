@@ -98,9 +98,82 @@
         <span class="operator-dot"></span>
         <span class="operator-id">@uziii2208</span>
       </a>
+
+      <!-- Mobile Menu Hamburger Toggle -->
+      <button id="nav-hamburger-btn" class="nav-hamburger-btn" onclick="toggleMobileMenu()" title="Toggle Navigation Menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
+        <span class="hamburger-box">
+          <span class="hamburger-line line-1"></span>
+          <span class="hamburger-line line-2"></span>
+          <span class="hamburger-line line-3"></span>
+        </span>
+      </button>
     </div>
   </div>
 </nav>
+
+<!-- ─── MOBILE NAVIGATION DRAWER & BACKDROP ─── -->
+<div id="mobile-menu-backdrop" class="mobile-menu-backdrop" onclick="closeMobileMenu()"></div>
+<div id="mobile-menu-drawer" class="mobile-menu-drawer" aria-hidden="true">
+  <div class="mobile-drawer-header">
+    <div class="mobile-drawer-brand">
+      <span class="brand-prompt">&gt;</span>
+      <span class="brand-name">uziii<span class="brand-num">2208</span></span>
+      <span class="brand-badge">[0x0D]</span>
+    </div>
+    <button class="mobile-drawer-close" onclick="closeMobileMenu()" aria-label="Close navigation menu">✕</button>
+  </div>
+
+  <div class="mobile-drawer-content">
+    <div class="mobile-section-tag">// NAVIGATION</div>
+    <ul class="mobile-routes-list">
+      <li>
+        <a href="/" id="mobile-link-home" class="mobile-route-item" onclick="closeMobileMenu(); return navigateToHome(event)">
+          <span class="m-route-num">01</span>
+          <span class="m-route-label">HOME</span>
+          <span class="m-route-arrow">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="../../post/" class="mobile-route-item active" onclick="closeMobileMenu()">
+          <span class="m-route-num">02</span>
+          <span class="m-route-label">WRITE-UPS</span>
+          <span class="m-route-arrow">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer" class="mobile-route-item" onclick="closeMobileMenu()">
+          <span class="m-route-num">03</span>
+          <span class="m-route-label">GITHUB ↗</span>
+          <span class="m-route-arrow">↗</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="mobile-section-tag">// TOOLS &amp; CONTROLS</div>
+    <div class="mobile-tools-grid">
+      <button type="button" class="mobile-tool-btn" onclick="closeMobileMenu(); openCmdPalette()">
+        <span class="m-tool-kbd">/</span>
+        <span class="m-tool-name">SEARCH WRITE-UPS</span>
+        <span class="m-tool-hint">Ctrl+K</span>
+      </button>
+      <button type="button" class="mobile-tool-btn" onclick="toggleSFX()">
+        <span class="m-tool-icon">♫</span>
+        <span class="m-tool-name">SOUND ENGINE</span>
+        <span id="mobile-sfx-status" class="m-tool-val">ON</span>
+      </button>
+    </div>
+
+    <div class="mobile-drawer-footer">
+      <a class="mobile-operator-badge" href="https://github.com/uziii2208" target="_blank" rel="noopener noreferrer">
+        <span class="operator-dot"></span>
+        <div class="mobile-operator-meta">
+          <span class="m-operator-handle">@uziii2208</span>
+          <span class="m-operator-desc">INDEPENDENT SECURITY RESEARCH</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
 
 <!-- ─── POST VIEW CONTAINER ─── -->
 <div id="post-view" style="display:block;">

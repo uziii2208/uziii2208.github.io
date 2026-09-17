@@ -82,6 +82,23 @@
     "locked": false
   },
   {
+    "id": "hackthebox-sorcery",
+    "slug": "hackthebox-sorcery",
+    "path": "posts/HackTheBox/HackTheBox-Sorcery.md",
+    "url": "post/hackthebox-sorcery/",
+    "title": "HackTheBox - Sorcery: Cypher Injection, Kafka SSRF to RCE & FreeIPA Privilege Escalation",
+    "date": "2026-04-25",
+    "tags": [
+      "htb",
+      "ctf",
+      "linux"
+    ],
+    "excerpt": "Sorcery is a Linux box with a Rust Rocket web app backed by Neo4j, Gitea, and a Kafka message bus. I’ll exploit Cypher injection in a derive-macro-generated query to...",
+    "readTime": "157 min read",
+    "author": "@0xdf",
+    "locked": false
+  },
+  {
     "id": "hackthebox-hercules",
     "slug": "hackthebox-hercules",
     "path": "posts/HackTheBox/HackTheBox-Hercules.md",
