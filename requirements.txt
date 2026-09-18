@@ -1,0 +1,9 @@
+# Core build & markdown dependencies
+markdown-it-py>=3.0.0
+mdit-py-plugins>=0.4.0
+
+# Cryptographic asset protection & steganography (AES-256-GCM / PBKDF2)
+cryptography>=42.0.0
+
+# Image manipulation & decoy generation
+pillow>=10.0.0
