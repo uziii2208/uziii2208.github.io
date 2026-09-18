@@ -1690,7 +1690,6 @@ function initCompanion() {
   // Load encrypted model stream into in-memory canvas
   try {
     loadSecuredCompanionModel();
-    monitorDevToolsState();
   } catch (e) {
     console.warn('Companion model load error:', e);
   }
@@ -1716,16 +1715,12 @@ function initCompanion() {
 }
 
 /* ═════════════════════════════════════════════════════════════════════
-   CYBER DEFENSE: IN-MEMORY ASSET DE-SCRAMBLER & DEVTOOLS GUARD
-/* ═════════════════════════════════════════════════════════════════════
-   CYBER DEFENSE: ZERO-BLOB JIGSAW MATRIX RECONSTRUCTOR & DEVTOOLS GUARD
+   CYBER DEFENSE: ZERO-BLOB JIGSAW MATRIX RECONSTRUCTOR
    Reassembles shredded, tile-permuted & XOR-scrambled matrix in RAM.
    NEVER generates Image, Blob, or ObjectURL — paints directly to canvas.
-   Monitors DevTools state and scrubs canvas memory upon inspection.
    ═════════════════════════════════════════════════════════════════════ */
 
 let companionImageData = null;
-let isDevToolsActive = false;
 
 async function loadSecuredCompanionModel() {
   const canvas = document.getElementById('companion-canvas');
@@ -1737,11 +1732,41 @@ async function loadSecuredCompanionModel() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  try {
-    const resp = await fetch(binPath);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const rawBuffer = await resp.arrayBuffer();
+  let rawBuffer = null;
 
+  // 1. Instantaneous in-memory matrix if available (supports local file:// and zero-latency load)
+  if (typeof window.__KIRA_MATRIX_DATA__ === 'string' && window.__KIRA_MATRIX_DATA__.length > 100) {
+    try {
+      const binaryString = atob(window.__KIRA_MATRIX_DATA__);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      rawBuffer = bytes.buffer;
+    } catch (e) {
+      console.warn('[!] Memory matrix decode fallback:', e);
+    }
+  }
+
+  // 2. Fetch binary stream if not preloaded (standard HTTP / HTTPS on GitHub Pages)
+  if (!rawBuffer) {
+    try {
+      const resp = await fetch(binPath);
+      if (resp.ok) {
+        rawBuffer = await resp.arrayBuffer();
+      }
+    } catch (e) {
+      console.warn('[!] Fetch matrix stream error:', e);
+    }
+  }
+
+  if (!rawBuffer) {
+    console.warn('[!] No valid companion matrix stream found.');
+    return;
+  }
+
+  try {
     // Verify Custom Magic Header ('KZSH' = 0x4B 0x5A 0x53 0x48)
     const headerView = new DataView(rawBuffer, 0, 18);
     const magic = String.fromCharCode(
@@ -1780,7 +1805,7 @@ async function loadSecuredCompanionModel() {
       const decompressedStream = new Response(compressedBytes).body.pipeThrough(ds);
       decompressedArr = new Uint8Array(await new Response(decompressedStream).arrayBuffer());
     } else {
-      throw new Error('DecompressionStream unsupported');
+      throw new Error('DecompressionStream unsupported in this browser environment');
     }
 
     const tileSize = tileW * tileH * 4;
@@ -1811,13 +1836,10 @@ async function loadSecuredCompanionModel() {
     }
 
     companionImageData = imgData;
-    if (!isDevToolsActive) {
-      renderCompanionCanvas(ctx, canvas, imgData);
-    }
+    ctx.putImageData(imgData, 0, 0);
 
   } catch (err) {
-    console.warn('[!] Companion matrix reconstructor fallback:', err);
-    drawGlitchWarning(ctx, canvas, 'ASSET STREAM SHIELDED // STANDBY');
+    console.warn('[!] Companion matrix reconstructor error:', err);
   }
 
   // Poison canvas export methods so console / scraper execution returns blank/error
@@ -1827,61 +1849,6 @@ async function loadSecuredCompanionModel() {
   canvas.toBlob = function(cb) {
     if (typeof cb === 'function') cb(new Blob([], { type: 'image/png' }));
   };
-}
-
-function renderCompanionCanvas(ctx, canvas, imgData) {
-  if (!ctx || !imgData) return;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.putImageData(imgData, 0, 0);
-}
-
-function drawGlitchWarning(ctx, canvas, reason) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgba(12, 12, 18, 0.96)';
-  ctx.fillRect(20, 100, canvas.width - 40, 420);
-  ctx.strokeStyle = '#e8192c';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(20, 100, canvas.width - 40, 420);
-
-  ctx.fillStyle = '#e8192c';
-  ctx.font = 'bold 22px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('[!] STREAM SEVERED', canvas.width / 2, 210);
-
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '14px monospace';
-  ctx.fillText(reason || 'DEVTOOLS INSPECTION DETECTED', canvas.width / 2, 260);
-
-  ctx.fillStyle = '#8888aa';
-  ctx.font = '12px monospace';
-  ctx.fillText('ASSET MEMORY FLUSHED // OPSEC ACTIVE', canvas.width / 2, 310);
-  ctx.fillText('CLOSE DEVTOOLS TO RESUME STREAM', canvas.width / 2, 340);
-  ctx.textAlign = 'left';
-}
-
-function monitorDevToolsState() {
-  const threshold = 160;
-  setInterval(() => {
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    const isOpen = widthDiff || heightDiff;
-
-    if (isOpen && !isDevToolsActive) {
-      isDevToolsActive = true;
-      const canvas = document.getElementById('companion-canvas');
-      if (canvas) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) drawGlitchWarning(ctx, canvas, 'DEVTOOLS INSPECTION DETECTED');
-      }
-    } else if (!isOpen && isDevToolsActive) {
-      isDevToolsActive = false;
-      const canvas = document.getElementById('companion-canvas');
-      if (canvas && companionImageData) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) renderCompanionCanvas(ctx, canvas, companionImageData);
-      }
-    }
-  }, 600);
 }
 
 function initConsoleDefense() {
