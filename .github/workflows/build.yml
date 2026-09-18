@@ -72,6 +72,7 @@ jobs:
         run: |
           node -c js/app.js
           node -c js/posts-data.js
+          node -c js/kira-matrix.js
 
       - name: Verify Security Shield & Gate Integrity
         run: |
@@ -82,10 +83,13 @@ jobs:
           index_html = Path('index.html').read_text(encoding='utf-8')
           assert 'companion-shield' in index_html, 'Missing companion-shield in index.html'
           assert 'companion-canvas' in index_html, 'Missing companion-canvas in index.html'
+          assert 'kira-matrix.js' in index_html, 'Missing kira-matrix.js in index.html'
           
-          # 2. Verify encrypted model binary & decoy image
+          # 2. Verify encrypted model binary, matrix module & decoy image
           model_bin = Path('photos/model.bin')
           assert model_bin.exists() and model_bin.stat().st_size > 1000, 'model.bin missing or corrupt'
+          kira_matrix = Path('js/kira-matrix.js')
+          assert kira_matrix.exists() and kira_matrix.stat().st_size > 1000, 'kira-matrix.js missing or corrupt'
           model_png = Path('photos/model.png')
           assert model_png.exists() and model_png.stat().st_size > 1000, 'model.png decoy missing'
           

@@ -1751,6 +1751,25 @@ async function loadSecuredCompanionModel() {
 
   // 2. Fetch binary stream if not preloaded (standard HTTP / HTTPS on GitHub Pages)
   if (!rawBuffer) {
+    if (typeof window.__KIRA_MATRIX_DATA__ !== 'string') {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      if (typeof window.__KIRA_MATRIX_DATA__ === 'string' && window.__KIRA_MATRIX_DATA__.length > 100) {
+        try {
+          const binaryString = atob(window.__KIRA_MATRIX_DATA__);
+          const len = binaryString.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          rawBuffer = bytes.buffer;
+        } catch (e) {
+          console.warn('[!] Memory matrix delayed decode fallback:', e);
+        }
+      }
+    }
+  }
+
+  if (!rawBuffer) {
     try {
       const resp = await fetch(binPath);
       if (resp.ok) {
@@ -1802,7 +1821,7 @@ async function loadSecuredCompanionModel() {
     let decompressedArr;
     if (typeof DecompressionStream !== 'undefined') {
       const ds = new DecompressionStream('deflate');
-      const decompressedStream = new Response(compressedBytes).body.pipeThrough(ds);
+      const decompressedStream = new Response(new Uint8Array(compressedBytes)).body.pipeThrough(ds);
       decompressedArr = new Uint8Array(await new Response(decompressedStream).arrayBuffer());
     } else {
       throw new Error('DecompressionStream unsupported in this browser environment');
