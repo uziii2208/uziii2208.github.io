@@ -35,6 +35,11 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="../css/style.css">
 
+  <!-- KaTeX Math Engine (LaTeX Rendering) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
   <!-- Pre-compiled Post Data -->
   <script src="../js/posts-data.js"></script>
 
@@ -503,6 +508,55 @@
 
 <!-- ─── FLOATING BACK TO TOP ─── -->
 <button id="back-to-top" class="back-to-top-btn" onclick="scrollToTop()" title="Back to top">▲</button>
+
+
+<!-- ─── CYBER OPERATIVE COMPANION (KIRA // 0x0D) — DOCKED LEFT ─── -->
+<div id="cyber-companion" class="cyber-companion" aria-label="Security Lab Operative Companion">
+  <!-- Tactical Comms HUD -->
+  <div id="companion-dialogue" class="companion-dialogue" role="status" aria-live="polite">
+    <div class="comms-header">
+      <div class="comms-channel">
+        <span class="comms-indicator"></span>
+        <span class="comms-title">COMMS // CH-0x0D</span>
+      </div>
+      <div class="comms-meta">
+        <span class="comms-freq">414.1 MHz</span>
+        <button type="button" class="comms-close" onclick="dismissDialogue()" title="Dismiss transmission" aria-label="Close">✕</button>
+      </div>
+    </div>
+    <div class="comms-body">
+      <div class="comms-prompt">&gt; KIRA:</div>
+      <p id="dialogue-text">Initializing security matrix...</p>
+    </div>
+    <div class="comms-footer">
+      <span class="comms-status">ENCRYPTED // AES-256</span>
+      <span class="comms-hint">CLICK OPERATIVE FOR INTEL</span>
+    </div>
+    <div class="dialogue-arrow"></div>
+  </div>
+
+  <!-- Character Model & Holographic Pedestal Dock -->
+  <div class="companion-stage">
+    <div class="companion-model-wrap" onclick="interactWithCompanion()" title="Operative Kira // Level-5 Protected Asset">
+      <div class="holo-emitter-glow"></div>
+      <div class="companion-shield" aria-hidden="true"></div>
+      <canvas id="companion-canvas" class="companion-canvas" width="832" height="1248" aria-label="uziii2208 Security Operative Kira" data-model-bin="../photos/model.bin"></canvas>
+    </div>
+
+    <div class="companion-pedestal">
+      <div class="pedestal-badge">
+        <span class="pedestal-dot"></span>
+        <span class="pedestal-name">KIRA</span>
+        <span class="pedestal-sep">//</span>
+        <span class="pedestal-role">0x0D OPERATIVE</span>
+      </div>
+      <button type="button" id="companion-toggle-btn" class="pedestal-toggle" onclick="toggleCompanionCollapse()" title="Minimize / Restore Operative" aria-label="Toggle Operative">
+        <span class="toggle-icon">−</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 
 <!-- ─── COMMAND PALETTE HUD (Ctrl+K or /) ─── -->
 <div id="cmd-palette" class="cmd-overlay" onclick="closeCmdPalette()">

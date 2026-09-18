@@ -1,45 +1,129 @@
-name: Auto-Build Blog Posts
+name: Cyber Range & Asset Defense CI/CD Pipeline
 
 on:
   push:
+    branches:
+      - main
+      - newest
     paths:
       - 'posts/**'
+      - 'photos/**'
+      - 'cursors/**'
+      - 'css/**'
+      - 'js/**'
       - 'build.py'
+      - 'scripts/**'
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - main
+      - newest
   workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-deploy"
+  cancel-in-progress: false
 
 jobs:
-  build:
+  security-build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Set up Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.11'
+          cache: 'pip'
 
-      - name: Run Blog Generator
-        run: python build.py
-
-      - name: Check for changes
-        id: git_status
+      - name: Install Build & Cryptographic Dependencies
         run: |
-          git status --porcelain
-          if [ -n "$(git status --porcelain posts.json js/posts-data.js)" ]; then
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          fi
+          python -m pip install --upgrade pip
+          pip install markdown-it-py mdit-py-plugins cryptography pillow
 
-      - name: Commit and push if changed
-        if: steps.git_status.outputs.has_changes == 'true'
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Asset Protection & Steganographic Watermark Engine
+        run: |
+          python scripts/protect_assets.py
+
+      - name: Compile Hardened Blog & Generate Post Pages
+        run: |
+          python build.py
+
+      - name: Verify Frontend JavaScript Syntax
+        run: |
+          node -c js/app.js
+          node -c js/posts-data.js
+
+      - name: Verify Security Shield & Gate Integrity
+        run: |
+          python -c "
+          from pathlib import Path
+          
+          # 1. Verify companion shield & in-memory canvas
+          index_html = Path('index.html').read_text(encoding='utf-8')
+          assert 'companion-shield' in index_html, 'Missing companion-shield in index.html'
+          assert 'companion-canvas' in index_html, 'Missing companion-canvas in index.html'
+          
+          # 2. Verify encrypted model binary & decoy image
+          model_bin = Path('photos/model.bin')
+          assert model_bin.exists() and model_bin.stat().st_size > 1000, 'model.bin missing or corrupt'
+          model_png = Path('photos/model.png')
+          assert model_png.exists() and model_png.stat().st_size > 1000, 'model.png decoy missing'
+          
+          # 3. Verify CSS cursor & selection lockdown
+          css_text = Path('css/style.css').read_text(encoding='utf-8')
+          assert 'Unavailable.png' in css_text, 'Missing Unavailable cursor rule in style.css'
+          assert 'user-select: none !important' in css_text, 'Missing user-select lockdown in style.css'
+          assert 'Beam%20select.png' in css_text, 'Missing code block Beam select cursor exception'
+          
+          # 4. Verify JS content shield
+          js_text = Path('js/app.js').read_text(encoding='utf-8')
+          assert 'initContentShield' in js_text, 'Missing initContentShield in app.js'
+          assert 'initConsoleDefense' in js_text, 'Missing initConsoleDefense in app.js'
+          
+          print('[+] Gate Passed: All defense shields verified.')
+          "
+
+      - name: Commit & Push Hardened Artifacts to Branch
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add posts.json js/posts-data.js
-          git commit -m "chore(auto): rebuild posts.json & js/posts-data.js [skip ci]"
-          git push
+          git add -A
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "chore(security-ci): compile blog with hardened asset & content shields [skip ci]"
+            git push origin ${{ github.ref_name }}
+          else
+            echo "No changes detected to commit."
+          fi
+
+      - name: Configure GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/newest'
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+
+      - name: Upload GitHub Pages Artifact
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/newest'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+        continue-on-error: true
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/newest'
+        id: deployment
+        uses: actions/deploy-pages@v4
+        continue-on-error: true

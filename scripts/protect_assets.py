@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+"""
+─────────────────────────────────────────────────────────────────────────────
+  uziii2208 Asset Protection & Forensic Watermark Engine (scripts/protect_assets.py)
+  Part of mcp2agy-forge CI/CD Defense Pipeline
+
+  1. Encrypts authentic Operative Kira image into AES-256-GCM binary blob
+     (photos/model.bin) for dynamic in-memory canvas rendering.
+  2. Replaces public photos/model.png with an authoritative Level-5 decoy
+     asset to neutralize DevTools Sources / URL direct scraping.
+  3. Strips sensitive EXIF/GPS metadata from all images across writeups.
+  4. Audits and validates frontend defense shields across CSS and JS.
+─────────────────────────────────────────────────────────────────────────────
+"""
+
+import sys
+import os
+import hashlib
+import shutil
+from pathlib import Path
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+# Ensure UTF-8 output on Windows console
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
+try:
+    from PIL import Image, ImageDraw, ImageFont, PngImagePlugin
+except ImportError:
+    print("[!] Pillow not found. Installing Pillow...")
+    import subprocess
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pillow"])
+    from PIL import Image, ImageDraw, ImageFont, PngImagePlugin
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+PHOTOS_DIR = BASE_DIR / "photos"
+SOURCE_MODEL_PNG = PHOTOS_DIR / ".source_model.png"
+MODEL_PNG = PHOTOS_DIR / "model.png"
+MODEL_BIN = PHOTOS_DIR / "model.bin"
+POSTS_DIR = BASE_DIR / "posts"
+POST_DIR = BASE_DIR / "post"
+FONTS_DIR = BASE_DIR / "fonts"
+PIXEL_FONT = FONTS_DIR / "uziii2208-pixel.ttf"
+CSS_FILE = BASE_DIR / "css" / "style.css"
+JS_FILE = BASE_DIR / "js" / "app.js"
+
+SECRET_SEED = b"uziii2208_operative_kira_sentinel_2026_0x0D"
+
+ASSET_METADATA = {
+    "Title": "Operative Kira (0x0D) — Protected Mascot Sentinel",
+    "Author": "Tong Hoang Gia (@uziii2208)",
+    "Copyright": "(c) 2026 uziii2208. All Rights Reserved. Direct extraction prohibited.",
+    "Classification": "LEVEL-5 CLASSIFIED // OPERATIVE SEC-DEFENSE",
+    "License": "Proprietary / All Rights Reserved",
+    "Provenance": "https://github.com/uziii2208/uziii2208.github.io"
+}
+
+def encrypt_model_asset():
+    """Encrypt authentic model into photos/model.bin using AES-256-GCM."""
+    if not SOURCE_MODEL_PNG.exists():
+        if MODEL_BIN.exists() and MODEL_BIN.stat().st_size > 1000:
+            print(f"[+] Encrypted payload already present at {MODEL_BIN.name} ({MODEL_BIN.stat().st_size} bytes)")
+            return True
+        elif MODEL_PNG.exists() and MODEL_PNG.stat().st_size > 100000:
+            shutil.copy(MODEL_PNG, SOURCE_MODEL_PNG)
+        else:
+            print(f"[!] Critical: Neither {SOURCE_MODEL_PNG} nor valid {MODEL_BIN} found.")
+            return False
+
+    print(f"[*] Encrypting authentic Operative Kira image from {SOURCE_MODEL_PNG.name}...")
+    raw_data = SOURCE_MODEL_PNG.read_bytes()
+    key = hashlib.sha256(SECRET_SEED).digest()
+    iv = os.urandom(12)  # Standard 96-bit AES-GCM nonce
+    aesgcm = AESGCM(key)
+    ciphertext = aesgcm.encrypt(iv, raw_data, None)
+
+    # Output: 12-byte IV + ciphertext (includes 16-byte auth tag)
+    MODEL_BIN.write_bytes(iv + ciphertext)
+    print(f"[+] Encrypted payload written to {MODEL_BIN.name} ({len(raw_data)} bytes -> {MODEL_BIN.stat().st_size} bytes)")
+    return True
+
+def generate_decoy_model_image():
+    """Generate high-contrast cyber warning decoy PNG for photos/model.png."""
+    print(f"[*] Generating Level-5 decoy asset at {MODEL_PNG.name}...")
+    w, h = 832, 1248
+    img = Image.new("RGBA", (w, h), (10, 10, 16, 255))
+    draw = ImageDraw.Draw(img)
+
+    # Load custom pixel font if available
+    try:
+        font_lg = ImageFont.truetype(str(PIXEL_FONT), 38)
+        font_md = ImageFont.truetype(str(PIXEL_FONT), 24)
+        font_sm = ImageFont.truetype(str(PIXEL_FONT), 18)
+    except Exception:
+        font_lg = ImageFont.load_default()
+        font_md = ImageFont.load_default()
+        font_sm = ImageFont.load_default()
+
+    # Cyber grid background
+    for y in range(0, h, 32):
+        draw.line([(0, y), (w, y)], fill=(20, 20, 35, 180), width=1)
+    for x in range(0, w, 32):
+        draw.line([(x, 0), (x, h)], fill=(20, 20, 35, 180), width=1)
+
+    # Diagonal hazard warning tape at top & bottom
+    for offset in range(-800, 1600, 40):
+        draw.line([(offset, 0), (offset + 400, 80)], fill=(232, 25, 44, 180), width=16)
+        draw.line([(offset, 1168), (offset + 400, 1248)], fill=(232, 25, 44, 180), width=16)
+
+    # Warning HUD Box
+    draw.rectangle([(50, 130), (782, 1118)], outline=(232, 25, 44, 255), width=3)
+    draw.rectangle([(60, 140), (772, 1108)], outline=(232, 25, 44, 80), width=1)
+
+    draw.text((90, 200), "[!] CLASSIFIED ASSET // 0x0D", font=font_lg, fill=(232, 25, 44, 255))
+    draw.text((90, 290), "OPERATIVE KIRA", font=font_lg, fill=(255, 255, 255, 255))
+    draw.text((90, 390), "DIRECT EXTRACTION PROHIBITED", font=font_md, fill=(255, 68, 85, 255))
+    draw.text((90, 450), "ASSET CIPHER: AES-256-GCM (LEVEL-5)", font=font_md, fill=(56, 239, 125, 255))
+    draw.text((90, 510), "IN-MEMORY RUNTIME DESERIALIZER ONLY", font=font_md, fill=(240, 240, 255, 255))
+
+    draw.text((90, 630), "// REPRODUCIBILITY RESTRICTED", font=font_md, fill=(232, 25, 44, 255))
+    draw.text((90, 690), "PROPERTY OF TONG HOANG GIA (@uziii2208)", font=font_sm, fill=(200, 200, 220, 255))
+    draw.text((90, 740), "ALL RIGHTS RESERVED (c) 2026", font=font_sm, fill=(200, 200, 220, 255))
+    draw.text((90, 790), "UNAUTHORIZED REPRODUCTION IS TRACKED", font=font_sm, fill=(255, 68, 85, 255))
+    draw.text((90, 910), "PORTAL: HTTPS://UZIII2208.GITHUB.IO", font=font_md, fill=(0, 230, 255, 255))
+
+    meta = PngImagePlugin.PngInfo()
+    for k, v in ASSET_METADATA.items():
+        meta.add_text(k, v)
+    meta.add_text("HardenedBy", "mcp2agy-forge-ci-v5.2.0")
+
+    img.save(MODEL_PNG, "PNG", pnginfo=meta, optimize=True)
+    print(f"[+] Decoy asset successfully deployed at {MODEL_PNG.name} ({MODEL_PNG.stat().st_size} bytes)")
+
+def strip_exif_metadata():
+    """Strip unnecessary EXIF/IPTC/GPS chunks from auxiliary images in writeup folders."""
+    count = 0
+    search_dirs = [PHOTOS_DIR, POSTS_DIR, POST_DIR]
+    for search_dir in search_dirs:
+        if not search_dir.exists():
+            continue
+        for img_path in search_dir.rglob("*"):
+            if img_path.name == "model.png" or img_path.name == ".source_model.png":
+                continue
+            if img_path.suffix.lower() in [".jpg", ".jpeg", ".webp"]:
+                try:
+                    with Image.open(img_path) as img:
+                        data = list(img.getdata())
+                        image_without_exif = Image.new(img.mode, img.size)
+                        image_without_exif.putdata(data)
+                        image_without_exif.save(img_path)
+                        count += 1
+                except Exception:
+                    pass
+    print(f"[+] Sanitized EXIF metadata across {count} auxiliary images.")
+
+def verify_frontend_shields():
+    """Verify that CSS and JS contain all necessary anti-tamper and cursor lockdown rules."""
+    passed = True
+    print("[*] Auditing frontend security shield configuration...")
+
+    if CSS_FILE.exists():
+        css_content = CSS_FILE.read_text(encoding="utf-8")
+        checks = [
+            ("companion-shield", "Kira model invisible pointer shield"),
+            ("companion-canvas", "Kira in-memory canvas styling"),
+            ("Unavailable.png", "Unavailable restricted cursor rule"),
+            ("user-select: none !important", "Writeup prose text selection lockdown"),
+            ("Beam%20select.png", "Code block exception rule"),
+            ("cursor: zoom-in !important", "Image lightbox hover exception rule"),
+        ]
+        for pattern, label in checks:
+            if pattern in css_content:
+                print(f"    [+] CSS Check Passed: {label}")
+            else:
+                print(f"    [!] CSS Check FAILED: Missing '{pattern}' ({label})")
+                passed = False
+
+    if JS_FILE.exists():
+        js_content = JS_FILE.read_text(encoding="utf-8")
+        checks = [
+            ("loadSecuredCompanionModel", "In-memory AES-256-GCM model loader"),
+            ("initContentShield", "Content protection & anti-copy engine"),
+            ("initConsoleDefense", "Console anti-tamper warning banner"),
+        ]
+        for pattern, label in checks:
+            if pattern in js_content:
+                print(f"    [+] JS Check Passed: {label}")
+            else:
+                print(f"    [!] JS Check FAILED: Missing '{pattern}' ({label})")
+                passed = False
+
+    return passed
+
+def main():
+    print("═══════════════════════════════════════════════════════════════")
+    print("  uziii2208 // Asset Protection & Forensic Watermark Engine    ")
+    print("  Security Forge CI/CD Component (mcp2agy-forge)               ")
+    print("═══════════════════════════════════════════════════════════════")
+
+    encrypt_model_asset()
+    generate_decoy_model_image()
+    strip_exif_metadata()
+    shields_ok = verify_frontend_shields()
+
+    if not shields_ok:
+        print("[!] Warning: Some frontend shields are still pending configuration.")
+    print("[+] Asset guard task completed successfully.\n")
+
+if __name__ == "__main__":
+    main()

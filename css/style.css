@@ -912,9 +912,16 @@ body.mobile-menu-open .mobile-menu-drawer {
     var(--bg);
 }
 
-/* Disabled AI slop canvas */
+/* ─── GLOBAL CYBER CONSTELLATION & PIXEL BUGS CANVAS ─── */
 #cyber-canvas {
-  display: none !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
 }
 
 .hero-bg {
@@ -1885,13 +1892,87 @@ body.page-post-index #cyber-canvas {
   padding-left: 15px;
 }
 
-/* ─── MARKDOWN CONTENT STYLING ─── */
+/* ─── MARKDOWN CONTENT STYLING & OPSEC CURSOR LOCKDOWN ─── */
+/* Global container lockdown: Disables text selection across writeup prose */
 .md-content {
   font-family: var(--font-content);
   font-size: 1rem;
   line-height: 1.78;
   color: #d8d8e8;
   word-wrap: break-word;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Restricted prose cursor: All non-code/non-image elements show Unavailable cursor */
+.md-content p,
+.md-content h1,
+.md-content h2,
+.md-content h3,
+.md-content h4,
+.md-content h5,
+.md-content h6,
+.md-content ul,
+.md-content ol,
+.md-content li,
+.md-content blockquote,
+.md-content aside,
+.md-content table,
+.md-content th,
+.md-content td,
+.md-content strong,
+.md-content em,
+.md-content hr,
+.md-content .katex,
+.md-content .katex-display {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  cursor: url('../cursors/Unavailable.png') 16 16, url('../cursors/Unavailable.cur'), not-allowed !important;
+}
+
+/* ─── EXCEPTION 1: CODE BLOCKS & SYNTAX (ALLOWED SELECTION & INTERACTION) ─── */
+.md-content pre,
+.md-content code,
+.md-content .code-block-wrap,
+.md-content .code-line,
+.md-content .line-content,
+.md-content .hljs,
+.md-content pre code {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  cursor: url('../cursors/Beam%20select.png') 16 16, url('../cursors/Beam%20select.cur'), text !important;
+  pointer-events: auto !important;
+}
+
+.md-content .line-number {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  cursor: default !important;
+}
+
+.md-content .code-copy-btn,
+pre .code-copy-btn {
+  user-select: none !important;
+  cursor: url('../cursors/Link%20select.png') 16 16, url('../cursors/Link%20select.cur'), pointer !important;
+  pointer-events: auto !important;
+}
+
+/* ─── EXCEPTION 2: WRITEUP IMAGES & LIGHTBOX (ALLOWED HOVER & ZOOM) ─── */
+.md-content img,
+.md-content figure img,
+.md-content .lightbox-trigger {
+  cursor: zoom-in !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+  -webkit-touch-callout: none !important;
 }
 
 .md-content h1,
@@ -1948,6 +2029,9 @@ body.page-post-index #cyber-canvas {
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: color 0.15s;
+  cursor: url('../cursors/Link%20select.png') 16 16, url('../cursors/Link%20select.cur'), pointer !important;
+  user-select: none !important;
+  pointer-events: auto !important;
 }
 
 .md-content a:hover {
@@ -2138,7 +2222,7 @@ body.page-post-index #cyber-canvas {
   font-size: 0.65rem;
   letter-spacing: 0.05em;
   padding: 3px 8px;
-  cursor: pointer;
+  cursor: url('../cursors/Link%20select.png') 16 16, url('../cursors/Link%20select.cur'), pointer !important;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -2146,6 +2230,7 @@ body.page-post-index #cyber-canvas {
 }
 
 .code-copy-btn:hover {
+  cursor: url('../cursors/Link%20select.png') 16 16, url('../cursors/Link%20select.cur'), pointer !important;
   border-color: var(--red);
   color: var(--red);
   box-shadow: 0 0 8px var(--red-glow);
@@ -3746,5 +3831,588 @@ footer a:hover { color: #ff4455; text-decoration: underline; }
   }
 }
 
+/* ─── 18. KATEX & LATEX MATHEMATICAL FORMULA STYLING ─── */
+.katex {
+  font-size: 1.05em;
+  text-rendering: geometricPrecision;
+  color: #f0f0f8;
+}
 
+/* Inline math formula containers */
+.math.inline,
+span.katex:not(.katex-display .katex) {
+  display: inline-block;
+  vertical-align: -0.1em;
+  padding: 0.1em 0.35em;
+  margin: 0 0.12em;
+  background: rgba(232, 25, 44, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  line-height: normal;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.math.inline:hover,
+span.katex:not(.katex-display .katex):hover {
+  border-color: rgba(232, 25, 44, 0.3);
+  background: rgba(232, 25, 44, 0.09);
+}
+
+/* Display / Block math formula containers */
+.math.block,
+.katex-display {
+  display: block;
+  margin: 1.8rem 0;
+  padding: 1.4rem 1.8rem;
+  background: rgba(11, 11, 16, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 3px solid var(--red, #e8192c);
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), inset 0 0 20px rgba(232, 25, 44, 0.02);
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+
+.katex-display > .katex {
+  display: inline-block;
+  text-align: initial;
+  max-width: 100%;
+}
+
+/* KaTeX custom horizontal scrollbar for large matrices and equations */
+.math.block::-webkit-scrollbar,
+.katex-display::-webkit-scrollbar {
+  height: 4px;
+}
+
+.math.block::-webkit-scrollbar-track,
+.katex-display::-webkit-scrollbar-track {
+  background: rgba(10, 10, 15, 0.8);
+}
+
+.math.block::-webkit-scrollbar-thumb,
+.katex-display::-webkit-scrollbar-thumb {
+  background: var(--red, #e8192c);
+  border-radius: 2px;
+}
+
+/* KaTeX error fallback */
+.katex-error {
+  color: #ff4455 !important;
+  font-family: var(--font-code, 'JetBrains Mono', monospace);
+  font-size: 0.88em;
+  background: rgba(232, 25, 44, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px dashed rgba(232, 25, 44, 0.4);
+}
+
+@media (max-width: 768px) {
+  .math.block,
+  .katex-display {
+    padding: 1rem 1.1rem;
+    margin: 1.4rem 0;
+  }
+}
+
+/* ─── 19. CUSTOM CYBER CURSORS (STANDARDIZED 32PX) ─── */
+html, body {
+  cursor: url('../cursors/Normal%20select.png') 10 5, url('../cursors/Normal%20select.cur'), auto;
+}
+
+/* Interactive links, buttons, cards & clickable elements */
+a, button, [role="button"], .tag, .filter-btn, .post-item, select, .summary-btn, 
+.nav-brand, .shortcut-key, summary, .interactive, .btn-ctrl, .back-btn, 
+.btn-sfx-hud, .nav-shortcut-btn, .mobile-tool-btn, .btn-404-primary, .btn-404-secondary,
+.companion-model-wrap, .companion-toggle-btn, .dialogue-close, .nav-hamburger-btn,
+.code-copy-btn, button.code-copy-btn, pre .code-copy-btn, .pedestal-toggle {
+  cursor: url('../cursors/Link%20select.png') 16 16, url('../cursors/Link%20select.cur'), pointer !important;
+}
+
+/* Text inputs, code blocks, terminal outputs & editable fields */
+input[type="text"], input[type="search"], input[type="password"], textarea, 
+pre, code, .code-line, .terminal-body, .locked-pass-input {
+  cursor: url('../cursors/Text%20select.png') 14 15, url('../cursors/Text%20select.cur'), text;
+}
+
+/* Tooltips, help prompts, badges & info markers */
+[title], [aria-label], .help-icon, abbr, .route-num, .brand-badge {
+  cursor: url('../cursors/Help%20select.png') 4 3, url('../cursors/Help%20select.cur'), help;
+}
+
+/* Busy / loading waiting states */
+.is-loading, .loading, .busy, [data-loading="true"] {
+  cursor: url('../cursors/Busy.png') 11 15, url('../cursors/Busy.cur'), wait;
+}
+
+/* Background task processing / working progress */
+.in-background, .working, progress, [data-progress] {
+  cursor: url('../cursors/Working%20in%20background.png') 4 3, url('../cursors/Working%20in%20background.cur'), progress;
+}
+
+/* Disabled & blocked elements */
+:disabled, [disabled], .disabled, [aria-disabled="true"], .is-locked-card {
+  cursor: url('../cursors/Unavailable.png') 15 16, url('../cursors/Unavailable.cur'), not-allowed;
+}
+
+/* Precision crosshair for interactive canvas & lightbox inspect */
+canvas#cyber-canvas, .diagram-canvas, .lightbox-overlay, .pixel-canvas, .post-hero-img {
+  cursor: url('../cursors/Precision%20select.png') 16 15, url('../cursors/Precision%20select.cur'), crosshair;
+}
+
+/* Move / dragging interactions */
+[draggable="true"], .draggable, .moveable, .drag-handle {
+  cursor: url('../cursors/move.png') 14 15, url('../cursors/move.cur'), move;
+}
+
+/* Resizing handles */
+.resize-ns, [data-resize="ns"], .row-resize {
+  cursor: url('../cursors/Vertical%20resize.png') 15 16, url('../cursors/Vertical%20resize.cur'), ns-resize;
+}
+.resize-ew, [data-resize="ew"], .col-resize {
+  cursor: url('../cursors/Horizontal%20resize.png') 15 16, url('../cursors/Horizontal%20resize.cur'), ew-resize;
+}
+.resize-nwse, [data-resize="nwse"] {
+  cursor: url('../cursors/Diagonal%20resize%201.png') 15 16, url('../cursors/Diagonal%20resize%201.cur'), nwse-resize;
+}
+.resize-nesw, [data-resize="nesw"] {
+  cursor: url('../cursors/Diagonal%20resize%202.png') 15 16, url('../cursors/Diagonal%20resize%202.cur'), nesw-resize;
+}
+
+/* Person / Author / Operative avatar selection */
+.meta-author, .post-meta-author, .author-badge, .mobile-operator-badge, 
+.nav-operator-badge, .author-dot, .companion-img, .author-avatar {
+  cursor: url('../cursors/Person%20select.png') 16 16, url('../cursors/Person%20select.cur'), pointer;
+}
+
+/* Alternate selection / quotes / Easter eggs */
+.dialogue-cue, .easter-egg, .quote-trigger, .terminal-dots, .post-auth-badge {
+  cursor: url('../cursors/Alternate%20select.png') 15 15, url('../cursors/Alternate%20select.cur'), pointer;
+}
+
+/* Location selection / navigation breadcrumbs */
+.breadcrumb, .breadcrumb a, .route-item, .crumb-current, .toc-link {
+  cursor: url('../cursors/Location%20select.png') 7 7, url('../cursors/Location%20select.cur'), pointer;
+}
+
+/* Handwriting / Signature */
+.handwriting, .signature, .annotation {
+  cursor: url('../cursors/Handwritting.png') 1 32, url('../cursors/Handwritting.cur'), default;
+}
+
+/* ─── 20. CYBER OPERATIVE COMPANION (KIRA // 0x0D) — DOCKED LEFT ─── */
+:root {
+  --companion-w: 240px;
+  --companion-h: 360px;
+}
+
+.cyber-companion {
+  position: fixed;
+  bottom: 0;
+  left: 24px;
+  right: auto;
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+  user-select: none;
+}
+
+/* Stage containing Model + Pedestal Dock */
+.companion-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+
+/* Model Container & Forensic Protective Shield */
+.companion-model-wrap {
+  position: relative;
+  width: var(--companion-w);
+  height: var(--companion-h);
+  pointer-events: auto;
+  cursor: url('../cursors/Person%20select.png') 16 16, url('../cursors/Person%20select.cur'), pointer !important;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  filter: drop-shadow(0 6px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 1px rgba(232, 25, 44, 0.7));
+  transition: transform 0.22s ease, filter 0.22s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.companion-model-wrap:hover {
+  filter: drop-shadow(0 8px 28px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 8px rgba(232, 25, 44, 0.6)) brightness(1.04);
+  transform: translateY(-2px);
+}
+
+.companion-model-wrap:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Invisible Guard Shield covering Kira against Right-Click & Drag */
+.companion-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: transparent;
+  pointer-events: auto;
+  cursor: url('../cursors/Person%20select.png') 16 16, url('../cursors/Person%20select.cur'), pointer !important;
+  -webkit-user-drag: none;
+  user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Character Canvas & Image — Cryptographically Shielded, Anti-Drag, Zero Direct Events */
+.companion-canvas,
+.companion-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+  -webkit-touch-callout: none !important;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ground Projection Light Beneath Boots */
+.holo-emitter-glow {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75%;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(232, 25, 44, 0.5) 0%, rgba(232, 25, 44, 0.15) 50%, transparent 80%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: emitterPulse 3s ease-in-out infinite alternate;
+}
+
+/* Grounded Cyber Pedestal / Dock */
+.companion-pedestal {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(var(--companion-w) * 0.85);
+  margin-top: -6px;
+  padding: 4px 10px;
+  background: rgba(8, 8, 14, 0.96);
+  border: 1px solid rgba(232, 25, 44, 0.45);
+  border-bottom: 2px solid var(--red, #e8192c);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.9), inset 0 0 10px rgba(232, 25, 44, 0.08);
+  pointer-events: auto;
+  z-index: 10;
+  transition: all 0.25s ease;
+}
+
+.pedestal-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-code);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+}
+
+.pedestal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00ff66;
+  box-shadow: 0 0 6px #00ff66;
+  animation: ledPulse 2s infinite;
+}
+
+.pedestal-name {
+  color: #fff;
+  font-weight: 600;
+}
+
+.pedestal-sep {
+  color: var(--text-dim);
+}
+
+.pedestal-role {
+  color: var(--red);
+  font-size: 0.58rem;
+}
+
+.pedestal-toggle {
+  background: rgba(20, 20, 30, 0.8);
+  border: 1px solid rgba(232, 25, 44, 0.4);
+  color: var(--text-dim);
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border-radius: 2px;
+  cursor: url('../cursors/Link%20select.png') 16 16, url('../cursors/Link%20select.cur'), pointer !important;
+  transition: all 0.15s ease;
+}
+
+.pedestal-toggle:hover {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red);
+  box-shadow: 0 0 8px rgba(232, 25, 44, 0.6);
+}
+
+/* Minimized / Collapsed State */
+.cyber-companion.collapsed {
+  --companion-w: 160px;
+  --companion-h: 0px;
+}
+
+.cyber-companion.collapsed .companion-model-wrap,
+.cyber-companion.collapsed .companion-dialogue {
+  display: none !important;
+}
+
+.cyber-companion.collapsed .companion-pedestal {
+  margin-bottom: 12px;
+  width: 160px;
+  padding: 6px 10px;
+  clip-path: none;
+  border-radius: 3px;
+  background: rgba(10, 10, 16, 0.98);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.85), 0 0 8px rgba(232, 25, 44, 0.3);
+}
+
+/* ─── TACTICAL COMMS HUD (DIALOGUE) ─── */
+.companion-dialogue {
+  position: relative;
+  width: 320px;
+  max-width: calc(100vw - 40px);
+  margin-bottom: 12px;
+  background: rgba(8, 8, 14, 0.97);
+  border: 1px solid rgba(232, 25, 44, 0.5);
+  border-left: 3px solid var(--red, #e8192c);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85), inset 0 0 14px rgba(232, 25, 44, 0.04);
+  padding: 10px 14px 8px;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(8px) scale(0.97);
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.companion-dialogue.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.comms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(232, 25, 44, 0.2);
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.comms-channel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.comms-indicator {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 6px var(--red);
+}
+
+.comms-title {
+  font-family: var(--font-code);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--red);
+  font-weight: 600;
+}
+
+.comms-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comms-freq {
+  font-family: var(--font-code);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+}
+
+.comms-close {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  cursor: url('../cursors/Link%20select.png') 16 16, url('../cursors/Link%20select.cur'), pointer !important;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.comms-close:hover {
+  color: #fff;
+}
+
+.comms-body {
+  font-family: var(--font-ui, 'Chakra Petch', sans-serif);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: #f0f0f8;
+  min-height: 38px;
+}
+
+.comms-prompt {
+  font-family: var(--font-code);
+  font-size: 0.64rem;
+  color: var(--text-dim);
+  margin-bottom: 3px;
+  letter-spacing: 0.05em;
+}
+
+.comms-body p {
+  margin: 0;
+}
+
+.comms-body .quote-author {
+  display: block;
+  font-family: var(--font-code);
+  font-size: 0.68rem;
+  color: var(--red);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.comms-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-code);
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.06);
+  padding-top: 4px;
+  letter-spacing: 0.04em;
+}
+
+.comms-status {
+  color: #38ef7d;
+}
+
+.comms-hint {
+  color: var(--text-muted);
+}
+
+/* Pointer Arrow Anchored Left (Pointing to Kira) */
+.dialogue-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 42px;
+  right: auto;
+  width: 10px;
+  height: 10px;
+  background: rgba(8, 8, 14, 0.97);
+  border-right: 1px solid rgba(232, 25, 44, 0.5);
+  border-bottom: 1px solid rgba(232, 25, 44, 0.5);
+  transform: rotate(45deg);
+}
+
+/* Hologram Re-sync Animation on Click */
+@keyframes holoResync {
+  0% { transform: scale(1); filter: brightness(1); }
+  25% { transform: scale(1.02) skewX(-1.5deg); filter: brightness(1.5) drop-shadow(0 0 12px #ff4455); }
+  50% { transform: scale(0.99) skewX(1.5deg); filter: brightness(0.9) drop-shadow(0 0 8px #00ffee); }
+  75% { transform: scale(1.01); filter: brightness(1.25); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.companion-model-wrap.is-syncing {
+  animation: holoResync 0.32s ease-out;
+}
+
+@keyframes emitterPulse {
+  0% { opacity: 0.6; transform: translateX(-50%) scaleX(0.9); }
+  100% { opacity: 1; transform: translateX(-50%) scaleX(1.1); }
+}
+
+@keyframes ledPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Back-to-top Button: Kept in natural right corner */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+}
+
+/* Mobile & Tablet Responsive Layout */
+@media (max-width: 1280px) {
+  :root {
+    --companion-w: 200px;
+    --companion-h: 300px;
+  }
+}
+
+@media (max-width: 960px) {
+  :root {
+    --companion-w: 160px;
+    --companion-h: 240px;
+  }
+  .companion-dialogue {
+    width: 270px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --companion-w: 120px;
+    --companion-h: 180px;
+  }
+  .cyber-companion {
+    left: 8px;
+  }
+  .companion-dialogue {
+    width: 250px;
+  }
+  .dialogue-arrow {
+    left: 28px;
+  }
+  .comms-freq {
+    display: none;
+  }
+}
 

@@ -283,60 +283,308 @@ function initCyberCanvas() {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  const isFixed = document.body.classList.contains('page-post') || 
-                  document.body.classList.contains('page-post-index') || 
-                  canvas.parentElement === document.body;
-
-  let width = (canvas.width = isFixed ? window.innerWidth : canvas.parentElement.offsetWidth);
-  let height = (canvas.height = isFixed ? window.innerHeight : canvas.parentElement.offsetHeight);
+  // Full viewport dimensions on all pages
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
 
   const particles = [];
-  const particleCount = Math.min(55, Math.floor(width / (isFixed ? 28 : 24)));
-  const maxDistance = 115;
+  const particleCount = Math.min(45, Math.max(20, Math.floor(width / 32)));
+  const maxDistance = 110;
 
-  const mouse = { x: null, y: null, radius: 140 };
+  const mouse = { x: null, y: null, radius: 145 };
 
   window.addEventListener('resize', () => {
-    if (isFixed) {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    } else if (canvas.parentElement) {
-      width = canvas.width = canvas.parentElement.offsetWidth;
-      height = canvas.height = canvas.parentElement.offsetHeight;
-    }
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
   });
 
-  const mouseTarget = isFixed ? window : canvas.parentElement;
-  mouseTarget.addEventListener('mousemove', (e) => {
-    if (isFixed) {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    } else {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    }
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
   });
 
-  mouseTarget.addEventListener('mouseleave', () => {
+  window.addEventListener('mouseleave', () => {
     mouse.x = null;
     mouse.y = null;
   });
 
-  // Particle Class
+  // Background Constellation Particles
   for (let i = 0; i < particleCount; i++) {
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.65,
-      vy: (Math.random() - 0.5) * 0.65,
-      size: Math.random() * 1.8 + 1,
-      baseAlpha: Math.random() * 0.45 + 0.25
+      vx: (Math.random() - 0.5) * 0.55,
+      vy: (Math.random() - 0.5) * 0.55,
+      size: Math.random() * 1.6 + 1,
+      baseAlpha: Math.random() * 0.4 + 0.2
     });
+  }
+
+  // ─── RETRO 8-BIT ARCADE SPRITE DEFINITIONS ───
+  const RETRO_SPRITES = [
+    // 0: Classic Space Invader Bug (9x7)
+    {
+      w: 9, h: 7,
+      frames: [
+        [
+          '..X...X..',
+          '...X.X...',
+          '..XXXXX..',
+          '.XXOXOXX.',
+          '.XXXXXXX.',
+          '..X.X.X..',
+          '.X.....X.'
+        ],
+        [
+          '..X...X..',
+          '...X.X...',
+          '..XXXXX..',
+          '.XXOXOXX.',
+          '.XXXXXXX.',
+          '...X.X...',
+          '..X...X..'
+        ]
+      ],
+      color: '#ff2a4b', eyeColor: '#00ffee'
+    },
+    // 1: Galaga Arcade Beetle (9x7)
+    {
+      w: 9, h: 7,
+      frames: [
+        [
+          'X.......X',
+          '.X.XXX.X.',
+          '.XXOXOXX.',
+          'XXXXXXXXX',
+          'X.XXXXX.X',
+          'X.X.X.X.X',
+          '..X...X..'
+        ],
+        [
+          'X.......X',
+          '.X.XXX.X.',
+          '.XXOXOXX.',
+          'XXXXXXXXX',
+          '.XXXXXXX.',
+          '.X.XXX.X.',
+          'X.......X'
+        ]
+      ],
+      color: '#e8192c', eyeColor: '#38ef7d'
+    },
+    // 2: Mini Cyber Drone (5x5)
+    {
+      w: 5, h: 5,
+      frames: [
+        [
+          'X...X',
+          '.X.X.',
+          'XOXOX',
+          'XXXXX',
+          '.X.X.'
+        ],
+        [
+          'X...X',
+          '.X.X.',
+          'XOXOX',
+          'XXXXX',
+          'X...X'
+        ]
+      ],
+      color: '#ff5566', eyeColor: '#ffffff'
+    },
+    // 3: 8-bit Micro Fly (7x6)
+    {
+      w: 7, h: 6,
+      frames: [
+        [
+          '..X.X..',
+          '.XXXXX.',
+          'XXOXOXX',
+          'XXXXXXX',
+          '.X.X.X.',
+          'X.....X'
+        ],
+        [
+          'X.....X',
+          '.XXXXX.',
+          'XXOXOXX',
+          'XXXXXXX',
+          '..X.X..',
+          '.X...X.'
+        ]
+      ],
+      color: '#ff3366', eyeColor: '#00f0ff'
+    }
+  ];
+
+  // ─── RETRO 8-BIT ARCADE BUGS (CUTE FLOATING OPERATIVES) ───
+  const bugs = [];
+  const bugCount = Math.min(18, Math.max(8, Math.floor(width / 120)));
+
+  class RetroArcadeBug {
+    constructor() {
+      this.reset(true);
+    }
+
+    reset(initial = false) {
+      this.x = Math.random() * width;
+      this.y = initial ? Math.random() * height : (Math.random() < 0.5 ? -25 : height + 25);
+      this.spriteIdx = Math.floor(Math.random() * RETRO_SPRITES.length);
+      this.sprite = RETRO_SPRITES[this.spriteIdx];
+
+      // Smooth floating velocities (gentle drift)
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 0.35 + Math.random() * 0.4;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      this.targetVx = this.vx;
+      this.targetVy = this.vy;
+
+      // Sinusoidal bobbing wave
+      this.bobPhase = Math.random() * Math.PI * 2;
+      this.bobSpeed = 0.02 + Math.random() * 0.025;
+      this.bobAmp = 0.35 + Math.random() * 0.45;
+
+      // 2-frame retro flapping animation (swaps every ~20-28 ticks)
+      this.animTick = Math.floor(Math.random() * 60);
+      this.animSpeed = 20 + Math.floor(Math.random() * 10);
+
+      // Pixel block size: crisp 8-bit scale
+      this.pixelSize = this.sprite.w === 5 ? 2.4 : (this.sprite.w === 7 ? 2.0 : 1.8);
+      this.alpha = 0.7 + Math.random() * 0.25;
+
+      // Direction wander timer
+      this.changeTimer = Math.floor(140 + Math.random() * 220);
+
+      // Cute star sparkles on hover
+      this.sparkles = [];
+    }
+
+    update() {
+      this.animTick++;
+      this.bobPhase += this.bobSpeed;
+
+      // Gentle mouse evasion: glides smoothly away when cursor approaches
+      if (mouse.x !== null && mouse.y !== null) {
+        const dx = this.x - mouse.x;
+        const dy = this.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 130 && dist > 0) {
+          const push = (1 - dist / 130) * 1.3;
+          this.targetVx += (dx / dist) * push;
+          this.targetVy += (dy / dist) * push;
+
+          // Emit tiny retro pixel sparkle
+          if (Math.random() < 0.25) {
+            this.sparkles.push({
+              x: this.x + (Math.random() - 0.5) * 12,
+              y: this.y + (Math.random() - 0.5) * 12,
+              size: Math.random() < 0.5 ? 2 : 1.5,
+              life: 22,
+              maxLife: 22,
+              color: this.sprite.eyeColor
+            });
+          }
+        }
+      }
+
+      // Smooth velocity interpolation towards target
+      this.vx += (this.targetVx - this.vx) * 0.045;
+      this.vy += (this.targetVy - this.vy) * 0.045;
+
+      // Gentle speed clamp
+      const spd = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+      if (spd > 1.6) {
+        this.vx = (this.vx / spd) * 1.6;
+        this.vy = (this.vy / spd) * 1.6;
+      }
+
+      // Periodic gentle course change
+      this.changeTimer--;
+      if (this.changeTimer <= 0) {
+        const angle = Math.random() * Math.PI * 2;
+        const baseSpeed = 0.35 + Math.random() * 0.4;
+        this.targetVx = Math.cos(angle) * baseSpeed;
+        this.targetVy = Math.sin(angle) * baseSpeed;
+        this.changeTimer = Math.floor(160 + Math.random() * 240);
+      }
+
+      // Apply coordinates with subtle sinusoidal wave
+      this.x += this.vx;
+      this.y += this.vy + Math.sin(this.bobPhase) * this.bobAmp;
+
+      // Canvas boundary wrap
+      const margin = 28;
+      if (this.x < -margin) this.x = width + margin;
+      if (this.x > width + margin) this.x = -margin;
+      if (this.y < -margin) this.y = height + margin;
+      if (this.y > height + margin) this.y = -margin;
+
+      // Update sparkles
+      for (let i = this.sparkles.length - 1; i >= 0; i--) {
+        const sp = this.sparkles[i];
+        sp.life--;
+        if (sp.life <= 0) {
+          this.sparkles.splice(i, 1);
+        }
+      }
+    }
+
+    draw(cCtx) {
+      // Draw retro sparkles
+      for (let i = 0; i < this.sparkles.length; i++) {
+        const sp = this.sparkles[i];
+        const sAlpha = sp.life / sp.maxLife;
+        cCtx.save();
+        cCtx.fillStyle = sp.color;
+        cCtx.globalAlpha = sAlpha * 0.85;
+        cCtx.fillRect(Math.round(sp.x), Math.round(sp.y), sp.size, sp.size);
+        cCtx.restore();
+      }
+
+      // Draw 8-bit retro arcade sprite
+      const frameIdx = Math.floor(this.animTick / this.animSpeed) % 2;
+      const matrix = this.sprite.frames[frameIdx];
+      const ps = this.pixelSize;
+      const w = this.sprite.w;
+      const h = this.sprite.h;
+      const startX = Math.round(this.x - (w * ps) / 2);
+      const startY = Math.round(this.y - (h * ps) / 2);
+
+      cCtx.save();
+      cCtx.globalAlpha = this.alpha;
+
+      for (let r = 0; r < h; r++) {
+        const row = matrix[r];
+        for (let c = 0; c < w; c++) {
+          const ch = row[c];
+          if (ch === 'X') {
+            cCtx.fillStyle = this.sprite.color;
+            cCtx.fillRect(startX + c * ps, startY + r * ps, ps, ps);
+          } else if (ch === 'O') {
+            cCtx.fillStyle = this.sprite.eyeColor;
+            cCtx.fillRect(startX + c * ps, startY + r * ps, ps, ps);
+          }
+        }
+      }
+
+      cCtx.restore();
+    }
+  }
+
+  for (let i = 0; i < bugCount; i++) {
+    bugs.push(new RetroArcadeBug());
   }
 
   function animate() {
     ctx.clearRect(0, 0, width, height);
+
+    // Update and draw cyber pixel bugs
+    for (let i = 0; i < bugs.length; i++) {
+      bugs[i].update();
+      bugs[i].draw(ctx);
+    }
 
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
@@ -502,6 +750,59 @@ function fallbackCopyText(text, btn) {
   }
   document.body.removeChild(textarea);
 }
+
+/* ─── 5b. LATEX & KATEX MATH FORMULA RENDERING ENGINE ─── */
+function renderLaTeX(root = document) {
+  if (typeof katex === 'undefined') {
+    return;
+  }
+
+  const targetRoot = root || document;
+
+  // 1. Render all structured math elements (.math.inline and .math.block)
+  const mathEls = targetRoot.querySelectorAll ? targetRoot.querySelectorAll('.math.inline, .math.block') : [];
+  mathEls.forEach(el => {
+    if (el.dataset.katexRendered === 'true') return;
+
+    // Strict guard: Never render inside code blocks
+    if (el.closest('pre') || el.closest('code') || el.closest('.code-block')) return;
+
+    const isBlock = el.classList.contains('block');
+    const rawTex = el.textContent.trim();
+    if (!rawTex) return;
+
+    try {
+      katex.render(rawTex, el, {
+        displayMode: isBlock,
+        throwOnError: false,
+        strict: false
+      });
+      el.dataset.katexRendered = 'true';
+    } catch (err) {
+      console.warn('KaTeX render error:', err);
+    }
+  });
+
+  // 2. Fallback auto-render for raw TeX delimiters outside code blocks
+  if (typeof renderMathInElement === 'function') {
+    try {
+      renderMathInElement(targetRoot, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false },
+          { left: '\\[', right: '\\]', display: true }
+        ],
+        throwOnError: false,
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'kbd'],
+        ignoredClasses: ['code-block', 'code-line', 'hljs', 'bash', 'powershell', 'python']
+      });
+    } catch (e) {
+      console.warn('KaTeX auto-render error:', e);
+    }
+  }
+}
+window.renderLaTeX = renderLaTeX;
 
 /* ─── 6. IMAGE LIGHTBOX FOR EXPLOIT SCREENSHOTS ─── */
 function initImageLightbox() {
@@ -1198,8 +1499,497 @@ function showToast(text) {
   }, 2200);
 }
 
+/* ─── 15. CYBER OPERATIVE COMPANION (KIRA // 0x0D) ─── */
+const COMPANION_GREETINGS = [
+  "Welcome back. Có gì hay để đọc hôm nay không?",
+  "Blog mới lên rồi đó - ghé tab writeups xem thử.",
+  "Hôm nay đang làm gì? Reversing, web, hay AD stuff?",
+  "Bắt đầu từ đâu? Search bar ở trên, tags ở sidebar.",
+  "uziii2208 Security Blogs - mọi thứ đều có nguồn, không có bullshit.",
+  "Chào. Cứ tự nhiên như ở nhà - blog này không log IP."
+];
+
+const COMPANION_QUOTES = [
+  { text: "There is no patch for human stupidity.", author: "Kevin Mitnick" },
+  { text: "Security is not a product, but a process.", author: "Bruce Schneier" },
+  { text: "Given enough eyeballs, all bugs are shallow.", author: "Linus's Law" },
+  { text: "In theory, there is no difference between theory and practice. In practice, there is.", author: "Benjamin Brewster" },
+  { text: "Complexity is the worst enemy of security.", author: "Bruce Schneier" },
+  { text: "88 bytes to overwrite RIP and the shell drops. Assembly doesn't lie.", author: "0x0D Research" },
+  { text: "Ring-0 bug không chỉ là crash - đó là ticket lên SYSTEM nếu biết cách dùng.", author: "Kira" },
+  { text: "Trust the primitive, not the password. AES-GCM + PBKDF2 với iteration đủ cao thì brute force chỉ là lãng phí điện.", author: "0x0D" },
+  { text: "Client-side validation là decoration. Server-side mới là gate.", author: "0x0D" },
+  { text: "ROP chain là nghệ thuật ghép gadget - mỗi địa chỉ đều có lý do để ở đó.", author: "0x0D Research" },
+  { text: "Trước khi nghĩ kernel exploit, check sudo -l và SUID trước. Low-hanging fruit vẫn là fruit.", author: "Kira" },
+  { text: "Unconstrained delegation trong AD là dấu hiệu admin chưa đọc BloodHound output.", author: "0x0D" },
+  { text: "Hack to understand, understand to defend.", author: "@uziii2208" },
+  { text: "Hôm nay là 0-day, ngày mai là CVE, năm sau là conference talk.", author: "0x0D" },
+  { text: "Offensive và defensive không phải đối lập - chúng là hai mặt của cùng một tư duy.", author: "Kira" }
+];
+
+const COMPANION_REACTIONS = [
+  "Ơ, click tôi làm gì vậy?",
+  "Đang rảnh à? Có writeup mới trong blog đó.",
+  "Cần tìm gì thì dùng search bar tiện hơn - tôi không có full-text index đâu.",
+  "Bạn vừa click vào một AI character trong một security blog. Cuộc đời thú vị nhỉ.",
+  "Ok ok, tôi thấy bạn rồi. Cần gợi ý bài đọc không?",
+  "Next click tôi sẽ random một quote. Hoặc không. Tôi chưa quyết."
+];
+
+let companionDialogueTimer = null;
+let companionTypewriterTimer = null;
+let companionIdleInterval = null;
+
+function getContextualGreeting() {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) {
+    return "Buổi sáng. Cà phê xong chưa? Blog có bài mới.";
+  } else if (hour >= 12 && hour < 18) {
+    return "Chiều rồi. Đang stuck chỗ nào không, hay chỉ đang đọc?";
+  } else if (hour >= 18 && hour < 23) {
+    return "Tối là giờ làm việc tốt nhất. Ít distraction, nhiều focus.";
+  } else {
+    return "Khuya thế này mà vẫn online. Respect - nhưng ngủ đủ giấc đấy.";
+  }
+}
+
+function showCompanionDialogue(message, author = null, duration = 8500) {
+  const dialogue = document.getElementById('companion-dialogue');
+  const textEl = document.getElementById('dialogue-text');
+  if (!dialogue || !textEl) return;
+
+  clearTimeout(companionDialogueTimer);
+  clearInterval(companionTypewriterTimer);
+
+  dialogue.classList.remove('show');
+  textEl.innerHTML = '';
+
+  // Trigger DOM reflow for smooth animation replay
+  void dialogue.offsetWidth;
+  dialogue.classList.add('show');
+
+  if (typeof playCyberSound === 'function') {
+    try { playCyberSound('pop'); } catch (e) {}
+  }
+
+  let idx = 0;
+  const chars = Array.from(message);
+  companionTypewriterTimer = setInterval(() => {
+    if (idx < chars.length) {
+      textEl.textContent += chars[idx];
+      idx++;
+    } else {
+      clearInterval(companionTypewriterTimer);
+      if (author) {
+        const authorEl = document.createElement('span');
+        authorEl.className = 'quote-author';
+        authorEl.textContent = `— ${author}`;
+        textEl.appendChild(authorEl);
+      }
+    }
+  }, 16);
+
+  if (duration > 0) {
+    companionDialogueTimer = setTimeout(() => {
+      dismissDialogue();
+    }, duration);
+  }
+}
+
+function dismissDialogue() {
+  const dialogue = document.getElementById('companion-dialogue');
+  if (dialogue) {
+    dialogue.classList.remove('show');
+  }
+  clearTimeout(companionDialogueTimer);
+  clearInterval(companionTypewriterTimer);
+}
+
+function interactWithCompanion() {
+  const companion = document.getElementById('cyber-companion');
+  if (!companion) return;
+
+  // If collapsed, clicking restores it
+  if (companion.classList.contains('collapsed')) {
+    toggleCompanionCollapse();
+    return;
+  }
+
+  if (typeof playCyberSound === 'function') {
+    try { playCyberSound('click'); } catch (e) {}
+  }
+
+  // Holographic re-sync glitch animation + tactical bounce feedback
+  const modelWrap = companion.querySelector('.companion-model-wrap');
+  if (modelWrap) {
+    modelWrap.classList.add('is-syncing');
+    modelWrap.style.transform = 'translateY(-8px) scale(1.03)';
+    setTimeout(() => {
+      modelWrap.classList.remove('is-syncing');
+      modelWrap.style.transform = '';
+    }, 350);
+  }
+
+  // 45% quote, 35% reaction, 20% greeting
+  const rand = Math.random();
+  if (rand < 0.45) {
+    const q = COMPANION_QUOTES[Math.floor(Math.random() * COMPANION_QUOTES.length)];
+    showCompanionDialogue(q.text, q.author, 9000);
+  } else if (rand < 0.80) {
+    const r = COMPANION_REACTIONS[Math.floor(Math.random() * COMPANION_REACTIONS.length)];
+    showCompanionDialogue(r, "Kira // Operative", 8000);
+  } else {
+    const g = COMPANION_GREETINGS[Math.floor(Math.random() * COMPANION_GREETINGS.length)];
+    showCompanionDialogue(g, "Security Telemetry", 8000);
+  }
+}
+
+function toggleCompanionCollapse() {
+  const companion = document.getElementById('cyber-companion');
+  const toggleBtn = document.getElementById('companion-toggle-btn');
+  if (!companion) return;
+
+  const isCollapsed = companion.classList.toggle('collapsed');
+  if (toggleBtn) {
+    const icon = toggleBtn.querySelector('.toggle-icon') || toggleBtn;
+    icon.textContent = isCollapsed ? '+' : '−';
+    toggleBtn.title = isCollapsed ? 'Expand companion' : 'Minimize companion';
+  }
+
+  if (isCollapsed) {
+    dismissDialogue();
+  }
+
+  try {
+    localStorage.setItem('zeropwn_companion_collapsed', isCollapsed ? 'true' : 'false');
+  } catch (e) {}
+
+  if (typeof playCyberSound === 'function') {
+    try { playCyberSound('click'); } catch (e) {}
+  }
+}
+
+function initCompanion() {
+  const companion = document.getElementById('cyber-companion');
+  if (!companion) return;
+
+  // Restore saved collapse state
+  try {
+    const isCollapsed = localStorage.getItem('zeropwn_companion_collapsed') === 'true';
+    if (isCollapsed) {
+      companion.classList.add('collapsed');
+      const toggleBtn = document.getElementById('companion-toggle-btn');
+      if (toggleBtn) {
+        const icon = toggleBtn.querySelector('.toggle-icon') || toggleBtn;
+        icon.textContent = '+';
+        toggleBtn.title = 'Expand companion';
+      }
+    }
+  } catch (e) {}
+
+  // Load encrypted model stream into in-memory canvas
+  try {
+    loadSecuredCompanionModel();
+    monitorDevToolsState();
+  } catch (e) {
+    console.warn('Companion model load error:', e);
+  }
+
+  // Initial greeting after 1.4s if not collapsed
+  setTimeout(() => {
+    if (!companion.classList.contains('collapsed')) {
+      showCompanionDialogue(getContextualGreeting(), "Kira // 0x0D", 7500);
+    }
+  }, 1400);
+
+  // Periodic random quote every 45s if idle & not collapsed
+  clearInterval(companionIdleInterval);
+  companionIdleInterval = setInterval(() => {
+    if (!companion.classList.contains('collapsed')) {
+      const dialogue = document.getElementById('companion-dialogue');
+      if (!dialogue || !dialogue.classList.contains('show')) {
+        const q = COMPANION_QUOTES[Math.floor(Math.random() * COMPANION_QUOTES.length)];
+        showCompanionDialogue(q.text, q.author, 8500);
+      }
+    }
+  }, 45000);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   CYBER DEFENSE: IN-MEMORY ASSET DE-SCRAMBLER & DEVTOOLS GUARD
+   Decrypts authentic Operative Kira image in RAM via AES-256-GCM.
+   Never exposes raw image in DOM or Sources tab; renders onto canvas.
+   Monitors DevTools state and scrubs canvas memory upon inspection.
+   ═════════════════════════════════════════════════════════════════════ */
+
+let companionDecryptedImg = null;
+let isDevToolsActive = false;
+
+async function loadSecuredCompanionModel() {
+  const canvas = document.getElementById('companion-canvas');
+  if (!canvas) return;
+
+  const binPath = canvas.getAttribute('data-model-bin') || 'photos/model.bin';
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  try {
+    const resp = await fetch(binPath);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const rawBuffer = await resp.arrayBuffer();
+
+    const iv = rawBuffer.slice(0, 12);
+    const ciphertext = rawBuffer.slice(12);
+
+    const keyBytes = await crypto.subtle.digest(
+      'SHA-256',
+      new TextEncoder().encode('uziii2208_operative_kira_sentinel_2026_0x0D')
+    );
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyBytes,
+      { name: 'AES-GCM' },
+      false,
+      ['decrypt']
+    );
+
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv: iv },
+      cryptoKey,
+      ciphertext
+    );
+
+    const blob = new Blob([decryptedBuffer], { type: 'image/png' });
+    const blobUrl = URL.createObjectURL(blob);
+    const img = new Image();
+
+    img.onload = () => {
+      companionDecryptedImg = img;
+      if (!isDevToolsActive) {
+        renderCompanionCanvas(ctx, canvas, img);
+      }
+      URL.revokeObjectURL(blobUrl);
+    };
+    img.src = blobUrl;
+  } catch (err) {
+    console.warn('[!] Companion crypto de-scrambler fallback:', err);
+    drawGlitchWarning(ctx, canvas, 'ASSET STREAM ENCRYPTED // STANDBY');
+  }
+
+  // Poison canvas export methods so console / scraper execution returns blank/error
+  canvas.toDataURL = function() {
+    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+  };
+  canvas.toBlob = function(cb) {
+    if (typeof cb === 'function') cb(new Blob([], { type: 'image/png' }));
+  };
+}
+
+function renderCompanionCanvas(ctx, canvas, img) {
+  if (!ctx || !img) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+  // Blit subtle forensic authentication watermark
+  ctx.save();
+  ctx.fillStyle = 'rgba(232, 25, 44, 0.04)';
+  ctx.font = '16px monospace';
+  ctx.fillText('uziii2208 // OPERATIVE KIRA 0x0D // LEVEL-5 SENTINEL', 24, canvas.height - 24);
+  ctx.restore();
+}
+
+function drawGlitchWarning(ctx, canvas, reason) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgba(12, 12, 18, 0.96)';
+  ctx.fillRect(40, 200, canvas.width - 80, 800);
+  ctx.strokeStyle = '#e8192c';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(40, 200, canvas.width - 80, 800);
+
+  ctx.fillStyle = '#e8192c';
+  ctx.font = 'bold 36px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('[!] STREAM SEVERED', canvas.width / 2, 450);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '22px monospace';
+  ctx.fillText(reason || 'DEVTOOLS INSPECTION DETECTED', canvas.width / 2, 520);
+
+  ctx.fillStyle = '#8888aa';
+  ctx.font = '18px monospace';
+  ctx.fillText('ASSET MEMORY FLUSHED // OPSEC ACTIVE', canvas.width / 2, 580);
+  ctx.fillText('CLOSE DEVTOOLS TO RESUME STREAM', canvas.width / 2, 640);
+  ctx.textAlign = 'left';
+}
+
+function monitorDevToolsState() {
+  const threshold = 160;
+  setInterval(() => {
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    const isOpen = widthDiff || heightDiff;
+
+    if (isOpen && !isDevToolsActive) {
+      isDevToolsActive = true;
+      const canvas = document.getElementById('companion-canvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) drawGlitchWarning(ctx, canvas, 'DEVTOOLS INSPECTION DETECTED');
+      }
+    } else if (!isOpen && isDevToolsActive) {
+      isDevToolsActive = false;
+      const canvas = document.getElementById('companion-canvas');
+      if (canvas && companionDecryptedImg) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) renderCompanionCanvas(ctx, canvas, companionDecryptedImg);
+      }
+    }
+  }, 600);
+}
+
+function initConsoleDefense() {
+  try {
+    const bannerStyle = 'color: #e8192c; font-size: 16px; font-weight: bold; font-family: monospace; text-shadow: 0 0 8px rgba(232, 25, 44, 0.7);';
+    const infoStyle = 'color: #38ef7d; font-size: 11px; font-family: monospace;';
+    const warnStyle = 'color: #8888aa; font-size: 10px; font-family: monospace;';
+    console.log('%c[!] uziii2208 // LEVEL-5 ASSET & CONTENT DEFENSE ACTIVE', bannerStyle);
+    console.log('%c[+] Anti-Tamper, Steganographic Provenance & OPSEC Shields Enforced.', infoStyle);
+    console.log('%c[*] Unauthorized reproduction of Operative Kira (0x0D) & classified exploit research is strictly monitored.', warnStyle);
+  } catch (e) {}
+}
+
+function initContentShield() {
+  // 1. Global Context Menu Shield: Disable right-click across the ENTIRE document
+  // (Neutralizes browser context menu shown in error.png)
+  window.addEventListener('contextmenu', (e) => {
+    const target = e.target;
+    // Strictly allow right-click ONLY inside code blocks or text inputs
+    const isInsideCode = target && (
+      target.closest('pre') ||
+      target.closest('code') ||
+      target.closest('input') ||
+      target.closest('textarea')
+    );
+
+    if (!isInsideCode) {
+      e.preventDefault();
+      if (typeof showToast === 'function') {
+        showToast('[OPSEC ALERT] Context extraction locked // Level-5 defense active.');
+      }
+      if (typeof playCyberSound === 'function') {
+        try { playCyberSound('error'); } catch (err) {}
+      }
+      return false;
+    }
+  }, true);
+
+  // 2. Anti-Copy Engine: Strictly allow copying ONLY from code blocks or inputs
+  document.addEventListener('copy', (e) => {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
+
+    let anchorNode = selection.anchorNode;
+    if (anchorNode && anchorNode.nodeType === Node.TEXT_NODE) {
+      anchorNode = anchorNode.parentElement;
+    }
+
+    const isInsideCode = anchorNode && (
+      anchorNode.closest('pre') ||
+      anchorNode.closest('code') ||
+      anchorNode.closest('.code-block-wrap') ||
+      anchorNode.closest('input') ||
+      anchorNode.closest('textarea')
+    );
+
+    if (!isInsideCode) {
+      e.preventDefault();
+      if (e.clipboardData) {
+        e.clipboardData.clearData();
+      }
+      if (typeof showToast === 'function') {
+        showToast('[OPSEC] Prose copying prohibited. Only code blocks may be copied.');
+      }
+      if (typeof playCyberSound === 'function') {
+        try { playCyberSound('error'); } catch (err) {}
+      }
+    }
+  });
+
+  // 3. Global Drag & Drop Shield: Prevent dragging any canvas, image, or text
+  window.addEventListener('dragstart', (e) => {
+    e.preventDefault();
+    return false;
+  }, true);
+
+  // 4. Global Keyboard Shortcut Armor: Block DevTools (F12, Ctrl+Shift+I/J/C), View Source (Ctrl+U), Save (Ctrl+S), Select All (Ctrl+A)
+  window.addEventListener('keydown', (e) => {
+    const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+    const target = e.target;
+    const isInput = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA');
+
+    if (isInput) return;
+
+    // Prevent F12 and DevTools shortcuts (Ctrl+Shift+I / J / C)
+    if (e.key === 'F12' || (isCtrlOrCmd && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key))) {
+      e.preventDefault();
+      if (typeof showToast === 'function') {
+        showToast('[DEFENSE] Debugger console hotkey blocked.');
+      }
+      return false;
+    }
+
+    // Prevent Ctrl+U / Cmd+U (View Source)
+    if (isCtrlOrCmd && (e.key === 'u' || e.key === 'U')) {
+      e.preventDefault();
+      if (typeof showToast === 'function') {
+        showToast('[OPSEC] Source payload inspection restricted.');
+      }
+      return false;
+    }
+
+    // Prevent Ctrl+S / Cmd+S (Save page as HTML)
+    if (isCtrlOrCmd && (e.key === 's' || e.key === 'S')) {
+      e.preventDefault();
+      if (typeof showToast === 'function') {
+        showToast('[OPSEC] Offline clone extraction blocked.');
+      }
+      if (typeof playCyberSound === 'function') {
+        try { playCyberSound('error'); } catch (err) {}
+      }
+      return false;
+    }
+
+    // Prevent Ctrl+A / Cmd+A outside code blocks
+    if (isCtrlOrCmd && (e.key === 'a' || e.key === 'A')) {
+      const selection = window.getSelection();
+      let isInsideCode = false;
+      if (selection && selection.anchorNode) {
+        let node = selection.anchorNode.nodeType === Node.TEXT_NODE ? selection.anchorNode.parentElement : selection.anchorNode;
+        isInsideCode = node && (node.closest('pre') || node.closest('code'));
+      }
+      if (!isInsideCode) {
+        e.preventDefault();
+        if (typeof showToast === 'function') {
+          showToast('[OPSEC] Bulk selection disabled.');
+        }
+        return false;
+      }
+    }
+  }, true);
+}
+
+// Global exposure for onclick bindings
+window.interactWithCompanion = interactWithCompanion;
+window.dismissDialogue = dismissDialogue;
+window.toggleCompanionCollapse = toggleCompanionCollapse;
+
 /* ─── INITIAL EXECUTION (ROBUST BOOT WITH READYSTATE CHECK) ─── */
 function boot() {
+  try { initConsoleDefense(); } catch (e) {}
+  try { initContentShield(); } catch (e) {}
   try { initBanner(); } catch (e) { console.warn('Banner init:', e); }
   try { updateSFXButtonUI(); } catch (e) { console.warn('SFX UI init:', e); }
   try { initScrambleEffects(); } catch (e) { console.warn('Scramble init:', e); }
@@ -1207,6 +1997,11 @@ function boot() {
   // Canvas background (Hero, post detail view, or post archive view)
   if (document.getElementById('cyber-canvas')) {
     try { initCyberCanvas(); } catch (e) { console.warn('Canvas init:', e); }
+  }
+
+  // Interactive Operative Companion
+  if (document.getElementById('cyber-companion')) {
+    try { initCompanion(); } catch (e) { console.warn('Companion init:', e); }
   }
 
   // If on homepage or post archive list
@@ -1218,8 +2013,11 @@ function boot() {
   if (document.body.classList.contains('page-post')) {
     try { initReadingProgressBar(); } catch (e) { console.warn('Progress bar:', e); }
     try { processCodeBlocks(document.getElementById('post-view-content')); } catch (e) { console.warn('Code blocks:', e); }
+    try { renderLaTeX(document.getElementById('post-view-content') || document.body); } catch (e) { console.warn('LaTeX render:', e); }
     try { initImageLightbox(); } catch (e) { console.warn('Lightbox:', e); }
     try { initScrollSpy(); } catch (e) { console.warn('ScrollSpy:', e); }
+  } else {
+    try { renderLaTeX(document.body); } catch (e) { console.warn('LaTeX render:', e); }
   }
 
   try { initBackToTop(); } catch (e) { console.warn('BackToTop:', e); }
@@ -1230,3 +2028,10 @@ if (document.readyState === 'loading') {
 } else {
   boot();
 }
+
+window.addEventListener('load', () => {
+  try {
+    const target = document.getElementById('post-view-content') || document.body;
+    renderLaTeX(target);
+  } catch (e) {}
+});
