@@ -1787,24 +1787,24 @@ async function loadSecuredCompanionModel() {
 
   try {
     // Verify Custom Magic Header ('KZSH' = 0x4B 0x5A 0x53 0x48)
-    const headerView = new DataView(rawBuffer, 0, 18);
+    const dataView = new DataView(rawBuffer);
     const magic = String.fromCharCode(
-      headerView.getUint8(0),
-      headerView.getUint8(1),
-      headerView.getUint8(2),
-      headerView.getUint8(3)
+      dataView.getUint8(0),
+      dataView.getUint8(1),
+      dataView.getUint8(2),
+      dataView.getUint8(3)
     );
     if (magic !== 'KZSH') {
       throw new Error('Corrupted or unauthorized asset stream');
     }
 
-    const targetW = headerView.getUint16(4);
-    const targetH = headerView.getUint16(6);
-    const cols = headerView.getUint16(8);
-    const rows = headerView.getUint16(10);
-    const tileW = headerView.getUint16(12);
-    const tileH = headerView.getUint16(14);
-    const numTiles = headerView.getUint16(16);
+    const targetW = dataView.getUint16(4);
+    const targetH = dataView.getUint16(6);
+    const cols = dataView.getUint16(8);
+    const rows = dataView.getUint16(10);
+    const tileW = dataView.getUint16(12);
+    const tileH = dataView.getUint16(14);
+    const numTiles = dataView.getUint16(16);
 
     canvas.width = targetW;
     canvas.height = targetH;
@@ -1813,7 +1813,7 @@ async function loadSecuredCompanionModel() {
     const permOffset = 18;
     const perm = new Uint16Array(numTiles);
     for (let i = 0; i < numTiles; i++) {
-      perm[i] = headerView.getUint16(permOffset + i * 2);
+      perm[i] = dataView.getUint16(permOffset + i * 2);
     }
 
     // Decompress Tile Stream via native Web Streams API
