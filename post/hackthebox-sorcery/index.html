@@ -4419,14 +4419,14 @@ Policy: [none]
       <canvas id="companion-canvas" class="companion-canvas" width="416" height="624" aria-label="uziii2208 Security Operative Kira" data-model-bin="../../photos/model.bin"></canvas>
     </div>
 
-    <div class="companion-pedestal">
+    <div class="companion-pedestal" onclick="onCompanionPedestalClick(event)">
       <div class="pedestal-badge">
         <span class="pedestal-dot"></span>
         <span class="pedestal-name">KIRA</span>
         <span class="pedestal-sep">//</span>
-        <span class="pedestal-role">0x0D OPERATIVE</span>
+        <span class="pedestal-role">OPERATIVE</span>
       </div>
-      <button type="button" id="companion-toggle-btn" class="pedestal-toggle" onclick="toggleCompanionCollapse()" title="Minimize / Restore Operative" aria-label="Toggle Operative">
+      <button type="button" id="companion-toggle-btn" class="pedestal-toggle" onclick="toggleCompanionCollapse(event)" title="Minimize / Restore Operative" aria-label="Toggle Operative">
         <span class="toggle-icon">−</span>
       </button>
     </div>

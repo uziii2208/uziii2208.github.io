@@ -1501,62 +1501,69 @@ function showToast(text) {
 
 /* ─── 15. CYBER OPERATIVE COMPANION (KIRA // 0x0D) ─── */
 const COMPANION_GREETINGS = [
-  "Welcome back. Có gì hay để đọc hôm nay không?",
-  "Blog mới lên rồi đó - ghé tab writeups xem thử.",
-  "Hôm nay đang làm gì? Reversing, web, hay AD stuff?",
-  "Bắt đầu từ đâu? Search bar ở trên, tags ở sidebar.",
-  "uziii2208 Security Blogs - mọi thứ đều có nguồn, không có bullshit.",
-  "Chào. Cứ tự nhiên như ở nhà - blog này không log IP."
+  { text: "Welcome back. Có gì hay để đọc hôm nay không?", expr: "greeting" },
+  { text: "Blog mới lên rồi đó - ghé tab writeups xem thử.", expr: "playful" },
+  { text: "Hôm nay đang làm gì? Reversing, web, hay AD stuff?", expr: "cool" },
+  { text: "Bắt đầu từ đâu? Search bar ở trên, tags ở sidebar.", expr: "cool" },
+  { text: "uziii2208 Security Blogs - mọi thứ đều có nguồn, không có bullshit.", expr: "confident" },
+  { text: "Chào. Cứ tự nhiên như ở nhà - blog này không log IP.", expr: "greeting" }
 ];
 
 const COMPANION_QUOTES = [
-  { text: "There is no patch for human stupidity.", author: "Kevin Mitnick" },
-  { text: "Security is not a product, but a process.", author: "Bruce Schneier" },
-  { text: "Given enough eyeballs, all bugs are shallow.", author: "Linus's Law" },
-  { text: "In theory, there is no difference between theory and practice. In practice, there is.", author: "Benjamin Brewster" },
-  { text: "Complexity is the worst enemy of security.", author: "Bruce Schneier" },
-  { text: "88 bytes to overwrite RIP and the shell drops. Assembly doesn't lie.", author: "0x0D Research" },
-  { text: "Ring-0 bug không chỉ là crash - đó là ticket lên SYSTEM nếu biết cách dùng.", author: "Kira" },
-  { text: "Trust the primitive, not the password. AES-GCM + PBKDF2 với iteration đủ cao thì brute force chỉ là lãng phí điện.", author: "0x0D" },
-  { text: "Client-side validation là decoration. Server-side mới là gate.", author: "0x0D" },
-  { text: "ROP chain là nghệ thuật ghép gadget - mỗi địa chỉ đều có lý do để ở đó.", author: "0x0D Research" },
-  { text: "Trước khi nghĩ kernel exploit, check sudo -l và SUID trước. Low-hanging fruit vẫn là fruit.", author: "Kira" },
-  { text: "Unconstrained delegation trong AD là dấu hiệu admin chưa đọc BloodHound output.", author: "0x0D" },
-  { text: "Hack to understand, understand to defend.", author: "@uziii2208" },
-  { text: "Hôm nay là 0-day, ngày mai là CVE, năm sau là conference talk.", author: "0x0D" },
-  { text: "Offensive và defensive không phải đối lập - chúng là hai mặt của cùng một tư duy.", author: "Kira" }
+  { text: "There is no patch for human stupidity.", author: "Kevin Mitnick", expr: "sarcastic" },
+  { text: "Security is not a product, but a process.", author: "Bruce Schneier", expr: "confident" },
+  { text: "Given enough eyeballs, all bugs are shallow.", author: "Linus's Law", expr: "cool" },
+  { text: "In theory, there is no difference between theory and practice. In practice, there is.", author: "Benjamin Brewster", expr: "tease" },
+  { text: "Complexity is the worst enemy of security.", author: "Bruce Schneier", expr: "cool" },
+  { text: "88 bytes to overwrite RIP and the shell drops. Assembly doesn't lie.", author: "0x0D Research", expr: "confident" },
+  { text: "Ring-0 bug không chỉ là crash - đó là ticket lên SYSTEM nếu biết cách dùng.", author: "Kira", expr: "tease" },
+  { text: "Trust the primitive, not the password. AES-GCM + PBKDF2 với iteration đủ cao thì brute force chỉ là lãng phí điện.", author: "0x0D", expr: "confident" },
+  { text: "Client-side validation là decoration. Server-side mới là gate.", author: "0x0D", expr: "sarcastic" },
+  { text: "ROP chain là nghệ thuật ghép gadget - mỗi địa chỉ đều có lý do để ở đó.", author: "0x0D Research", expr: "cool" },
+  { text: "Trước khi nghĩ kernel exploit, check sudo -l và SUID trước. Low-hanging fruit vẫn là fruit.", author: "Kira", expr: "tease" },
+  { text: "Unconstrained delegation trong AD là dấu hiệu admin chưa đọc BloodHound output.", author: "0x0D", expr: "sarcastic" },
+  { text: "Hack to understand, understand to defend.", author: "@uziii2208", expr: "confident" },
+  { text: "Hôm nay là 0-day, ngày mai là CVE, năm sau là conference talk.", author: "0x0D", expr: "playful" },
+  { text: "Offensive và defensive không phải đối lập - chúng là hai mặt của cùng một tư duy.", author: "Kira", expr: "cool" }
 ];
 
 const COMPANION_REACTIONS = [
-  "Ơ, click tôi làm gì vậy?",
-  "Đang rảnh à? Có writeup mới trong blog đó.",
-  "Cần tìm gì thì dùng search bar tiện hơn - tôi không có full-text index đâu.",
-  "Bạn vừa click vào một AI character trong một security blog. Cuộc đời thú vị nhỉ.",
-  "Ok ok, tôi thấy bạn rồi. Cần gợi ý bài đọc không?",
-  "Next click tôi sẽ random một quote. Hoặc không. Tôi chưa quyết."
+  { text: "Ơ, click tôi làm gì vậy?", expr: "playful" },
+  { text: "Đang rảnh à? Có writeup mới trong blog đó.", expr: "tease" },
+  { text: "Cần tìm gì thì dùng search bar tiện hơn - tôi không có full-text index đâu.", expr: "cool" },
+  { text: "Bạn vừa click vào một AI character trong một security blog. Cuộc đời thú vị nhỉ.", expr: "sarcastic" },
+  { text: "Ok ok, tôi thấy bạn rồi. Cần gợi ý bài đọc không?", expr: "greeting" },
+  { text: "Next click tôi sẽ random một quote. Hoặc không. Tôi chưa quyết.", expr: "tease" }
 ];
 
 let companionDialogueTimer = null;
 let companionTypewriterTimer = null;
 let companionIdleInterval = null;
+let companionClickCombo = 0;
+let companionClickComboTimer = null;
 
 function getContextualGreeting() {
   const hour = new Date().getHours();
   if (hour >= 5 && hour < 12) {
-    return "Buổi sáng. Cà phê xong chưa? Blog có bài mới.";
+    return { text: "Buổi sáng. Cà phê xong chưa? Blog có bài mới.", expr: "greeting" };
   } else if (hour >= 12 && hour < 18) {
-    return "Chiều rồi. Đang stuck chỗ nào không, hay chỉ đang đọc?";
+    return { text: "Chiều rồi. Đang stuck chỗ nào không, hay chỉ đang đọc?", expr: "greeting" };
   } else if (hour >= 18 && hour < 23) {
-    return "Tối là giờ làm việc tốt nhất. Ít distraction, nhiều focus.";
+    return { text: "Tối là giờ làm việc tốt nhất. Ít distraction, nhiều focus.", expr: "confident" };
   } else {
-    return "Khuya thế này mà vẫn online. Respect - nhưng ngủ đủ giấc đấy.";
+    return { text: "Khuya thế này mà vẫn online. Respect - nhưng ngủ đủ giấc đấy nhé.", expr: "special" };
   }
 }
 
-function showCompanionDialogue(message, author = null, duration = 8500) {
+function showCompanionDialogue(message, author = null, duration = 8500, expression = 'default') {
   const dialogue = document.getElementById('companion-dialogue');
   const textEl = document.getElementById('dialogue-text');
   if (!dialogue || !textEl) return;
+
+  // Trigger expressive visual state transition on canvas
+  if (typeof setCompanionExpression === 'function') {
+    setCompanionExpression(expression || 'default');
+  }
 
   clearTimeout(companionDialogueTimer);
   clearInterval(companionTypewriterTimer);
@@ -1603,6 +1610,11 @@ function dismissDialogue() {
   }
   clearTimeout(companionDialogueTimer);
   clearInterval(companionTypewriterTimer);
+
+  // Smoothly return to default idle stance
+  if (typeof setCompanionExpression === 'function') {
+    setCompanionExpression('default');
+  }
 }
 
 function interactWithCompanion() {
@@ -1617,6 +1629,24 @@ function interactWithCompanion() {
 
   if (typeof playCyberSound === 'function') {
     try { playCyberSound('click'); } catch (e) {}
+  }
+
+  // Click combo detection for special face-to-face easter egg (5 rapid clicks)
+  companionClickCombo++;
+  clearTimeout(companionClickComboTimer);
+  companionClickComboTimer = setTimeout(() => {
+    companionClickCombo = 0;
+  }, 2200);
+
+  if (companionClickCombo >= 5) {
+    companionClickCombo = 0;
+    showCompanionDialogue(
+      "K-khoan đã... click dồn dập thế làm gì! Tôi là security operative chứ có phải plushie đâu! >///<",
+      "Kira // Flustered",
+      9500,
+      "special"
+    );
+    return;
   }
 
   // Holographic re-sync glitch animation + tactical bounce feedback
@@ -1634,17 +1664,20 @@ function interactWithCompanion() {
   const rand = Math.random();
   if (rand < 0.45) {
     const q = COMPANION_QUOTES[Math.floor(Math.random() * COMPANION_QUOTES.length)];
-    showCompanionDialogue(q.text, q.author, 9000);
+    showCompanionDialogue(q.text, q.author, 9000, q.expr);
   } else if (rand < 0.80) {
     const r = COMPANION_REACTIONS[Math.floor(Math.random() * COMPANION_REACTIONS.length)];
-    showCompanionDialogue(r, "Kira // Operative", 8000);
+    showCompanionDialogue(r.text, "Kira // Operative", 8000, r.expr);
   } else {
     const g = COMPANION_GREETINGS[Math.floor(Math.random() * COMPANION_GREETINGS.length)];
-    showCompanionDialogue(g, "Security Telemetry", 8000);
+    showCompanionDialogue(g.text, "Security Telemetry", 8000, g.expr);
   }
 }
 
-function toggleCompanionCollapse() {
+function toggleCompanionCollapse(e) {
+  if (e && typeof e.stopPropagation === 'function') {
+    e.stopPropagation();
+  }
   const companion = document.getElementById('cyber-companion');
   const toggleBtn = document.getElementById('companion-toggle-btn');
   if (!companion) return;
@@ -1662,10 +1695,20 @@ function toggleCompanionCollapse() {
 
   try {
     localStorage.setItem('zeropwn_companion_collapsed', isCollapsed ? 'true' : 'false');
-  } catch (e) {}
+  } catch (err) {}
 
   if (typeof playCyberSound === 'function') {
-    try { playCyberSound('click'); } catch (e) {}
+    try { playCyberSound('click'); } catch (err) {}
+  }
+}
+
+function onCompanionPedestalClick(e) {
+  if (e && e.target && e.target.closest('#companion-toggle-btn')) {
+    return;
+  }
+  const companion = document.getElementById('cyber-companion');
+  if (companion && companion.classList.contains('collapsed')) {
+    toggleCompanionCollapse(e);
   }
 }
 
@@ -1697,7 +1740,8 @@ function initCompanion() {
   // Initial greeting after 1.4s if not collapsed
   setTimeout(() => {
     if (!companion.classList.contains('collapsed')) {
-      showCompanionDialogue(getContextualGreeting(), "Kira // 0x0D", 7500);
+      const g = getContextualGreeting();
+      showCompanionDialogue(g.text, "Kira // 0x0D", 7500, g.expr);
     }
   }, 1400);
 
@@ -1708,160 +1752,156 @@ function initCompanion() {
       const dialogue = document.getElementById('companion-dialogue');
       if (!dialogue || !dialogue.classList.contains('show')) {
         const q = COMPANION_QUOTES[Math.floor(Math.random() * COMPANION_QUOTES.length)];
-        showCompanionDialogue(q.text, q.author, 8500);
+        showCompanionDialogue(q.text, q.author, 8500, q.expr);
       }
     }
   }, 45000);
 }
 
 /* ═════════════════════════════════════════════════════════════════════
-   CYBER DEFENSE: ZERO-BLOB JIGSAW MATRIX RECONSTRUCTOR
-   Reassembles shredded, tile-permuted & XOR-scrambled matrix in RAM.
-   NEVER generates Image, Blob, or ObjectURL — paints directly to canvas.
+   CYBER DEFENSE: MULTI-EXPRESSION MATRIX RECONSTRUCTOR ENGINE
+   Decodes scrambled in-memory packets dynamically into ImageBitmaps.
+   ZERO hardcoded secret keys or seeds (pure self-seeding LCG transform).
+   Never exposes plain PNG URLs, blobs, or images in DOM.
    ═════════════════════════════════════════════════════════════════════ */
 
-let companionImageData = null;
+const companionBitmaps = {};
+let currentCompanionExpression = 'default';
+
+async function decodeKiraPacket(b64OrBuffer) {
+  try {
+    let rawBytes;
+    if (typeof b64OrBuffer === 'string') {
+      const binStr = atob(b64OrBuffer);
+      rawBytes = new Uint8Array(binStr.length);
+      for (let i = 0; i < binStr.length; i++) {
+        rawBytes[i] = binStr.charCodeAt(i);
+      }
+    } else if (b64OrBuffer instanceof Uint8Array) {
+      rawBytes = b64OrBuffer;
+    } else if (b64OrBuffer instanceof ArrayBuffer) {
+      rawBytes = new Uint8Array(b64OrBuffer);
+    } else {
+      return null;
+    }
+
+    const magic = String.fromCharCode(rawBytes[0], rawBytes[1], rawBytes[2], rawBytes[3]);
+    if (magic !== 'KZ8M') {
+      return null;
+    }
+
+    const view = new DataView(rawBytes.buffer, rawBytes.byteOffset, rawBytes.byteLength);
+    const salt = view.getUint16(20);
+    const payloadLen = view.getUint32(22);
+    const payloadOffset = 26;
+
+    const descrambled = new Uint8Array(payloadLen);
+    let state = salt;
+    for (let i = 0; i < payloadLen; i++) {
+      state = (Math.imul(state, 1103515245) + 12345) & 0x7FFFFFFF;
+      descrambled[i] = rawBytes[payloadOffset + i] ^ ((state >> 16) & 0xFF);
+    }
+
+    const blob = new Blob([descrambled], { type: 'image/webp' });
+    return await createImageBitmap(blob);
+  } catch (err) {
+    console.warn('[!] Kira packet decode failure:', err);
+    return null;
+  }
+}
+
+async function setCompanionExpression(exprKey) {
+  const canvas = document.getElementById('companion-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const targetKey = (window.__KIRA_EXPRESSIONS__ && window.__KIRA_EXPRESSIONS__[exprKey]) ? exprKey : 'default';
+
+  // Decode lazily on demand if not yet cached
+  if (!companionBitmaps[targetKey] && window.__KIRA_EXPRESSIONS__ && window.__KIRA_EXPRESSIONS__[targetKey]) {
+    try {
+      companionBitmaps[targetKey] = await decodeKiraPacket(window.__KIRA_EXPRESSIONS__[targetKey]);
+    } catch (e) {
+      console.warn('[!] Expression lazy decode error:', targetKey, e);
+    }
+  }
+
+  const bitmap = companionBitmaps[targetKey] || companionBitmaps['default'];
+  if (!bitmap) return;
+
+  if (currentCompanionExpression !== targetKey) {
+    currentCompanionExpression = targetKey;
+    const modelWrap = document.querySelector('.companion-model-wrap');
+    if (modelWrap) {
+      modelWrap.classList.add('is-shifting');
+      setTimeout(() => modelWrap.classList.remove('is-shifting'), 220);
+    }
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+}
 
 async function loadSecuredCompanionModel() {
   const canvas = document.getElementById('companion-canvas');
   if (!canvas) return;
 
-  const binPath = canvas.getAttribute('data-model-bin') || 'photos/model.bin';
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvas.width = 416;
+  canvas.height = 624;
 
-  let rawBuffer = null;
-
-  // 1. Instantaneous in-memory matrix if available (supports local file:// and zero-latency load)
-  if (typeof window.__KIRA_MATRIX_DATA__ === 'string' && window.__KIRA_MATRIX_DATA__.length > 100) {
-    try {
-      const binaryString = atob(window.__KIRA_MATRIX_DATA__);
-      const len = binaryString.length;
-      const bytes = new Uint8Array(len);
-      for (let i = 0; i < len; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      rawBuffer = bytes.buffer;
-    } catch (e) {
-      console.warn('[!] Memory matrix decode fallback:', e);
-    }
+  // 1. Await in-memory expression matrix if deferred
+  if (!window.__KIRA_EXPRESSIONS__) {
+    await new Promise(resolve => setTimeout(resolve, 50));
   }
 
-  // 2. Fetch binary stream if not preloaded (standard HTTP / HTTPS on GitHub Pages)
-  if (!rawBuffer) {
-    if (typeof window.__KIRA_MATRIX_DATA__ !== 'string') {
-      await new Promise(resolve => setTimeout(resolve, 50));
-      if (typeof window.__KIRA_MATRIX_DATA__ === 'string' && window.__KIRA_MATRIX_DATA__.length > 100) {
-        try {
-          const binaryString = atob(window.__KIRA_MATRIX_DATA__);
-          const len = binaryString.length;
-          const bytes = new Uint8Array(len);
-          for (let i = 0; i < len; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-          }
-          rawBuffer = bytes.buffer;
-        } catch (e) {
-          console.warn('[!] Memory matrix delayed decode fallback:', e);
+  if (window.__KIRA_EXPRESSIONS__) {
+    // 2. Decode 'default' expression first for instant 0ms painting
+    try {
+      const defaultBmp = await decodeKiraPacket(window.__KIRA_EXPRESSIONS__['default'] || window.__KIRA_MATRIX_DATA__);
+      if (defaultBmp) {
+        companionBitmaps['default'] = defaultBmp;
+        currentCompanionExpression = 'default';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(defaultBmp, 0, 0, canvas.width, canvas.height);
+      }
+    } catch (e) {
+      console.warn('[!] Companion default decode error:', e);
+    }
+
+    // 3. Pre-decode other expressions in background queue
+    setTimeout(async () => {
+      for (const [key, b64] of Object.entries(window.__KIRA_EXPRESSIONS__)) {
+        if (key !== 'default' && !companionBitmaps[key]) {
+          try {
+            companionBitmaps[key] = await decodeKiraPacket(b64);
+          } catch (e) {}
         }
       }
-    }
-  }
-
-  if (!rawBuffer) {
+    }, 120);
+  } else {
+    // 4. Binary stream fetch fallback
+    const binPath = canvas.getAttribute('data-model-bin') || 'photos/model.bin';
     try {
       const resp = await fetch(binPath);
       if (resp.ok) {
-        rawBuffer = await resp.arrayBuffer();
+        const rawBuffer = await resp.arrayBuffer();
+        const defaultBmp = await decodeKiraPacket(rawBuffer);
+        if (defaultBmp) {
+          companionBitmaps['default'] = defaultBmp;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(defaultBmp, 0, 0, canvas.width, canvas.height);
+        }
       }
     } catch (e) {
       console.warn('[!] Fetch matrix stream error:', e);
     }
   }
 
-  if (!rawBuffer) {
-    console.warn('[!] No valid companion matrix stream found.');
-    return;
-  }
-
-  try {
-    // Verify Custom Magic Header ('KZSH' = 0x4B 0x5A 0x53 0x48)
-    const dataView = new DataView(rawBuffer);
-    const magic = String.fromCharCode(
-      dataView.getUint8(0),
-      dataView.getUint8(1),
-      dataView.getUint8(2),
-      dataView.getUint8(3)
-    );
-    if (magic !== 'KZSH') {
-      throw new Error('Corrupted or unauthorized asset stream');
-    }
-
-    const targetW = dataView.getUint16(4);
-    const targetH = dataView.getUint16(6);
-    const cols = dataView.getUint16(8);
-    const rows = dataView.getUint16(10);
-    const tileW = dataView.getUint16(12);
-    const tileH = dataView.getUint16(14);
-    const numTiles = dataView.getUint16(16);
-
-    canvas.width = targetW;
-    canvas.height = targetH;
-
-    // Read Permutation Table
-    const permOffset = 18;
-    const perm = new Uint16Array(numTiles);
-    for (let i = 0; i < numTiles; i++) {
-      perm[i] = dataView.getUint16(permOffset + i * 2);
-    }
-
-    // Decompress Tile Stream via native Web Streams API
-    const compressedBytes = rawBuffer.slice(permOffset + numTiles * 2);
-    let decompressedArr;
-    if (typeof DecompressionStream !== 'undefined') {
-      const ds = new DecompressionStream('deflate');
-      const decompressedStream = new Response(new Uint8Array(compressedBytes)).body.pipeThrough(ds);
-      decompressedArr = new Uint8Array(await new Response(decompressedStream).arrayBuffer());
-    } else {
-      throw new Error('DecompressionStream unsupported in this browser environment');
-    }
-
-    const tileSize = tileW * tileH * 4;
-    const imgData = ctx.createImageData(targetW, targetH);
-    const canvasPixels = imgData.data;
-
-    // Unscramble, unmask and paint tiles directly into pixel buffer
-    for (let pIdx = 0; pIdx < numTiles; pIdx++) {
-      const origTileIdx = perm[pIdx];
-      const origR = Math.floor(origTileIdx / cols);
-      const origC = origTileIdx % cols;
-      const mask = ((origR * 23) ^ (origC * 37) ^ 0x5A) & 0xFF;
-
-      const tileBytesStart = pIdx * tileSize;
-      for (let tr = 0; tr < tileH; tr++) {
-        for (let tc = 0; tc < tileW; tc++) {
-          const srcOffset = tileBytesStart + (tr * tileW + tc) * 4;
-          const dstY = origR * tileH + tr;
-          const dstX = origC * tileW + tc;
-          const dstOffset = (dstY * targetW + dstX) * 4;
-
-          canvasPixels[dstOffset]     = decompressedArr[srcOffset] ^ mask;
-          canvasPixels[dstOffset + 1] = decompressedArr[srcOffset + 1] ^ mask;
-          canvasPixels[dstOffset + 2] = decompressedArr[srcOffset + 2] ^ mask;
-          canvasPixels[dstOffset + 3] = decompressedArr[srcOffset + 3] ^ mask;
-        }
-      }
-    }
-
-    companionImageData = imgData;
-    ctx.putImageData(imgData, 0, 0);
-
-  } catch (err) {
-    console.warn('[!] Companion matrix reconstructor error:', err);
-  }
-
-  // Poison canvas export methods so console / scraper execution returns blank/error
+  // Poison canvas export methods so console / scraper execution returns blank decoy
   canvas.toDataURL = function() {
     return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
   };
@@ -2005,6 +2045,8 @@ function initContentShield() {
 window.interactWithCompanion = interactWithCompanion;
 window.dismissDialogue = dismissDialogue;
 window.toggleCompanionCollapse = toggleCompanionCollapse;
+window.onCompanionPedestalClick = onCompanionPedestalClick;
+window.setCompanionExpression = setCompanionExpression;
 
 /* ─── INITIAL EXECUTION (ROBUST BOOT WITH READYSTATE CHECK) ─── */
 function boot() {
