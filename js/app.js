@@ -1717,12 +1717,14 @@ function initCompanion() {
 
 /* ═════════════════════════════════════════════════════════════════════
    CYBER DEFENSE: IN-MEMORY ASSET DE-SCRAMBLER & DEVTOOLS GUARD
-   Decrypts authentic Operative Kira image in RAM via AES-256-GCM.
-   Never exposes raw image in DOM or Sources tab; renders onto canvas.
+/* ═════════════════════════════════════════════════════════════════════
+   CYBER DEFENSE: ZERO-BLOB JIGSAW MATRIX RECONSTRUCTOR & DEVTOOLS GUARD
+   Reassembles shredded, tile-permuted & XOR-scrambled matrix in RAM.
+   NEVER generates Image, Blob, or ObjectURL — paints directly to canvas.
    Monitors DevTools state and scrubs canvas memory upon inspection.
    ═════════════════════════════════════════════════════════════════════ */
 
-let companionDecryptedImg = null;
+let companionImageData = null;
 let isDevToolsActive = false;
 
 async function loadSecuredCompanionModel() {
@@ -1733,7 +1735,6 @@ async function loadSecuredCompanionModel() {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  // Clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   try {
@@ -1741,42 +1742,82 @@ async function loadSecuredCompanionModel() {
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const rawBuffer = await resp.arrayBuffer();
 
-    const iv = rawBuffer.slice(0, 12);
-    const ciphertext = rawBuffer.slice(12);
-
-    const keyBytes = await crypto.subtle.digest(
-      'SHA-256',
-      new TextEncoder().encode('uziii2208_operative_kira_sentinel_2026_0x0D')
+    // Verify Custom Magic Header ('KZSH' = 0x4B 0x5A 0x53 0x48)
+    const headerView = new DataView(rawBuffer, 0, 18);
+    const magic = String.fromCharCode(
+      headerView.getUint8(0),
+      headerView.getUint8(1),
+      headerView.getUint8(2),
+      headerView.getUint8(3)
     );
-    const cryptoKey = await crypto.subtle.importKey(
-      'raw',
-      keyBytes,
-      { name: 'AES-GCM' },
-      false,
-      ['decrypt']
-    );
+    if (magic !== 'KZSH') {
+      throw new Error('Corrupted or unauthorized asset stream');
+    }
 
-    const decryptedBuffer = await crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv: iv },
-      cryptoKey,
-      ciphertext
-    );
+    const targetW = headerView.getUint16(4);
+    const targetH = headerView.getUint16(6);
+    const cols = headerView.getUint16(8);
+    const rows = headerView.getUint16(10);
+    const tileW = headerView.getUint16(12);
+    const tileH = headerView.getUint16(14);
+    const numTiles = headerView.getUint16(16);
 
-    const blob = new Blob([decryptedBuffer], { type: 'image/png' });
-    const blobUrl = URL.createObjectURL(blob);
-    const img = new Image();
+    canvas.width = targetW;
+    canvas.height = targetH;
 
-    img.onload = () => {
-      companionDecryptedImg = img;
-      if (!isDevToolsActive) {
-        renderCompanionCanvas(ctx, canvas, img);
+    // Read Permutation Table
+    const permOffset = 18;
+    const perm = new Uint16Array(numTiles);
+    for (let i = 0; i < numTiles; i++) {
+      perm[i] = headerView.getUint16(permOffset + i * 2);
+    }
+
+    // Decompress Tile Stream via native Web Streams API
+    const compressedBytes = rawBuffer.slice(permOffset + numTiles * 2);
+    let decompressedArr;
+    if (typeof DecompressionStream !== 'undefined') {
+      const ds = new DecompressionStream('deflate');
+      const decompressedStream = new Response(compressedBytes).body.pipeThrough(ds);
+      decompressedArr = new Uint8Array(await new Response(decompressedStream).arrayBuffer());
+    } else {
+      throw new Error('DecompressionStream unsupported');
+    }
+
+    const tileSize = tileW * tileH * 4;
+    const imgData = ctx.createImageData(targetW, targetH);
+    const canvasPixels = imgData.data;
+
+    // Unscramble, unmask and paint tiles directly into pixel buffer
+    for (let pIdx = 0; pIdx < numTiles; pIdx++) {
+      const origTileIdx = perm[pIdx];
+      const origR = Math.floor(origTileIdx / cols);
+      const origC = origTileIdx % cols;
+      const mask = ((origR * 23) ^ (origC * 37) ^ 0x5A) & 0xFF;
+
+      const tileBytesStart = pIdx * tileSize;
+      for (let tr = 0; tr < tileH; tr++) {
+        for (let tc = 0; tc < tileW; tc++) {
+          const srcOffset = tileBytesStart + (tr * tileW + tc) * 4;
+          const dstY = origR * tileH + tr;
+          const dstX = origC * tileW + tc;
+          const dstOffset = (dstY * targetW + dstX) * 4;
+
+          canvasPixels[dstOffset]     = decompressedArr[srcOffset] ^ mask;
+          canvasPixels[dstOffset + 1] = decompressedArr[srcOffset + 1] ^ mask;
+          canvasPixels[dstOffset + 2] = decompressedArr[srcOffset + 2] ^ mask;
+          canvasPixels[dstOffset + 3] = decompressedArr[srcOffset + 3] ^ mask;
+        }
       }
-      URL.revokeObjectURL(blobUrl);
-    };
-    img.src = blobUrl;
+    }
+
+    companionImageData = imgData;
+    if (!isDevToolsActive) {
+      renderCompanionCanvas(ctx, canvas, imgData);
+    }
+
   } catch (err) {
-    console.warn('[!] Companion crypto de-scrambler fallback:', err);
-    drawGlitchWarning(ctx, canvas, 'ASSET STREAM ENCRYPTED // STANDBY');
+    console.warn('[!] Companion matrix reconstructor fallback:', err);
+    drawGlitchWarning(ctx, canvas, 'ASSET STREAM SHIELDED // STANDBY');
   }
 
   // Poison canvas export methods so console / scraper execution returns blank/error
@@ -1788,40 +1829,33 @@ async function loadSecuredCompanionModel() {
   };
 }
 
-function renderCompanionCanvas(ctx, canvas, img) {
-  if (!ctx || !img) return;
+function renderCompanionCanvas(ctx, canvas, imgData) {
+  if (!ctx || !imgData) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-  // Blit subtle forensic authentication watermark
-  ctx.save();
-  ctx.fillStyle = 'rgba(232, 25, 44, 0.04)';
-  ctx.font = '16px monospace';
-  ctx.fillText('uziii2208 // OPERATIVE KIRA 0x0D // LEVEL-5 SENTINEL', 24, canvas.height - 24);
-  ctx.restore();
+  ctx.putImageData(imgData, 0, 0);
 }
 
 function drawGlitchWarning(ctx, canvas, reason) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = 'rgba(12, 12, 18, 0.96)';
-  ctx.fillRect(40, 200, canvas.width - 80, 800);
+  ctx.fillRect(20, 100, canvas.width - 40, 420);
   ctx.strokeStyle = '#e8192c';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(40, 200, canvas.width - 80, 800);
+  ctx.lineWidth = 3;
+  ctx.strokeRect(20, 100, canvas.width - 40, 420);
 
   ctx.fillStyle = '#e8192c';
-  ctx.font = 'bold 36px monospace';
+  ctx.font = 'bold 22px monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('[!] STREAM SEVERED', canvas.width / 2, 450);
+  ctx.fillText('[!] STREAM SEVERED', canvas.width / 2, 210);
 
   ctx.fillStyle = '#ffffff';
-  ctx.font = '22px monospace';
-  ctx.fillText(reason || 'DEVTOOLS INSPECTION DETECTED', canvas.width / 2, 520);
+  ctx.font = '14px monospace';
+  ctx.fillText(reason || 'DEVTOOLS INSPECTION DETECTED', canvas.width / 2, 260);
 
   ctx.fillStyle = '#8888aa';
-  ctx.font = '18px monospace';
-  ctx.fillText('ASSET MEMORY FLUSHED // OPSEC ACTIVE', canvas.width / 2, 580);
-  ctx.fillText('CLOSE DEVTOOLS TO RESUME STREAM', canvas.width / 2, 640);
+  ctx.font = '12px monospace';
+  ctx.fillText('ASSET MEMORY FLUSHED // OPSEC ACTIVE', canvas.width / 2, 310);
+  ctx.fillText('CLOSE DEVTOOLS TO RESUME STREAM', canvas.width / 2, 340);
   ctx.textAlign = 'left';
 }
 
@@ -1842,9 +1876,9 @@ function monitorDevToolsState() {
     } else if (!isOpen && isDevToolsActive) {
       isDevToolsActive = false;
       const canvas = document.getElementById('companion-canvas');
-      if (canvas && companionDecryptedImg) {
+      if (canvas && companionImageData) {
         const ctx = canvas.getContext('2d');
-        if (ctx) renderCompanionCanvas(ctx, canvas, companionDecryptedImg);
+        if (ctx) renderCompanionCanvas(ctx, canvas, companionImageData);
       }
     }
   }, 600);

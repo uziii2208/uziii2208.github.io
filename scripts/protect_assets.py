@@ -47,7 +47,11 @@ PIXEL_FONT = FONTS_DIR / "uziii2208-pixel.ttf"
 CSS_FILE = BASE_DIR / "css" / "style.css"
 JS_FILE = BASE_DIR / "js" / "app.js"
 
-SECRET_SEED = b"uziii2208_operative_kira_sentinel_2026_0x0D"
+import struct
+import zlib
+import random
+
+SECRET_SEED = b"uziii2208_quantum_shred_matrix_2026_0x0D"
 
 ASSET_METADATA = {
     "Title": "Operative Kira (0x0D) — Protected Mascot Sentinel",
@@ -59,27 +63,75 @@ ASSET_METADATA = {
 }
 
 def encrypt_model_asset():
-    """Encrypt authentic model into photos/model.bin using AES-256-GCM."""
+    """
+    Constructs a scrambled, tile-shredded, and deflated holographic matrix (photos/model.bin).
+    - Downscales master image to 416x624 (display resolution)
+    - Burns permanent cyber forensic watermarks onto the character
+    - Slices into 384 tiles (16 cols x 24 rows)
+    - Permutes tile sequence via pseudo-random shuffle
+    - Bitwise XOR scrambles pixel channels using coordinate-dependent masks
+    - Compresses tiles with zlib deflate
+    - Prepends binary header (Magic: 'KZSH') + permutation table
+    """
     if not SOURCE_MODEL_PNG.exists():
         if MODEL_BIN.exists() and MODEL_BIN.stat().st_size > 1000:
-            print(f"[+] Encrypted payload already present at {MODEL_BIN.name} ({MODEL_BIN.stat().st_size} bytes)")
-            return True
-        elif MODEL_PNG.exists() and MODEL_PNG.stat().st_size > 100000:
-            shutil.copy(MODEL_PNG, SOURCE_MODEL_PNG)
-        else:
-            print(f"[!] Critical: Neither {SOURCE_MODEL_PNG} nor valid {MODEL_BIN} found.")
-            return False
+            header = MODEL_BIN.read_bytes()[:4]
+            if header == b"KZSH":
+                print(f"[+] Shredded matrix payload verified at {MODEL_BIN.name} ({MODEL_BIN.stat().st_size:,} bytes)")
+                return True
+        print(f"[!] Critical: Neither {SOURCE_MODEL_PNG} nor valid {MODEL_BIN} found.")
+        return False
 
-    print(f"[*] Encrypting authentic Operative Kira image from {SOURCE_MODEL_PNG.name}...")
-    raw_data = SOURCE_MODEL_PNG.read_bytes()
-    key = hashlib.sha256(SECRET_SEED).digest()
-    iv = os.urandom(12)  # Standard 96-bit AES-GCM nonce
-    aesgcm = AESGCM(key)
-    ciphertext = aesgcm.encrypt(iv, raw_data, None)
+    print(f"[*] Constructing secure shredded holographic matrix from {SOURCE_MODEL_PNG.name}...")
+    img = Image.open(SOURCE_MODEL_PNG).convert("RGBA")
+    target_w, target_h = 416, 624
+    img_down = img.resize((target_w, target_h), Image.Resampling.LANCZOS)
 
-    # Output: 12-byte IV + ciphertext (includes 16-byte auth tag)
-    MODEL_BIN.write_bytes(iv + ciphertext)
-    print(f"[+] Encrypted payload written to {MODEL_BIN.name} ({len(raw_data)} bytes -> {MODEL_BIN.stat().st_size} bytes)")
+    # Burn forensic visual watermark across tactical clothing
+    draw = ImageDraw.Draw(img_down)
+    try:
+        font_wm = ImageFont.truetype(str(PIXEL_FONT), 13)
+        font_sm = ImageFont.truetype(str(PIXEL_FONT), 10)
+    except Exception:
+        font_wm = ImageFont.load_default()
+        font_sm = ImageFont.load_default()
+
+    draw.text((125, 340), "OPERATIVE KIRA // 0x0D", fill=(232, 25, 44, 110), font=font_wm)
+    draw.text((126, 341), "OPERATIVE KIRA // 0x0D", fill=(0, 255, 238, 85), font=font_wm)
+    draw.text((120, 360), "PROVENANCE: @uziii2208", fill=(255, 255, 255, 75), font=font_sm)
+    draw.text((140, 480), "github.com/uziii2208", fill=(232, 25, 44, 70), font=font_sm)
+
+    cols, rows = 16, 24
+    tile_w = target_w // cols
+    tile_h = target_h // rows
+    num_tiles = cols * rows
+
+    tiles = []
+    for r in range(rows):
+        for c in range(cols):
+            tile = img_down.crop((c * tile_w, r * tile_h, (c + 1) * tile_w, (r + 1) * tile_h))
+            tiles.append((r, c, bytearray(tile.tobytes())))
+
+    seed_int = int(hashlib.sha256(SECRET_SEED).hexdigest()[:8], 16)
+    rng = random.Random(seed_int)
+    perm = list(range(num_tiles))
+    rng.shuffle(perm)
+
+    shuffled_bytes = bytearray()
+    for p_idx in perm:
+        r, c, tb = tiles[p_idx]
+        mask = ((r * 23) ^ (c * 37) ^ 0x5A) & 0xFF
+        for i in range(len(tb)):
+            tb[i] ^= mask
+        shuffled_bytes.extend(tb)
+
+    compressed = zlib.compress(bytes(shuffled_bytes), 9)
+    header = struct.pack(">4sHHHHHHH", b"KZSH", target_w, target_h, cols, rows, tile_w, tile_h, num_tiles)
+    perm_table = struct.pack(f">{num_tiles}H", *perm)
+    payload = header + perm_table + compressed
+
+    MODEL_BIN.write_bytes(payload)
+    print(f"[+] Shredded matrix payload deployed to {MODEL_BIN.name} ({len(payload):,} bytes)")
     return True
 
 def generate_decoy_model_image():
