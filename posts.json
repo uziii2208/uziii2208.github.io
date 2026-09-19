@@ -17,6 +17,23 @@
     "locked": true
   },
   {
+    "id": "hackthebox-trustfail",
+    "slug": "hackthebox-trustfail",
+    "path": "posts/HackTheBox/HackTheBox-TrustFail.md",
+    "url": "post/hackthebox-trustfail/",
+    "title": "HackTheBox - TrustFall: Multi-Stage Exploitation From Public Attack Surface to Complete Domain Compromise in a Hardened Enterprise",
+    "date": "2026-09-19",
+    "tags": [
+      "htb",
+      "ctf",
+      "windows"
+    ],
+    "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
+    "readTime": "4 min read",
+    "author": "@uziii2208",
+    "locked": true
+  },
+  {
     "id": "hackthebox-sandcastle",
     "slug": "hackthebox-sandcastle",
     "path": "posts/HackTheBox/HackTheBox-Sandcastle.md",
