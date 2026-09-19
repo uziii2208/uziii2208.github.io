@@ -1243,6 +1243,10 @@ function renderPostList(items) {
 
 function getTagClass(tag) {
   const t = (tag || '').toLowerCase();
+  if (t === 'easy' || t.includes('easy')) return 'easy';
+  if (t === 'medium' || t.includes('medium')) return 'medium';
+  if (t === 'hard' || t.includes('hard')) return 'hard';
+  if (t === 'insane' || t.includes('insane')) return 'insane';
   if (t.includes('cve')) return 'cve';
   if (t.includes('ctf')) return 'ctf';
   if (t.includes('htb') || t.includes('hackthebox')) return 'htb';

@@ -1208,6 +1208,38 @@ main {
   box-shadow: 0 0 10px var(--red-glow);
 }
 
+.filter-btn[data-tag="easy"]:hover,
+.filter-btn[data-tag="easy"].active {
+  border-color: #38ef7d;
+  color: #38ef7d;
+  background: rgba(56, 239, 125, 0.12);
+  box-shadow: 0 0 10px rgba(56, 239, 125, 0.35);
+}
+
+.filter-btn[data-tag="medium"]:hover,
+.filter-btn[data-tag="medium"].active {
+  border-color: #f1c40f;
+  color: #f1c40f;
+  background: rgba(241, 196, 15, 0.12);
+  box-shadow: 0 0 10px rgba(241, 196, 15, 0.35);
+}
+
+.filter-btn[data-tag="hard"]:hover,
+.filter-btn[data-tag="hard"].active {
+  border-color: #ff7675;
+  color: #ff7675;
+  background: rgba(255, 118, 117, 0.12);
+  box-shadow: 0 0 10px rgba(255, 118, 117, 0.35);
+}
+
+.filter-btn[data-tag="insane"]:hover,
+.filter-btn[data-tag="insane"].active {
+  border-color: #c084fc;
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.12);
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.35);
+}
+
 .search-status-bar {
   font-family: var(--font-meta);
   font-size: 0.72rem;
@@ -1379,6 +1411,51 @@ main {
   text-decoration: none;
   display: inline-block;
   transition: all 0.12s;
+}
+
+/* ─── DIFFICULTY TAG CHIPS ─── */
+.tag-easy {
+  color: #38ef7d;
+  border-color: rgba(56, 239, 125, 0.35);
+  background: rgba(56, 239, 125, 0.08);
+}
+.tag-easy:hover {
+  background: rgba(56, 239, 125, 0.22);
+  border-color: #38ef7d;
+  box-shadow: 0 0 10px rgba(56, 239, 125, 0.35);
+}
+
+.tag-medium {
+  color: #f1c40f;
+  border-color: rgba(241, 196, 15, 0.35);
+  background: rgba(241, 196, 15, 0.08);
+}
+.tag-medium:hover {
+  background: rgba(241, 196, 15, 0.22);
+  border-color: #f1c40f;
+  box-shadow: 0 0 10px rgba(241, 196, 15, 0.35);
+}
+
+.tag-hard {
+  color: #ff7675;
+  border-color: rgba(255, 118, 117, 0.4);
+  background: rgba(255, 118, 117, 0.09);
+}
+.tag-hard:hover {
+  background: rgba(255, 118, 117, 0.22);
+  border-color: #ff7675;
+  box-shadow: 0 0 10px rgba(255, 118, 117, 0.35);
+}
+
+.tag-insane {
+  color: #c084fc;
+  border-color: rgba(192, 132, 252, 0.4);
+  background: rgba(192, 132, 252, 0.09);
+}
+.tag-insane:hover {
+  background: rgba(192, 132, 252, 0.22);
+  border-color: #c084fc;
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
 }
 
 .tag-cve {

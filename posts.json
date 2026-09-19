@@ -9,7 +9,8 @@
     "tags": [
       "htb",
       "ctf",
-      "challenges"
+      "challenges",
+      "insane"
     ],
     "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
     "readTime": "24 min read",
@@ -26,7 +27,8 @@
     "tags": [
       "htb",
       "ctf",
-      "challenges"
+      "challenges",
+      "insane"
     ],
     "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
     "readTime": "22 min read",
@@ -43,7 +45,8 @@
     "tags": [
       "htb",
       "ctf",
-      "windows"
+      "windows",
+      "hard"
     ],
     "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
     "readTime": "4 min read",
@@ -60,7 +63,8 @@
     "tags": [
       "htb",
       "ctf",
-      "challenges"
+      "challenges",
+      "insane"
     ],
     "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
     "readTime": "17 min read",
@@ -77,7 +81,8 @@
     "tags": [
       "htb",
       "ctf",
-      "challenges"
+      "challenges",
+      "hard"
     ],
     "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
     "readTime": "14 min read",
@@ -93,7 +98,8 @@
     "date": "2026-09-10",
     "tags": [
       "cve",
-      "research"
+      "research",
+      "medium"
     ],
     "excerpt": "Verified. An improper authorization and header-spoofing vulnerability exists in Knowns' reverse proxy for the embedded OpenCode AI agent daemon (server.go:1249-1305)....",
     "readTime": "10 min read",
@@ -109,7 +115,8 @@
     "date": "2026-09-07",
     "tags": [
       "cve",
-      "research"
+      "research",
+      "easy"
     ],
     "excerpt": "Verified by Nguyen Huy Hoang (hoanggxyuuki) & Tong Hoang Gia (uziii2208). The default deployment of the Knowns browser server operates in a fully unauthenticated state,...",
     "readTime": "4 min read",
@@ -125,7 +132,8 @@
     "date": "2026-09-06",
     "tags": [
       "cve",
-      "research"
+      "research",
+      "hard"
     ],
     "excerpt": "Verified. A two-leg exploit chain exists in OpenMAIC's authentication middleware and outbound provider request layer that allows an unauthenticated remote attacker to...",
     "readTime": "8 min read",
@@ -142,7 +150,8 @@
     "tags": [
       "htb",
       "ctf",
-      "linux"
+      "linux",
+      "medium"
     ],
     "excerpt": "Sorcery is a Linux box with a Rust Rocket web app backed by Neo4j, Gitea, and a Kafka message bus. I’ll exploit Cypher injection in a derive-macro-generated query to...",
     "readTime": "157 min read",
@@ -159,7 +168,8 @@
     "tags": [
       "htb",
       "ctf",
-      "windows"
+      "windows",
+      "insane"
     ],
     "excerpt": "Reaper is an Insane-difficulty Windows target on HackTheBox that tests the full spectrum of modern offensive security engineering-bridging userland reverse engineering,...",
     "readTime": "25 min read",
@@ -176,7 +186,8 @@
     "tags": [
       "htb",
       "ctf",
-      "windows"
+      "windows",
+      "insane"
     ],
     "excerpt": "Hercules is an Insane-difficulty Windows machine that requires extensive knowledge of Active Directory attacks and Kerberos authentication. The domain has NTLM disabled,...",
     "readTime": "31 min read",
