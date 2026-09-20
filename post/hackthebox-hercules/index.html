@@ -634,7 +634,7 @@ class Program
 <blockquote>
 <p>Summary of the Vulnerability</p>
 <p>The provided C# code snippet shows a file upload filter that is vulnerable to an attack designed to steal NTLM authentication hashes. The core issue is that the application only validates the file extension (checking for <code>.odt</code> or <code>.docx</code>) but <code>fails to validate the file’s actual content</code>.</p>
-<p>This allows an attacker to upload a maliciously crafted file—which may not be a valid document at all—as long as it has the correct extension. The goal is to get this file onto the server, where a separate process (like a document processor, a preview generator, or an administrator) will open it, triggering an outbound connection from the server to an attacker-controlled endpoint.</p>
+<p>This allows an attacker to upload a maliciously crafted file-which may not be a valid document at all-as long as it has the correct extension. The goal is to get this file onto the server, where a separate process (like a document processor, a preview generator, or an administrator) will open it, triggering an outbound connection from the server to an attacker-controlled endpoint.</p>
 <p>Example:</p>
 <pre><code class="language-c#">else
 {
@@ -924,7 +924,7 @@ Content-Transfer-Encoding: quoted-printable
 [2025-10-20 09:26:04] [Set-DomainObjectDN] Modifying CN=Stephen Miller,OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb object dn to OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb
 [2025-10-20 09:26:04] [Set-DomainObject] Success! modified new dn for CN=Stephen Miller,OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb
 </code></pre>
-<p>This change <code>survives the cleanup script</code> because it does <code>not revert OU membership</code> — only passwords, ACLs, and group memberships.</p>
+<p>This change <code>survives the cleanup script</code> because it does <code>not revert OU membership</code> - only passwords, ACLs, and group memberships.</p>
 <p>Now <code>stephen.m</code> inherits the ability to have <code>msDS-KeyCredentialLink</code> written (Shadow Credentials) due to the Web Department OU policy.</p>
 <h4>Shadow Credentials Attack on stephen.m</h4>
 <pre><code class="language-bash">$ impacket-getTGT 'HERCULES.HTB/natalie.a:Prettyprincess123!'                                      

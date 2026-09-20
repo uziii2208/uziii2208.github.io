@@ -1,5 +1,23 @@
 [
   {
+    "id": "hackthebox-nestguard-breach",
+    "slug": "hackthebox-nestguard-breach",
+    "path": "posts/HackTheBox/HackTheBox-NestGuard-Breach.md",
+    "url": "post/hackthebox-nestguard-breach/",
+    "title": "HackTheBox - NestGuard Breach: ESP32 XOR-Decoded MQTT Identity to Retained $debug Topic Leak",
+    "date": "2026-09-20",
+    "tags": [
+      "htb",
+      "ctf",
+      "challenges",
+      "medium"
+    ],
+    "excerpt": "CLASSIFIED ADVISORY // RESTRICTED ACCESS. This research document is encrypted with AES-256-GCM. Authorization credentials are required to decrypt.",
+    "readTime": "14 min read",
+    "author": "@uziii2208",
+    "locked": true
+  },
+  {
     "id": "hackthebox-blinded",
     "slug": "hackthebox-blinded",
     "path": "posts/HackTheBox/HackTheBox-Blinded.md",
