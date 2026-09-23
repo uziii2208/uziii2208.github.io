@@ -12,7 +12,7 @@
       "challenges",
       "hard"
     ],
-    "excerpt": "Challenge Name: vvm Platform: HackTheBox Category: Reverse Engineering Difficulty: Hard Status: Solved Final Flag: HTB{v1rTu4Lp4sSw0rDt3ChN0loGy} --- The vvm challenge...",
+    "excerpt": "--- The vvm challenge from HackTheBox features a proprietary client-side password validation engine protected by a custom, stack-based Virtual Machine (VM). The...",
     "readTime": "19 min read",
     "author": "@uziii2208",
     "locked": false
