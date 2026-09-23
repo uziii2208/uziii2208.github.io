@@ -356,7 +356,7 @@ For each dynamic opcode:</p>
 <li>Calls <code>mmap(NULL, code_size, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0)</code> to allocate executable memory.</li>
 <li>Reads an encrypted byte buffer from <code>.rodata</code>/<code>.data</code>.</li>
 <li>Decrypts the payload using a repeating 6-byte XOR keystream:
-$<span class="math inline">\text{Key} = [0\text{x}2a, 0\text{x}0b, 0\text{x}21, 0\text{x}21, 0\text{x}4d, 0\text{x}2a]</span>$</li>
+<span class="math inline">\text{Key} = [0\text{x}2a, 0\text{x}0b, 0\text{x}21, 0\text{x}21, 0\text{x}4d, 0\text{x}2a]</span></li>
 <li>Copies the decrypted bytes into the <code>mmap</code> allocation.</li>
 <li>Assigns the allocated function pointer to <code>dispatch_table[opcode]</code>.</li>
 </ol>
@@ -765,7 +765,7 @@ loc_28a2:
 [ 302] HALT             ; Return 32-bit dword to caller
 </code></pre>
 <p>This routine packs 4 distinct bytes <span class="math inline">[c_0, c_1, c_2, c_3]</span> into a single 32-bit unsigned little-endian word:
-$<span class="math inline">\text{dword} = c_0 \mid (c_1 \ll 8) \mid (c_2 \ll 16) \mid (c_3 \ll 24)</span>$</p>
+<span class="math inline">\text{dword} = c_0 \mid (c_1 \ll 8) \mid (c_2 \ll 16) \mid (c_3 \ll 24)</span></p>
 <hr />
 <h3 id="7-4-permutation-matrix-32-characters-to-8-dwords">7.4. Permutation Matrix: 32 Characters to 8 Dwords</h3>
 <p>The main routine extracts characters from the 32-byte input string using <code>GET_CHAR &lt;index&gt;</code> and passes them into <code>CALL 282, 4</code> exactly 8 times. Tracing the indices extracted for each dword gives the following permutation table:</p>
@@ -840,7 +840,7 @@ Every character index in the range <span class="math inline">[0, 31]</span> appe
 [ 470] HALT             ; Return result
 </code></pre>
 <p>This is the standard implementation of <strong>32-bit Circular Left Rotation</strong>:
-$<span class="math inline">\text{ROL32}(x, k) = (x \ll k) \mid (x \gg (32 - k))</span>$</p>
+<span class="math inline">\text{ROL32}(x, k) = (x \ll k) \mid (x \gg (32 - k))</span></p>
 <p>The rotation amounts <span class="math inline">k_i</span> applied to each dword are calculated on the fly using VM arithmetic:</p>
 <ul>
 <li><strong><span class="math inline">d_7</span>:</strong> <code>PUSH 8; PUSH 7; ADD</code> <span class="math inline">\implies k_7 = 8 + 7 = \mathbf{15}</span></li>
@@ -881,7 +881,7 @@ $<span class="math inline">\text{ROL32}(x, k) = (x \ll k) \mid (x \gg (32 - k))<
 d_i = \text{ROR32}(\text{target}_i, k_i)
 </div>
 <p>Where:
-$<span class="math inline">\text{ROR32}(v, k) = (v \gg k) \mid (v \ll (32 - k)) \pmod{2^{32}}</span>$</p>
+<span class="math inline">\text{ROR32}(v, k) = (v \gg k) \mid (v \ll (32 - k)) \pmod{2^{32}}</span></p>
 <h3 id="step-1-recovering-the-8-dwords-d-0-dots-d-7">Step 1: Recovering the 8 Dwords (<span class="math inline">d_0 \dots d_7</span>)</h3>
 <p>Applying <span class="math inline">\text{ROR32}</span> to each target constant:</p>
 <table>
@@ -1022,7 +1022,7 @@ Index:   16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
 Char:     w  0  r  D  _  t  3  C  h  N  0  l  o  G  y  }
 </code></pre>
 <p>Combining the characters reconstructs the full flag:
-$<span class="math inline">\mathbf{HTB\{v1rTu4L\_p4sSw0rD\_t3ChN0loGy\}}</span>$</p>
+<span class="math inline">\mathbf{HTB\{v1rTu4L\_p4sSw0rD\_t3ChN0loGy\}}</span></p>
 <hr />
 <h2 id="9-complete-python-solver-amp-proof-of-execution">9. Complete Python Solver &amp; Proof of Execution</h2>
 <p>The full, standalone solve script is located at <code>solve.py</code>:</p>
