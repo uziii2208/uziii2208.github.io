@@ -1,5 +1,23 @@
 [
   {
+    "id": "hackthebox-vvm",
+    "slug": "hackthebox-vvm",
+    "path": "posts/HackTheBox/HackTheBox-vvm.md",
+    "url": "post/hackthebox-vvm/",
+    "title": "HackTheBox - vvm: ELF 64-bit LSB PIE Executable (x86_64) & Custom Stack-Based Virtual Machine (VM) with Self-Decrypting Handlers",
+    "date": "2026-09-23",
+    "tags": [
+      "htb",
+      "ctf",
+      "challenges",
+      "hard"
+    ],
+    "excerpt": "Challenge Name: vvm Platform: HackTheBox Category: Reverse Engineering Difficulty: Hard Status: Solved Final Flag: HTB{v1rTu4Lp4sSw0rDt3ChN0loGy} --- The vvm challenge...",
+    "readTime": "19 min read",
+    "author": "@uziii2208",
+    "locked": false
+  },
+  {
     "id": "hackthebox-nestguard-breach",
     "slug": "hackthebox-nestguard-breach",
     "path": "posts/HackTheBox/HackTheBox-NestGuard-Breach.md",
